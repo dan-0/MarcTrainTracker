@@ -37,11 +37,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
                 message.setText(R.string.title_status)
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_dashboard -> {
+            R.id.navigation_notifications -> {
                 message.setText(R.string.title_alerts)
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_notifications -> {
+            R.id.navigation_dashboard -> {
                 message.setText(R.string.title_schedule)
                 return@OnNavigationItemSelectedListener true
             }
