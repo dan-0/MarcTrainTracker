@@ -31,8 +31,8 @@ abstract class BaseActivity <T : ViewDataBinding, V : BaseViewModel<*>> : AppCom
     }
 
     private fun initDataBinding() {
-        viewDataBinding = DataBindingUtil.setContentView(this, getLayoutId())
-        viewDataBinding?.setVariable(getBindingVariable(), viewModel)
+        viewDataBinding = DataBindingUtil.setContentView(this, layoutId)
+        viewDataBinding?.setVariable(bindingVariable, viewModel)
         viewDataBinding?.executePendingBindings()
     }
 
@@ -58,21 +58,20 @@ abstract class BaseActivity <T : ViewDataBinding, V : BaseViewModel<*>> : AppCom
     abstract fun getActivityViewModel() : V
 
     /**
-     * @return
-     *      The variable ID
+     *  The variable ID
      */
-    abstract fun getBindingVariable() : Int
+    abstract val bindingVariable : Int
 
     open fun getProgressBar() : ProgressBar? {
         return null
     }
 
     /**
-     * @return
-     *      The Layout ID
+     *  The Layout ID
      */
-    @LayoutRes
-    abstract fun getLayoutId() : Int
+    abstract val layoutId : Int
+        @LayoutRes
+        get
 
     private fun performDependencyInjection() {
         AndroidInjection.inject(this)
