@@ -1,4 +1,4 @@
-package marctrain.idleoffice.com.marctrain
+package com.idleoffice.marctrain
 
 import org.junit.Test
 
