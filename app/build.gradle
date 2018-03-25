@@ -22,6 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [enableCrashlytics: "true"]
         }
+
+        all {
+            buildConfigField "String", "POLL_URL", "\"http://10.0.0.11:4884/\""
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

@@ -1,5 +1,6 @@
 package com.idleoffice.marctrain.ui.main
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.widget.Toast
 import com.idleoffice.marctrain.BR
 import kotlinx.android.synthetic.main.activity_main.*
 import com.idleoffice.marctrain.R
+import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.databinding.ActivityMainBinding
 import com.idleoffice.marctrain.ui.base.BaseActivity
 import dagger.android.AndroidInjector
@@ -57,7 +59,21 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
         this.activityMainBinding = viewDataBinding
         mainViewModel?.navigator = this
 
+        setTrainStatusObserver()
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+    }
+
+    private fun setTrainStatusObserver() {
+        val trainStatusObserver = Observer<List<TrainStatus>> @Synchronized {
+            if (it != null) {
+                Timber.d("New train status received")
+                message.text = it.toString()
+            }
+            hideLoading()
+        }
+
+        mainViewModel?.trainStatusData?.observe(this, trainStatusObserver)
     }
 
     override fun displayError(errorMsg: String) {
