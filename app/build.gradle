@@ -58,7 +58,7 @@ dependencies {
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
-    kapt "com.android.databinding:compiler:3.0.1"
+    kapt "com.android.databinding:compiler:3.1.0"
     implementation "android.arch.lifecycle:common-java8:$lifecycleVersion"
     implementation "android.arch.lifecycle:reactivestreams:$lifecycleVersion"
     testImplementation "android.arch.core:core-testing:$lifecycleVersion"

@@ -14,9 +14,8 @@ class MainActivityModule {
     @Provides
     fun provideMainViewModel(
             application: Application,
-            schedulerProvider: SchedulerProvider,
-            trainStatusService: TrainStatusService) : MainViewModel {
-        return MainViewModel(application, schedulerProvider, trainStatusService)
+            schedulerProvider: SchedulerProvider) : MainViewModel {
+        return MainViewModel(application, schedulerProvider)
     }
 
     @Provides

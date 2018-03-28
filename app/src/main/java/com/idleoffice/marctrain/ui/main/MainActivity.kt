@@ -13,6 +13,7 @@ import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.databinding.ActivityMainBinding
 import com.idleoffice.marctrain.ui.base.BaseActivity
+import com.idleoffice.marctrain.ui.status.StatusFragment
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -33,18 +34,24 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
     private var activityMainBinding : ActivityMainBinding? = null
     var mainViewModel : MainViewModel? = null
 
+    fun loadFragment(frag: Fragment) {
+        var ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.view_content, frag, frag.tag)
+        ft.commit()
+    }
+
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
-                message.setText(R.string.title_status)
+                loadFragment(StatusFragment())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_notifications -> {
-                message.setText(R.string.title_alerts)
+//                message.setText(R.string.title_alerts)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
-                message.setText(R.string.title_schedule)
+//                message.setText(R.string.title_schedule)
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -59,22 +66,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
         this.activityMainBinding = viewDataBinding
         mainViewModel?.navigator = this
 
-        setTrainStatusObserver()
-
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
-    private fun setTrainStatusObserver() {
-        val trainStatusObserver = Observer<List<TrainStatus>> @Synchronized {
-            if (it != null) {
-                Timber.d("New train status received")
-                message.text = it.toString()
-            }
-            hideLoading()
-        }
 
-        mainViewModel?.trainStatusData?.observe(this, trainStatusObserver)
-    }
 
     override fun displayError(errorMsg: String) {
         Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show()
@@ -91,5 +86,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentDispatchingAndroidInjector
+    }
+
+    override fun onFragmentAttached() {
+
+    }
+
+    override fun onFragmentDetached(tag: String) {
+
     }
 }

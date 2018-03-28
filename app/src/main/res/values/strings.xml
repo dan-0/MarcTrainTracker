@@ -1,6 +1,35 @@
 <resources>
-    <string name="app_name">MARC Train</string>
+    <string name="app_name">MARC Tracker</string>
     <string name="title_status">Status</string>
     <string name="title_alerts">Alerts</string>
     <string name="title_schedule">Schedule</string>
+    <string name="direction">Direction</string>
+    <string name="line">Line</string>
+    <string name="placeholder_station" translatable="false">placeholder: station</string>
+    <string name="placeholder_time" translatable="false">placeholder: time</string>
+    <string name="placeholder_status" translatable="false">placeholder: status</string>
+    <string name="placeholder_delay" translatable="false">placeholder: delay</string>
+    <string name="next_station">Next Station:</string>
+    <string name="est_departure">Est. Departure:</string>
+    <string name="status">Status:</string>
+    <string name="delay">Delay:</string>
+    <string name="placeholder_train_num">609</string>
+    <string name="train_number" translatable="false">Train Number</string>
+
+    <string-array name="line_array">
+        <item>Penn</item>
+        <item>Camden</item>
+        <item>Brunswick</item>
+    </string-array>
+
+    <string-array name="ns_dir_array">
+        <item>North</item>
+        <item>South</item>
+    </string-array>
+
+    <string-array name="ew_dir_array">
+        <item>East</item>
+        <item>West</item>
+    </string-array>
+
 </resources>

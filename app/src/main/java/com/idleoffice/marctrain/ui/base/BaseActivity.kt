@@ -1,7 +1,9 @@
 package com.idleoffice.marctrain.ui.base
 
+import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
@@ -9,10 +11,11 @@ import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import android.widget.ProgressBar
 import dagger.android.AndroidInjection
+import io.fabric.sdk.android.services.network.NetworkUtils
 import timber.log.Timber
 
 
-abstract class BaseActivity <T : ViewDataBinding, V : BaseViewModel<*>> : AppCompatActivity() {
+abstract class BaseActivity <T : ViewDataBinding, V : BaseViewModel<*>> : AppCompatActivity(), BaseFragment.Callback {
 
     private var progressBar: ProgressBar? = null
     var viewDataBinding : T? = null
@@ -69,11 +72,16 @@ abstract class BaseActivity <T : ViewDataBinding, V : BaseViewModel<*>> : AppCom
     /**
      *  The Layout ID
      */
+    @get:LayoutRes
     abstract val layoutId : Int
-        @LayoutRes
-        get
 
     private fun performDependencyInjection() {
         AndroidInjection.inject(this)
+    }
+
+    fun isNetworkConnected() : Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+        val network = cm?.activeNetworkInfo
+        return network != null && network.isConnectedOrConnecting
     }
 }
