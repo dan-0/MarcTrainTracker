@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/trainNumberBadge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:contentDescription="@string/train_number" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <TextView
             android:id="@+id/trainNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,12 +57,12 @@
         android:elevation="@dimen/elevation_card"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/constraintLayout"
+        app:layout_constraintStart_toEndOf="@+id/trainNumberBadge"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             style="@style/mt.traininfo.label"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"

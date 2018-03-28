@@ -3,10 +3,9 @@ package com.idleoffice.marctrain.ui.status
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.AdapterView
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
 import android.widget.ArrayAdapter
 import android.widget.ListAdapter
 import com.idleoffice.marctrain.BR
@@ -26,6 +25,9 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
     override val bindingVariable: Int = BR.viewModel
     override val layoutId: Int = R.layout.fragment_status
 
+    // TODO fix this, its just for a proof of concept
+    private val statuses : MutableList<TrainStatus> = mutableListOf()
+
     private val spinnerItem = R.layout.spinner_item
 
     private var fragmentStatusBinding : FragmentStatusBinding? = null
@@ -40,6 +42,7 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         initLineSpinner()
+        initRecyclerView()
         super.onActivityCreated(savedInstanceState)
     }
 
@@ -47,12 +50,31 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
         val trainStatusObserver = Observer<List<TrainStatus>> @Synchronized {
             if (it != null) {
                 Timber.d("New train status received")
-                // TODO popuplate view with data
+                with(statuses) {
+                    clear()
+                    addAll(it)
+                    trainStatusList?.adapter?.notifyDataSetChanged()
+                }
             }
         }
         viewModel.trainStatusData.observe(this, trainStatusObserver)
     }
 
+    private fun setLineChangeObserver() {
+        val lineChangeObserver = Observer<Int> @Synchronized {
+            if (it != null) {
+                Timber.d("New line selected: %d", it)
+                parseNewLine(it)
+            }
+        }
+
+        viewModel.selectedTrainLine.observe(this, lineChangeObserver)
+    }
+
+    /**
+     * Set the direction spinner based on the line number, necessary because some go North-South,
+     * some go East-West
+     */
     private fun setDirSpinner(lineNum: Int) {
         val array = resources.getStringArray(R.array.line_array)
         var dirArray = R.array.ns_dir_array
@@ -65,6 +87,9 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
         directionSpinner.adapter = dirAdapter
     }
 
+    /**
+     * Parse a new line selection
+     */
     private fun parseNewLine(lineNum: Int) {
         if(directionSpinner == null) {
             return
@@ -80,17 +105,9 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
         setDirSpinner(lineNum)
     }
 
-    private fun setLineChangeObserver() {
-        val lineChangeObserver = Observer<Int> @Synchronized {
-            if (it != null) {
-                Timber.d("New line selected: %d", it)
-                parseNewLine(it)
-            }
-        }
-
-        viewModel.selectedTrainLine.observe(this, lineChangeObserver)
-    }
-
+    /**
+     * Initialize the line spinner
+     */
     private fun initLineSpinner() {
         val prefs = context?.getSharedPreferences(getString(R.string.pref_file), Context.MODE_PRIVATE)
         val lastLine = prefs?.getInt(getString(R.string.last_line), 0)
@@ -102,6 +119,22 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
         val lineAdapter = ArrayAdapter.createFromResource(context, R.array.line_array, spinnerItem)
         lineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         lineSpinner.adapter = lineAdapter
+    }
+
+
+    // TODO fix, none of this is right
+    private fun initRecyclerView() {
+        trainStatusList ?: return
+        var viewManager = LinearLayoutManager(context)
+        trainStatusList.apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = StatusAdapter(statuses)
+
+            itemAnimator = DefaultItemAnimator()
+            addItemDecoration(DividerItemDecoration(context, viewManager.orientation))
+        }
+
     }
 
     override fun lineChanged() {
