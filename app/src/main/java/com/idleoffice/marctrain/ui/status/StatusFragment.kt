@@ -3,11 +3,12 @@ package com.idleoffice.marctrain.ui.status
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.ArrayAdapter
-import android.widget.ListAdapter
 import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainStatus
@@ -22,11 +23,11 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
     @Inject
     override lateinit var viewModel: StatusViewModel
 
+    @Inject
+    lateinit var statusAdapter: StatusAdapter
+
     override val bindingVariable: Int = BR.viewModel
     override val layoutId: Int = R.layout.fragment_status
-
-    // TODO fix this, its just for a proof of concept
-    private val statuses : MutableList<TrainStatus> = mutableListOf()
 
     private val spinnerItem = R.layout.spinner_item
 
@@ -50,7 +51,7 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
         val trainStatusObserver = Observer<List<TrainStatus>> @Synchronized {
             if (it != null) {
                 Timber.d("New train status received")
-                with(statuses) {
+                with(statusAdapter.trainStatuses) {
                     clear()
                     addAll(it)
                     trainStatusList?.adapter?.notifyDataSetChanged()
@@ -125,14 +126,22 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
     // TODO fix, none of this is right
     private fun initRecyclerView() {
         trainStatusList ?: return
-        var viewManager = LinearLayoutManager(context)
+        val viewManager = LinearLayoutManager(context)
         trainStatusList.apply {
             setHasFixedSize(true)
             layoutManager = viewManager
-            adapter = StatusAdapter(statuses)
 
             itemAnimator = DefaultItemAnimator()
-            addItemDecoration(DividerItemDecoration(context, viewManager.orientation))
+            adapter = statusAdapter
+
+            val divider = DividerItemDecoration(context, viewManager.orientation)
+
+            val drawable = ContextCompat.getDrawable(context, R.drawable.status_divider)
+            if(drawable != null) {
+                divider.setDrawable(drawable)
+            }
+
+            addItemDecoration(divider)
         }
 
     }

@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/rounded_corners"
-    android:elevation="@dimen/elevation_card"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="2dp"
+    android:layout_marginTop="2dp"
+    android:background="@drawable/rounded_corners"
+    android:layout_margin="8dp"
+    android:elevation="@dimen/elevation_card">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/trainNumberBadge"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginStart="16dp"
-        android:background="@drawable/rounded_corners_primary_dark"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:elevation="@dimen/elevation_card"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/trainStatusData"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -22,43 +26,37 @@
             android:id="@+id/trainIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_train_orange_50dp"
-            android:tint="@color/colorAccent"
-            app:layout_constraintBottom_toTopOf="@+id/trainNumber"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/train_number"
+            android:src="@drawable/ic_train_dark_blue_50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/trainNumber"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/train_number" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/trainNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/placeholder_train_num"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="25sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/trainIcon" />
+            app:layout_constraintStart_toEndOf="@+id/trainIcon"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayout2"
-        android:layout_width="0dp"
+        android:id="@+id/trainStatusData"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:background="@drawable/rounded_corners"
         android:backgroundTint="@android:color/white"
         android:elevation="@dimen/elevation_card"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/trainNumberBadge"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/trainNumberBadge">
 
         <LinearLayout
             style="@style/mt.traininfo.label"
@@ -94,6 +92,7 @@
                     android:text="@string/status" />
 
                 <TextView
+                    android:id="@+id/textLabelDelay"
                     style="@style/mt.traininfo.label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -135,8 +134,7 @@
                     android:text="@string/placeholder_delay" />
             </LinearLayout>
         </LinearLayout>
-
-
     </android.support.constraint.ConstraintLayout>
+
 
 </android.support.constraint.ConstraintLayout>
