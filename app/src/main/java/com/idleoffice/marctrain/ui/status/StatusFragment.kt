@@ -3,7 +3,6 @@ package com.idleoffice.marctrain.ui.status
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
@@ -58,7 +57,7 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
                 }
             }
         }
-        viewModel.trainStatusData.observe(this, trainStatusObserver)
+        viewModel.currentTrainStatusData.observe(this, trainStatusObserver)
     }
 
     private fun setLineChangeObserver() {
@@ -143,10 +142,5 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
 
             addItemDecoration(divider)
         }
-
-    }
-
-    override fun lineChanged() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

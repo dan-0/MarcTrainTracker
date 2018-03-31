@@ -3,9 +3,8 @@
 buildscript {
     ext.kotlin_version = '1.2.31'
     ext.supportLibVersion = "27.1.0"
-    ext.roomVersion = '1.0.0'
     ext.lifecycleVersion = '1.1.1'
-    ext.daggerVersion = "2.11"
+    ext.daggerVersion = "2.15"
     ext.retrofitVersion = "2.3.0"
     ext.moshiVersion = "1.5.0"
 
