@@ -1,6 +1,5 @@
 package com.idleoffice.marctrain.ui.main
 
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -8,15 +7,14 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.widget.Toast
 import com.idleoffice.marctrain.BR
-import kotlinx.android.synthetic.main.activity_main.*
 import com.idleoffice.marctrain.R
-import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.databinding.ActivityMainBinding
 import com.idleoffice.marctrain.ui.base.BaseActivity
 import com.idleoffice.marctrain.ui.status.StatusFragment
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -32,10 +30,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
     override val layoutId: Int = R.layout.activity_main
 
     private var activityMainBinding : ActivityMainBinding? = null
-    var mainViewModel : MainViewModel? = null
+    private var mainViewModel : MainViewModel? = null
 
-    fun loadFragment(frag: Fragment) {
-        var ft = supportFragmentManager.beginTransaction()
+    private fun loadFragment(frag: Fragment) {
+        val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.view_content, frag, frag.tag)
         ft.commit()
     }

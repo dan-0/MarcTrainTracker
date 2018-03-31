@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Maryland MTA Alerts and Advisories</title>
+    <link>http://mta.maryland.gov/</link>
+    <description>Maryland MTA Alerts and Advisories</description>
+    <language>en-us</language>
+    <generator>eAlert Messaging System  http://www.ealert.com</generator>
+    <webMaster>hostmaster@mis-sciences.com (MIS Hostmaster)</webMaster>
+    <ttl>15</ttl>
+    <item>
+      <title>MARC Train - Tr 418 (1120a Dpt Wash) will see a delay of 10-15 minutes due to signal issues at New Carrollton. </title>
+      <link>http://tinyurl.com/marcsvc</link>
+      <description>Tr 418 (1120a Dpt Wash) will see a delay of 10-15 minutes due to signal issues at New Carrollton. </description>
+      <pubDate>Tue, 27 Mar 2018 15:46:51 GMT</pubDate>
+      <guid isPermaLink="false">181236DC-DAF4-4506-88F7-26CA627386B3</guid>
+    </item>
+    <item>
+      <title>MARC Train - Marc 878 (625am Dpt Martinsburg) will board on the opposite track at Harpers Ferry and Duffields. </title>
+      <link>http://tinyurl.com/marcsvc</link>
+      <description>Marc 878 (625am Dpt Martinsburg) will board on the opposite track at Harpers Ferry and Duffields. </description>
+      <pubDate>Tue, 27 Mar 2018 10:30:53 GMT</pubDate>
+      <guid isPermaLink="false">94397113-496F-4296-A5D7-5D6BA0136450</guid>
+    </item>
+    <item>
+      <title>MARC Train - Tr 579 (6:35p DPT PRY) will board from the opposite platform at Aberdeen</title>
+      <link>http://tinyurl.com/marcsvc</link>
+      <description>Penn Train 579 (6:35p DPT PRY) will board from the opposite platform at Aberdeen. Please remain on the platform till the train comes to a complete stop. This train will board on the middle track.</description>
+      <pubDate>Mon, 26 Mar 2018 22:42:52 GMT</pubDate>
+      <guid isPermaLink="false">68CB08B6-551D-4DBE-9D54-38879C4DB63E</guid>
+    </item>
+    <item>
+      <title>MARC Train - UPDATED: Tr 852 (4:43p DPT WAS) has departed on time.</title>
+      <link>http://tinyurl.com/marcsvc</link>
+      <description>UPDATED: Tr 852 (4:43p DPT WAS) has departed on time.</description>
+      <pubDate>Mon, 26 Mar 2018 20:51:33 GMT</pubDate>
+      <guid isPermaLink="false">1548AF72-E4A9-42CD-A6CA-D6F77099BE76</guid>
+    </item>
+  </channel>
+</rss>

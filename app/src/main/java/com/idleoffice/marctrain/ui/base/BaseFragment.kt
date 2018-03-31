@@ -44,6 +44,7 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel<*>> : Fragmen
         viewDataBinding!!.executePendingBindings()
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is BaseActivity<*, *>) {
