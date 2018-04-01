@@ -10,6 +10,7 @@ import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.ActivityMainBinding
 import com.idleoffice.marctrain.ui.base.BaseActivity
+import com.idleoffice.marctrain.ui.base.BaseFragment
 import com.idleoffice.marctrain.ui.status.StatusFragment
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -32,9 +33,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
     private var activityMainBinding : ActivityMainBinding? = null
     private var mainViewModel : MainViewModel? = null
 
-    private fun loadFragment(frag: Fragment) {
+    private fun loadFragment(frag: BaseFragment<*,*>) {
+        if(supportFragmentManager.findFragmentByTag(frag.fragTag) != null) {
+            Timber.d("Fragment already exists, skipping.")
+            return
+        }
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.view_content, frag, frag.tag)
+
+        Timber.d("Replacing fragment view.")
+        ft.replace(R.id.view_content, frag, frag.fragTag)
         ft.commit()
     }
 
@@ -45,7 +52,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_notifications -> {
-//                message.setText(R.string.title_alerts)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
@@ -65,9 +71,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
         mainViewModel?.navigator = this
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        loadFragment(StatusFragment())
     }
-
-
 
     override fun displayError(errorMsg: String) {
         Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show()

@@ -21,6 +21,7 @@ class StatusViewModel(app : Application,
     private val allTrainStatusData = MutableLiveData<List<TrainStatus>>().apply { value = emptyList() }
     val selectedTrainLine = MutableLiveData<Int>().apply { value = 0 }
     private val selectedTrainDirection = MutableLiveData<Int>().apply { value = 0 }
+    val title = MutableLiveData<String>().apply { value = "" }
 
     override fun initialize() {
         Timber.d("Init")
@@ -63,7 +64,7 @@ class StatusViewModel(app : Application,
         parseCurrentTrainStatus()
     }
 
-    fun parseCurrentTrainStatus() {
+    private fun parseCurrentTrainStatus() {
         val res = getApplication<MainApp>().resources
 
         // value is initialized, so assert that it shouldn't be null
@@ -77,6 +78,8 @@ class StatusViewModel(app : Application,
         currentTrainStatusData.value = allTrainStatusData.value?.filter {
             (it.direction == direction && it.line == line)
         }
+
+        title.value = "$line $direction"
     }
 
 }

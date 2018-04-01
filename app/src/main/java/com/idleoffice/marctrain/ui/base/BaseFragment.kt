@@ -11,15 +11,15 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.AndroidSupportInjection
 
-abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel<*>> : Fragment() {
+abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel<*>> : Fragment() {
 
     private var baseActivity: BaseActivity<T,V>? = null
     var viewDataBinding: T? = null
     private var rootView: View? = null
 
     abstract val viewModel: V?
-
     abstract val bindingVariable: Int
+    abstract val fragTag: String
 
     @get:LayoutRes
     abstract val layoutId: Int

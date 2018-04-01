@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.idleoffice.marctrain.ui.status.StatusViewModel" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/statusAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/background_light"
+            style="@style/mt.traininfo.appbar"
+            android:fitsSystemWindows="true">
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/statusCollapsing"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:fitsSystemWindows="true"
+                style="@style/mt.collapsingtoolbarlayout"
+                app:title="test4"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:collapsedTitleTextAppearance="@style/mt.toolbar.title"
+                app:expandedTitleTextAppearance="@style/mt.toolbar.title.transparent">
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_scrollFlags="scroll|snap"
+                    app:layout_collapseMode="parallax"
+                    android:fitsSystemWindows="true"
+                    android:minHeight="?android:attr/actionBarSize">
+                </android.support.v7.widget.Toolbar>
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:elevation="4dp"
+                    android:layout_gravity="fill_vertical"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="-.5"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    >
+
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:id="@+id/lineSpinner"
+                        style="@style/mt.spinner.underlined"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:onItemSelected="@{(par,v,pos,id) -> viewModel.trainLineSelected(pos)}"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:id="@+id/directionSpinner"
+                        style="@style/mt.spinner.underlined"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:onItemSelected="@{(par,v,pos,id) -> viewModel.trainDirectionSelected(pos)}"
+                        app:layout_constraintTop_toBottomOf="@id/lineSpinner"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                </android.support.constraint.ConstraintLayout>
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/trainStatusList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:elevation="@dimen/elevation_card"
+                android:scrollbars="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lineDirectionBox">
+            </android.support.v7.widget.RecyclerView>
+        </android.support.v4.widget.NestedScrollView>
+        <include
+            layout="@layout/progress_bar_frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lineDirectionBox" />
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

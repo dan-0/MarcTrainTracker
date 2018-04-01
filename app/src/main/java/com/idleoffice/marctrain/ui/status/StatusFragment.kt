@@ -13,14 +13,14 @@ import android.widget.ArrayAdapter
 import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainStatus
-import com.idleoffice.marctrain.databinding.FragmentStatusBinding
+import com.idleoffice.marctrain.databinding.FragmentStatusCoordinatorBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
-import kotlinx.android.synthetic.main.fragment_status.*
+import kotlinx.android.synthetic.main.fragment_status_coordinator.*
 import kotlinx.android.synthetic.main.progress_bar_frame_layout.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), StatusNavigator {
+class StatusFragment: BaseFragment<FragmentStatusCoordinatorBinding, StatusViewModel>(), StatusNavigator {
 
     @Inject
     override lateinit var viewModel: StatusViewModel
@@ -29,11 +29,12 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
     lateinit var statusAdapter: StatusAdapter
 
     override val bindingVariable: Int = BR.viewModel
-    override val layoutId: Int = R.layout.fragment_status
+    override val layoutId: Int = R.layout.fragment_status_coordinator
+    override val fragTag: String = javaClass.name
 
     private val spinnerItem = R.layout.spinner_item
 
-    private var fragmentStatusBinding : FragmentStatusBinding? = null
+    private var fragmentStatusBinding : FragmentStatusCoordinatorBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +42,7 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
         viewModel.navigator = this
         setTrainStatusObserver()
         setLineChangeObserver()
+        setTitleChangedObserver()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -71,7 +73,7 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
     private fun setLineChangeObserver() {
         val lineChangeObserver = Observer<Int> @Synchronized {
             if (it != null) {
-                Timber.d("New line selected: %d", it)
+                Timber.d("New line selected: $it")
                 parseNewLine(it)
             }
         }
@@ -79,11 +81,23 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
         viewModel.selectedTrainLine.observe(this, lineChangeObserver)
     }
 
+    private fun setTitleChangedObserver() {
+        val titleChangedObserver = Observer<String> @Synchronized {
+            if (it != null) {
+                Timber.d("Direction changed $it")
+                statusCollapsing?.title = it
+            }
+        }
+
+        viewModel.title.observe(this, titleChangedObserver)
+    }
+
     /**
      * Set the direction spinner based on the line number, necessary because some go North-South,
      * some go East-West
      */
     private fun setDirSpinner(lineNum: Int) {
+
         val array = resources.getStringArray(R.array.line_array)
         var dirArray = R.array.ns_dir_array
         if(array[lineNum] == "Brunswick") {
@@ -92,7 +106,7 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
 
         val dirAdapter = ArrayAdapter.createFromResource(context, dirArray, spinnerItem)
         dirAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        directionSpinner.adapter = dirAdapter
+        directionSpinner?.adapter = dirAdapter
     }
 
     /**
@@ -156,13 +170,12 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
     }
 
     override fun showLoading() {
-        trainStatusLoadingView ?: return
         activity?.window?.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        trainStatusLoadingView.visibility = View.VISIBLE
+        trainStatusLoadingView?.visibility = View.VISIBLE
     }
 
     override fun hideLoading() {
-        loadingTextView.text = getString(R.string.looking_for_in_service_trains)
+        loadingTextView?.text = getString(R.string.looking_for_in_service_trains)
         trainStatusLoadingView?.visibility = View.GONE
         activity?.window?.clearFlags(FLAG_NOT_TOUCHABLE)
     }
