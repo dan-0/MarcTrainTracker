@@ -7,6 +7,8 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
+import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import android.widget.ArrayAdapter
 import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.R
@@ -14,6 +16,7 @@ import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.databinding.FragmentStatusBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_status.*
+import kotlinx.android.synthetic.main.progress_bar_frame_layout.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -43,6 +46,7 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         initLineSpinner()
         initRecyclerView()
+        showLoading()
         super.onActivityCreated(savedInstanceState)
     }
 
@@ -52,6 +56,10 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
                 Timber.d("New train status received")
                 with(statusAdapter.trainStatuses) {
                     clear()
+                    if(it.isEmpty()) {
+                        showLoading(getString(R.string.no_active_trains))
+                        return@with
+                    }
                     addAll(it)
                     trainStatusList?.adapter?.notifyDataSetChanged()
                 }
@@ -121,8 +129,6 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
         lineSpinner.adapter = lineAdapter
     }
 
-
-    // TODO fix, none of this is right
     private fun initRecyclerView() {
         trainStatusList ?: return
         val viewManager = LinearLayoutManager(context)
@@ -142,5 +148,22 @@ class StatusFragment: BaseFragment<FragmentStatusBinding, StatusViewModel>(), St
 
             addItemDecoration(divider)
         }
+    }
+
+    private fun showLoading(msg: String) {
+        loadingTextView.text = msg
+        showLoading()
+    }
+
+    override fun showLoading() {
+        trainStatusLoadingView ?: return
+        activity?.window?.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
+        trainStatusLoadingView.visibility = View.VISIBLE
+    }
+
+    override fun hideLoading() {
+        loadingTextView.text = getString(R.string.looking_for_in_service_trains)
+        trainStatusLoadingView?.visibility = View.GONE
+        activity?.window?.clearFlags(FLAG_NOT_TOUCHABLE)
     }
 }
