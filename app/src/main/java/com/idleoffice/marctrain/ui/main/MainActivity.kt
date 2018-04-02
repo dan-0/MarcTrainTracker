@@ -46,6 +46,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
         Timber.d("Replacing fragment view.")
         ft.replace(R.id.view_content, frag, frag.fragTag)
         ft.commit()
+        if(backStack.size > 10) {
+            val new = ArrayList<Int>()
+            new.addAll(backStack.subList(backStack.size - 10, backStack.size - 1))
+            backStack.clear()
+            backStack.add(0)
+            backStack.addAll(new)
+        }
         backStack.push(menuItem)
     }
 
