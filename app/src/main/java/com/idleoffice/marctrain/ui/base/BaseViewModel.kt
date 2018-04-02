@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel
 import android.databinding.ObservableBoolean
 import com.idleoffice.marctrain.rx.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
+import timber.log.Timber
 
 
 abstract class BaseViewModel<T>(app : Application,
@@ -32,6 +33,7 @@ abstract class BaseViewModel<T>(app : Application,
     protected open fun initialize() {}
 
     override fun onCleared() {
+        Timber.d("Clearing disposables")
         compositeDisposable.dispose()
         super.onCleared()
     }

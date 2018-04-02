@@ -17,6 +17,10 @@
     <string name="train_number" translatable="false">Train Number</string>
     <string name="looking_for_in_service_trains">Looking for in service trains.</string>
     <string name="no_active_trains">No active trains found. We\'ll keep looking.</string>
+    <string name="date">Date:</string>
+    <string name="description">Description:</string>
+    <string name="no_alerts_reported_looking">No alerts reported at this time, but we\'ll keep looking.</string>
+    <string name="looking_for_alerts">Looking for active alerts</string>
 
     <string-array name="line_array">
         <item>Penn</item>

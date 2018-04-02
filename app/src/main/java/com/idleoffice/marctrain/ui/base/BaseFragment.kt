@@ -9,17 +9,25 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import com.idleoffice.marctrain.BR
+import com.idleoffice.marctrain.R
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.progress_bar_frame_layout.*
+import timber.log.Timber
+import javax.inject.Inject
 
-abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel<*>> : Fragment() {
+abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel<*>> : Fragment() {
 
     private var baseActivity: BaseActivity<T,V>? = null
     var viewDataBinding: T? = null
     private var rootView: View? = null
 
-    abstract val viewModel: V?
-    abstract val bindingVariable: Int
-    abstract val fragTag: String
+    @Inject
+    lateinit var viewModel: V
+
+    private val bindingVariable = BR.viewModel
+    val fragTag: String = javaClass.name
 
     @get:LayoutRes
     abstract val layoutId: Int
@@ -28,7 +36,7 @@ abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel<*>> : Fra
         performDependencyInjection()
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(false)
-        viewModel?.viewInitialize()
+        viewModel.viewInitialize()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -56,6 +64,8 @@ abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel<*>> : Fra
 
     override fun onDetach() {
         baseActivity = null
+        Timber.d("Detaching fragment")
+        viewModel.compositeDisposable.clear()
         super.onDetach()
     }
 
@@ -73,4 +83,16 @@ abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel<*>> : Fra
     fun isNetworkConnected() : Boolean {
         return baseActivity != null && baseActivity!!.isNetworkConnected()
     }
+
+    open fun showLoading(msg: String) {
+        loadingTextView?.text = msg
+        loadingView?.visibility = View.VISIBLE
+    }
+
+    open fun hideLoading() {
+        loadingTextView?.text = getString(R.string.looking_for_in_service_trains)
+        loadingView?.visibility = View.GONE
+    }
+
+
 }

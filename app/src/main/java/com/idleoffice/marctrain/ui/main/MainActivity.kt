@@ -5,10 +5,12 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.view.WindowManager
 import android.widget.Toast
 import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.ActivityMainBinding
+import com.idleoffice.marctrain.ui.alert.AlertFragment
 import com.idleoffice.marctrain.ui.base.BaseActivity
 import com.idleoffice.marctrain.ui.base.BaseFragment
 import com.idleoffice.marctrain.ui.status.StatusFragment
@@ -17,6 +19,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNavigator, HasSupportFragmentInjector {
@@ -29,29 +32,31 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
 
     override val bindingVariable: Int = BR.viewModel
     override val layoutId: Int = R.layout.activity_main
+    val backStack = Stack<Int>()
 
     private var activityMainBinding : ActivityMainBinding? = null
     private var mainViewModel : MainViewModel? = null
 
-    private fun loadFragment(frag: BaseFragment<*,*>) {
+    private fun loadFragment(frag: BaseFragment<*,*>, menuItem: Int) {
         if(supportFragmentManager.findFragmentByTag(frag.fragTag) != null) {
             Timber.d("Fragment already exists, skipping.")
             return
         }
         val ft = supportFragmentManager.beginTransaction()
-
         Timber.d("Replacing fragment view.")
         ft.replace(R.id.view_content, frag, frag.fragTag)
         ft.commit()
+        backStack.push(menuItem)
     }
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
-                loadFragment(StatusFragment())
+                loadFragment(StatusFragment(), item.itemId)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_notifications -> {
+                loadFragment(AlertFragment(), item.itemId)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
@@ -60,6 +65,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
             }
         }
         false
+    }
+
+    override fun onBackPressed() {
+        if(backStack.empty()) {
+            super.onBackPressed()
+            return
+        }
+        backStack.pop()
+        navigation?.selectedItemId = backStack.pop()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +85,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
         mainViewModel?.navigator = this
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        loadFragment(StatusFragment())
+        loadFragment(StatusFragment(), 1)
     }
 
     override fun displayError(errorMsg: String) {
@@ -96,6 +110,5 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
     }
 
     override fun onFragmentDetached(tag: String) {
-
     }
 }

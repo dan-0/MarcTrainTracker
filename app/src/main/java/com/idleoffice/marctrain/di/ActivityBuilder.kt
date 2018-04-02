@@ -1,5 +1,7 @@
 package com.idleoffice.marctrain.di
 
+import com.idleoffice.marctrain.ui.alert.AlertFragment
+import com.idleoffice.marctrain.ui.alert.AlertFragmentModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import com.idleoffice.marctrain.ui.main.MainActivity
@@ -15,4 +17,7 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = [StatusFragmentModule::class])
     abstract fun bindStatusFragment() : StatusFragment
+
+    @ContributesAndroidInjector(modules = [AlertFragmentModule::class])
+    abstract fun bindAlertFragment() : AlertFragment
 }

@@ -1,7 +1,7 @@
 package com.idleoffice.marctrain.di
 
 import com.idleoffice.marctrain.BuildConfig
-import com.idleoffice.marctrain.retrofit.tss.TrainStatusService
+import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.idleoffice.marctrain.rx.AppSchedulerProvider
 import com.idleoffice.marctrain.rx.SchedulerProvider
 import com.squareup.moshi.KotlinJsonAdapterFactory
@@ -23,7 +23,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideTrainStatusService() : TrainStatusService {
+    fun provideTrainStatusService() : TrainDataService {
         val moshi = Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
                 .build()
@@ -33,6 +33,6 @@ class AppModule {
                 .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
-                .create(TrainStatusService::class.java)
+                .create(TrainDataService::class.java)
     }
 }

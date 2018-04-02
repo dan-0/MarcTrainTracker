@@ -2,19 +2,20 @@ package com.idleoffice.marctrain.ui.status
 
 import android.app.Application
 import android.arch.lifecycle.MutableLiveData
+import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.MainApp
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainStatus
-import com.idleoffice.marctrain.retrofit.tss.TrainStatusService
+import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.idleoffice.marctrain.rx.SchedulerProvider
 import com.idleoffice.marctrain.ui.base.BaseViewModel
 import io.reactivex.Observable
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class StatusViewModel(app : Application,
+class StatusViewModel(app: Application,
                       schedulerProvider: SchedulerProvider,
-                      private var trainStatusService: TrainStatusService):
+                      trainDataService: TrainDataService):
         BaseViewModel<StatusNavigator>(app, schedulerProvider) {
 
     val currentTrainStatusData = MutableLiveData<List<TrainStatus>>().apply { value = emptyList() }
@@ -29,8 +30,8 @@ class StatusViewModel(app : Application,
         super.initialize()
     }
 
-    private val statusObservable = Observable.interval(0,10, TimeUnit.SECONDS)
-            .flatMap { trainStatusService.getTrainData()
+    private val statusObservable = Observable.interval(0,BuildConfig.STATUS_POLL_INTERVAL, TimeUnit.SECONDS)
+            .flatMap { trainDataService.getTrainStatus()
                     .onErrorResumeNext { t: Throwable ->
                         val logMessage = t.message ?: ""
                         Timber.e(t, "Error attempting to get current train status: $logMessage")

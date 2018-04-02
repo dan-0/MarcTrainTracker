@@ -10,8 +10,7 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="match_parent">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/statusAppBar"
@@ -95,14 +94,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/lineDirectionBox">
             </android.support.v7.widget.RecyclerView>
         </android.support.v4.widget.NestedScrollView>
-        <include
-            layout="@layout/progress_bar_frame_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lineDirectionBox" />
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

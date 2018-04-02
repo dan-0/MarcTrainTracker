@@ -2,8 +2,7 @@ package com.idleoffice.marctrain.ui.status
 
 import android.app.Application
 import android.arch.lifecycle.ViewModelProvider
-import com.idleoffice.marctrain.data.model.TrainStatus
-import com.idleoffice.marctrain.retrofit.tss.TrainStatusService
+import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.idleoffice.marctrain.rx.SchedulerProvider
 import com.idleoffice.marctrain.ui.ViewModelProviderFactory
 import dagger.Module
@@ -15,8 +14,8 @@ class StatusFragmentModule {
     @Provides
     fun provideStatusViewModel(application: Application,
                                schedulerProvider: SchedulerProvider,
-                               trainStatusService: TrainStatusService): StatusViewModel {
-        return StatusViewModel(application, schedulerProvider, trainStatusService)
+                               trainDataService: TrainDataService): StatusViewModel {
+        return StatusViewModel(application, schedulerProvider, trainDataService)
     }
 
     @Provides
@@ -25,7 +24,7 @@ class StatusFragmentModule {
     }
 
     @Provides
-    fun provideStatusAdapter() : StatusAdapter{
+    fun provideStatusAdapter() : StatusAdapter {
         return StatusAdapter(mutableListOf())
     }
 }

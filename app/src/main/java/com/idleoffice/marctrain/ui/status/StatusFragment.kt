@@ -7,38 +7,26 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.view.View
-import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+import android.view.WindowManager
 import android.widget.ArrayAdapter
-import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.databinding.FragmentStatusCoordinatorBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_status_coordinator.*
-import kotlinx.android.synthetic.main.progress_bar_frame_layout.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class StatusFragment: BaseFragment<FragmentStatusCoordinatorBinding, StatusViewModel>(), StatusNavigator {
-
-    @Inject
-    override lateinit var viewModel: StatusViewModel
+class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusViewModel>(), StatusNavigator {
 
     @Inject
     lateinit var statusAdapter: StatusAdapter
 
-    override val bindingVariable: Int = BR.viewModel
     override val layoutId: Int = R.layout.fragment_status_coordinator
-    override val fragTag: String = javaClass.name
-
     private val spinnerItem = R.layout.spinner_item
-
-    private var fragmentStatusBinding : FragmentStatusCoordinatorBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fragmentStatusBinding = viewDataBinding
         viewModel.navigator = this
         setTrainStatusObserver()
         setLineChangeObserver()
@@ -48,7 +36,7 @@ class StatusFragment: BaseFragment<FragmentStatusCoordinatorBinding, StatusViewM
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         initLineSpinner()
         initRecyclerView()
-        showLoading()
+        showLoading(getString(R.string.looking_for_in_service_trains))
         super.onActivityCreated(savedInstanceState)
     }
 
@@ -164,19 +152,15 @@ class StatusFragment: BaseFragment<FragmentStatusCoordinatorBinding, StatusViewM
         }
     }
 
-    private fun showLoading(msg: String) {
-        loadingTextView.text = msg
-        showLoading()
-    }
-
-    override fun showLoading() {
-        activity?.window?.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
-        trainStatusLoadingView?.visibility = View.VISIBLE
+    override fun showLoading(msg: String) {
+        lineSpinner?.isClickable = false
+        directionSpinner?.isClickable = false
+        super.showLoading(msg)
     }
 
     override fun hideLoading() {
-        loadingTextView?.text = getString(R.string.looking_for_in_service_trains)
-        trainStatusLoadingView?.visibility = View.GONE
-        activity?.window?.clearFlags(FLAG_NOT_TOUCHABLE)
+        lineSpinner?.isClickable = true
+        directionSpinner?.isClickable = true
+        super.hideLoading()
     }
 }

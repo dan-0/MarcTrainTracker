@@ -25,6 +25,8 @@ android {
 
         all {
             buildConfigField "String", "POLL_URL", "\"http://10.0.0.11:4884/\""
+            buildConfigField "long", "ALERT_POLL_INTERVAL", "60"
+            buildConfigField "long", "STATUS_POLL_INTERVAL", "30"
         }
     }
     compileOptions {
@@ -54,8 +56,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     // Java Rx
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
