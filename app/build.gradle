@@ -24,9 +24,9 @@ android {
         }
 
         all {
-            buildConfigField "String", "POLL_URL", "\"http://10.0.0.11:4884/\""
+            buildConfigField "String", "POLL_URL", "\"https://d2jr231zyecel4.cloudfront.net/\""
             buildConfigField "long", "ALERT_POLL_INTERVAL", "60"
-            buildConfigField "long", "STATUS_POLL_INTERVAL", "30"
+            buildConfigField "long", "STATUS_POLL_INTERVAL", "60"
         }
     }
     compileOptions {
@@ -48,7 +48,7 @@ dependencies {
 
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
     implementation "com.android.support:design:$supportLibVersion"
-    implementation "com.android.support.constraint:constraint-layout:1.0.2"
+    implementation "com.android.support.constraint:constraint-layout:1.1.0"
     implementation "com.android.support:support-vector-drawable:$supportLibVersion"
 
     testImplementation 'junit:junit:4.12'
@@ -61,7 +61,7 @@ dependencies {
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
-    kapt "com.android.databinding:compiler:3.1.0"
+    kapt "com.android.databinding:compiler:3.1.1"
     implementation "android.arch.lifecycle:common-java8:$lifecycleVersion"
     implementation "android.arch.lifecycle:reactivestreams:$lifecycleVersion"
     testImplementation "android.arch.core:core-testing:$lifecycleVersion"
@@ -71,7 +71,7 @@ dependencies {
 //    implementation('com.crashlytics.sdk.android:crashlytics:2.9.0@aar') {
 //        transitive = true
 //    }
-    implementation 'com.google.firebase:firebase-core:12.0.0'
+    implementation 'com.google.firebase:firebase-core:15.0.0'
 
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"

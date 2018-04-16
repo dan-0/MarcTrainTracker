@@ -85,12 +85,14 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel<*>> : Fragmen
     }
 
     open fun showLoading(msg: String) {
+        Timber.d("Showing loading view.")
         loadingTextView?.text = msg
         loadingView?.visibility = View.VISIBLE
     }
 
     open fun hideLoading() {
-        loadingTextView?.text = getString(R.string.looking_for_in_service_trains)
+        Timber.d("Hiding loading view.")
+        loadingTextView?.text = ""
         loadingView?.visibility = View.GONE
     }
 

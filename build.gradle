@@ -2,7 +2,7 @@
 
 buildscript {
     ext.kotlin_version = '1.2.31'
-    ext.supportLibVersion = "27.1.0"
+    ext.supportLibVersion = "27.1.1"
     ext.lifecycleVersion = '1.1.1'
     ext.daggerVersion = "2.15"
     ext.retrofitVersion = "2.3.0"
@@ -17,7 +17,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0'
+        classpath 'com.android.tools.build:gradle:3.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:3.2.0'
         classpath 'io.fabric.tools:gradle:1.25.1'

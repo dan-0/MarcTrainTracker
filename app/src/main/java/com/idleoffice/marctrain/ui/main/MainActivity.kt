@@ -5,14 +5,15 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
-import android.view.WindowManager
 import android.widget.Toast
 import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.ActivityMainBinding
+import com.idleoffice.marctrain.helpers.vibrateTap
 import com.idleoffice.marctrain.ui.alert.AlertFragment
 import com.idleoffice.marctrain.ui.base.BaseActivity
 import com.idleoffice.marctrain.ui.base.BaseFragment
+import com.idleoffice.marctrain.ui.schedule.ScheduleFragment
 import com.idleoffice.marctrain.ui.status.StatusFragment
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -38,6 +39,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
     private var mainViewModel : MainViewModel? = null
 
     private fun loadFragment(frag: BaseFragment<*,*>, menuItem: Int) {
+
         if(supportFragmentManager.findFragmentByTag(frag.fragTag) != null) {
             Timber.d("Fragment already exists, skipping.")
             return
@@ -57,17 +59,22 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
     }
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+
         when (item.itemId) {
+
             R.id.navigation_home -> {
+                vibrateTap(this)
                 loadFragment(StatusFragment(), item.itemId)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_notifications -> {
+                vibrateTap(this)
                 loadFragment(AlertFragment(), item.itemId)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
-//                message.setText(R.string.title_schedule)
+                vibrateTap(this)
+                loadFragment(ScheduleFragment(), item.itemId)
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -76,11 +83,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
 
     override fun onBackPressed() {
         if(backStack.empty()) {
+            navigation?.selectedItemId = 0
             super.onBackPressed()
             return
         }
         backStack.pop()
-        navigation?.selectedItemId = backStack.pop()
+
+        val item = backStack.pop() ?: 0
+        navigation?.selectedItemId = item
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

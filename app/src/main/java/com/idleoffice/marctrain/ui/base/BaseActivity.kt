@@ -44,14 +44,12 @@ abstract class BaseActivity <T : ViewDataBinding, V : BaseViewModel<*>> : AppCom
             progressBar = getProgressBar() ?: return
         }
         Timber.d("Showing progress bar.")
-        window.setFlags(FLAG_NOT_TOUCHABLE, FLAG_NOT_TOUCHABLE)
         progressBar?.visibility = View.VISIBLE
     }
 
     fun hideLoading() {
         progressBar?.visibility = View.GONE
         Timber.d("Hiding progress bar.")
-        window.clearFlags(FLAG_NOT_TOUCHABLE)
     }
 
     /**

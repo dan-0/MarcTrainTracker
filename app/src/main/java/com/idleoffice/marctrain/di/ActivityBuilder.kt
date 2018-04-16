@@ -6,6 +6,8 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import com.idleoffice.marctrain.ui.main.MainActivity
 import com.idleoffice.marctrain.ui.main.MainActivityModule
+import com.idleoffice.marctrain.ui.schedule.ScheduleFragment
+import com.idleoffice.marctrain.ui.schedule.ScheduleFragmentModule
 import com.idleoffice.marctrain.ui.status.StatusFragment
 import com.idleoffice.marctrain.ui.status.StatusFragmentModule
 
@@ -20,4 +22,7 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = [AlertFragmentModule::class])
     abstract fun bindAlertFragment() : AlertFragment
+
+    @ContributesAndroidInjector(modules = [ScheduleFragmentModule::class])
+    abstract fun bindScheduleFragment() : ScheduleFragment
 }

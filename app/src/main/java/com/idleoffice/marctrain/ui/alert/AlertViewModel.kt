@@ -50,7 +50,6 @@ class AlertViewModel(app: Application,
                 { n ->
                     Timber.d("Data: $n")
                     allAlerts.value = n
-                    navigator?.hideLoading()
                 },
                 { e -> Timber.e(e)}
         )

@@ -7,35 +7,46 @@
             name="viewModel"
             type="com.idleoffice.marctrain.ui.alert.AlertViewModel" />
     </data>
-    <android.support.constraint.ConstraintLayout
+
+
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/alertsToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
-            android:elevation="4dp"
-            app:title="Alerts"
-            app:titleTextColor="@color/colorPrimaryDark"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            />
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/trainAlertList"
+        android:layout_height="match_parent">
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:elevation="@dimen/elevation_card"
-            android:scrollbars="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/alertsToolbar">
-        </android.support.v7.widget.RecyclerView>
+            style="@style/mt.traininfo.appbar"
+            android:fitsSystemWindows="true">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/alertsToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:background="@color/white"
+                android:elevation="4dp"
+                app:title="@string/alerts"
+                app:titleTextColor="@color/colorPrimaryDark"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                />
+        </android.support.design.widget.AppBarLayout>
 
-    </android.support.constraint.ConstraintLayout>
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/trainAlertList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:elevation="@dimen/elevation_card"
+                android:scrollbars="vertical">
+            </android.support.v7.widget.RecyclerView>
+        </android.support.v4.widget.NestedScrollView>
+        <include layout="@layout/progress_bar_frame_layout"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+    </android.support.design.widget.CoordinatorLayout>
 
 </layout>

@@ -48,9 +48,11 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
                     clear()
                     if(it.isEmpty()) {
                         showLoading(getString(R.string.no_active_trains))
+                        trainStatusList?.adapter?.notifyDataSetChanged()
                         return@with
                     }
                     addAll(it)
+                    hideLoading()
                     trainStatusList?.adapter?.notifyDataSetChanged()
                 }
             }

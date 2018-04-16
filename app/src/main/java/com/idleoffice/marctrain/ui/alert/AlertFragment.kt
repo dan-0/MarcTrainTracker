@@ -2,6 +2,7 @@ package com.idleoffice.marctrain.ui.alert
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
@@ -37,7 +38,6 @@ class AlertFragment : BaseFragment<FragmentAlertBinding, AlertViewModel>(), Aler
         val alertObserver = Observer<List<TrainAlert>> @Synchronized {
             if (it != null) {
                 Timber.d("New alert received")
-                hideLoading()
                 with(alertAdapter.alerts) {
                     clear()
                     if(it.isEmpty()) {
@@ -45,6 +45,7 @@ class AlertFragment : BaseFragment<FragmentAlertBinding, AlertViewModel>(), Aler
                         return@with
                     }
                     addAll(it)
+                    hideLoading()
                     trainAlertList?.adapter?.notifyDataSetChanged()
                 }
             }

@@ -21,6 +21,11 @@
     <string name="description">Description:</string>
     <string name="no_alerts_reported_looking">No alerts reported at this time, but we\'ll keep looking.</string>
     <string name="looking_for_alerts">Looking for active alerts</string>
+    <string name="penn">PENN</string>
+    <string name="camden">CAMDEN</string>
+    <string name="brunswick">BRUNSWICK</string>
+    <string name="alerts">Alerts</string>
+    <string name="pdf_reader_unavailable">PDF READER UNAVAILABLE</string>
 
     <string-array name="line_array">
         <item>Penn</item>

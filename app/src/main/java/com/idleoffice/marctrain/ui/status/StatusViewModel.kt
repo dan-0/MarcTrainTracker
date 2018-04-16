@@ -46,7 +46,6 @@ class StatusViewModel(app: Application,
                 { n ->
                     allTrainStatusData.value = n
                     parseCurrentTrainStatus()
-                    navigator?.hideLoading()
                 },
                 {e -> Timber.e(e)})
 
