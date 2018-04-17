@@ -31,12 +31,14 @@ class StatusViewModel(app: Application,
     }
 
     private val statusObservable = Observable.interval(0,BuildConfig.STATUS_POLL_INTERVAL, TimeUnit.SECONDS)
-            .flatMap { trainDataService.getTrainStatus()
-                    .onErrorResumeNext { t: Throwable ->
-                        val logMessage = t.message ?: ""
-                        Timber.e(t, "Error attempting to get current train status: $logMessage")
-                        Observable.empty()
-                    }
+            .flatMap { trainDataService.getTrainStatus() }
+            .doOnError {
+                Timber.e(it, "Error attempting to get current train status")
+            }
+            .retryWhen {
+                it.flatMap {
+                    Observable.timer(10, TimeUnit.SECONDS)
+                }
             }
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())!!

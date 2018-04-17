@@ -24,17 +24,19 @@ class AlertViewModel(app: Application,
 
     private val alertObservable = Observable
             .interval(0, BuildConfig.ALERT_POLL_INTERVAL, TimeUnit.SECONDS)
-            .flatMap {
-                trainDataService.getTrainAlerts()
-                        .onErrorResumeNext { t: Throwable ->
-                            val logMessage = t.message ?: ""
-                            if(logMessage.contains("HTTP 404 Not Found")) {
-                                Timber.w("404 attempting to get MARC alerts: $logMessage")
-                            } else {
-                                Timber.e(t, "Error attempting to get alerts: $logMessage")
-                            }
-                            Observable.empty()
-                        }
+            .flatMap {trainDataService.getTrainAlerts() }
+            .doOnError {
+                val logMessage = it.message ?: ""
+                if(logMessage.contains("HTTP 404 Not Found")) {
+                    Timber.w(it, "404 attempting to get MARC alerts.")
+                } else {
+                    Timber.e(it, "Error attempting to get alerts.")
+                }
+            }
+            .retryWhen {
+                it.flatMap {
+                    Observable.timer(10, TimeUnit.SECONDS)
+                }
             }
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
