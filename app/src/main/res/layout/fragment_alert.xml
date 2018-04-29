@@ -17,8 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/alertAppBarLayout"
-            style="@style/mt.traininfo.appbar"
-            android:fitsSystemWindows="true">
+            style="@style/mt.traininfo.appbar">
             <android.support.v7.widget.Toolbar
                 android:id="@+id/alertsToolbar"
                 android:layout_width="match_parent"

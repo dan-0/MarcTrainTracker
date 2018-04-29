@@ -2,7 +2,6 @@ package com.idleoffice.marctrain.ui.alert
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
@@ -26,6 +25,7 @@ class AlertFragment : BaseFragment<FragmentAlertBinding, AlertViewModel>(), Aler
         super.onCreate(savedInstanceState)
         viewModel.navigator = this
         setAlertObserver()
+        retainInstance = true
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

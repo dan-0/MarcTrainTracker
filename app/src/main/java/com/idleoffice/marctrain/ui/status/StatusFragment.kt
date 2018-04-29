@@ -7,7 +7,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.view.WindowManager
 import android.widget.ArrayAdapter
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainStatus
@@ -31,6 +30,7 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
         setTrainStatusObserver()
         setLineChangeObserver()
         setTitleChangedObserver()
+        retainInstance = true
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

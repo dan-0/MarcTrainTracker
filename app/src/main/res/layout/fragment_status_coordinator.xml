@@ -10,15 +10,15 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/statusLayout">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/statusAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/mt.traininfo.appbar"
-            android:stateListAnimator="@animator/toolbar_dropshadow"
-            android:fitsSystemWindows="true">
+            android:stateListAnimator="@animator/toolbar_dropshadow">
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/statusCollapsing"
                 android:layout_width="match_parent"
@@ -44,7 +44,6 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:layout_marginBottom="@dimen/activity_vertical_margin"
-                    android:elevation="4dp"
                     android:layout_gravity="fill_vertical"
                     app:layout_collapseMode="parallax"
                     app:layout_collapseParallaxMultiplier="-.5"
@@ -56,8 +55,8 @@
                         style="@style/mt.spinner.underlined"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:paddingTop="16dp"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
                         android:onItemSelected="@{(par,v,pos,id) -> viewModel.trainLineSelected(pos)}"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -66,8 +65,6 @@
                         style="@style/mt.spinner.underlined"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
                         android:onItemSelected="@{(par,v,pos,id) -> viewModel.trainDirectionSelected(pos)}"
                         app:layout_constraintTop_toBottomOf="@id/lineSpinner"

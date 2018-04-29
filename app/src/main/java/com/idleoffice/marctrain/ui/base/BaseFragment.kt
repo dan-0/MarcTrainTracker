@@ -9,9 +9,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import com.idleoffice.marctrain.BR
-import com.idleoffice.marctrain.R
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.progress_bar_frame_layout.*
 import timber.log.Timber
@@ -20,7 +18,7 @@ import javax.inject.Inject
 abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel<*>> : Fragment() {
 
     private var baseActivity: BaseActivity<T,V>? = null
-    var viewDataBinding: T? = null
+    private var viewDataBinding: T? = null
     private var rootView: View? = null
 
     @Inject

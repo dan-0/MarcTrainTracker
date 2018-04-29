@@ -12,5 +12,4 @@ data class TrainStatus(
         @Json(name = "Delay") val delay: String,
         @Json(name = "LastUpdate") val lastUpdate: String,
         @Json(name = "Message") val message: String
-) {
-}
+)

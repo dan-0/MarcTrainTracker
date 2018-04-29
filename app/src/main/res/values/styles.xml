@@ -28,15 +28,8 @@
     <style name="mt.spinner.underlined" parent="Base.Widget.AppCompat.Spinner.Underlined">
         <item name="android:backgroundTint">@color/colorAccent</item>
         <item name="android:colorControlHighlight">@color/colorPrimary</item>
-    </style>
-
-    <style name="mt.spinner.box" parent="AppTheme">
-        <item name="android:background">@android:color/white</item>
-        <item name="android:padding">@dimen/activity_vertical_margin</item>
-        <item name="android:elevation">4dp</item>
         <item name="android:layout_marginEnd">@dimen/activity_horizontal_margin</item>
         <item name="android:layout_marginStart">@dimen/activity_horizontal_margin</item>
-        <item name="android:layout_marginTop">8dp</item>
     </style>
 
     <style name="mt.traininfo" parent="AppTheme">
@@ -59,12 +52,7 @@
         <item name="android:titleTextAppearance">@color/colorPrimaryDark</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:background">@android:color/background_light</item>
-    </style>
-
-    <style name="mt.traininfo.toolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:elevation">4dp</item>
-        <item name="android:titleTextAppearance">@color/colorPrimaryDark</item>
-        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:fitsSystemWindows">true</item>
     </style>
 
     <style name="mt.collapsingtoolbarlayout" parent="Widget.Design.CollapsingToolbar">

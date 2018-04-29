@@ -3,6 +3,5 @@
     <color name="colorPrimary">#0091ea</color>
     <color name="colorPrimaryDark">#01579b</color>
     <color name="colorAccent">#f57f17</color>
-    <color name="textLight">@android:color/secondary_text_light</color>
     <color name="white">@android:color/white</color>
 </resources>

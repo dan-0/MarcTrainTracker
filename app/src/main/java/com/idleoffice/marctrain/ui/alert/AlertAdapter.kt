@@ -8,8 +8,6 @@ import android.widget.TextView
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.ui.base.BaseViewHolder
-import java.text.SimpleDateFormat
-import java.util.*
 
 class AlertAdapter(val alerts: MutableList<TrainAlert>) : RecyclerView.Adapter<BaseViewHolder>() {
 

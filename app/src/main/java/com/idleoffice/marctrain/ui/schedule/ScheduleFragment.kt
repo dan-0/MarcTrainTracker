@@ -27,6 +27,7 @@ class ScheduleFragment :
         appFilesDir = context?.filesDir
         appAssets = context?.assets
         appContext = context
+        retainInstance = true
     }
 
     override fun displayActivityNotFound() {

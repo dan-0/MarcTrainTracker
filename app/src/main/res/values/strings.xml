@@ -3,8 +3,6 @@
     <string name="title_status">Status</string>
     <string name="title_alerts">Alerts</string>
     <string name="title_schedule">Schedule</string>
-    <string name="direction">Direction</string>
-    <string name="line">Line</string>
     <string name="placeholder_station" translatable="false">placeholder: station</string>
     <string name="placeholder_time" translatable="false">placeholder: time</string>
     <string name="placeholder_status" translatable="false">placeholder: status</string>

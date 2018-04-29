@@ -1,7 +1,6 @@
 package com.idleoffice.marctrain.ui.main
 
 import android.app.Application
-import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.rx.SchedulerProvider
 import com.idleoffice.marctrain.ui.base.BaseViewModel
 import java.util.*
@@ -13,7 +12,7 @@ class MainViewModel(
     : BaseViewModel<MainNavigator>(app, schedulerProvider) {
 
     companion object {
-        val BACKSTACK_EMPTY = -1
+        const val BACKSTACK_EMPTY = -1
     }
 
     private val backStack = Stack<Int>()

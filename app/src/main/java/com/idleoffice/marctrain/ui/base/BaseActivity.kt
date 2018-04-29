@@ -8,10 +8,8 @@ import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
 import android.widget.ProgressBar
 import dagger.android.AndroidInjection
-import io.fabric.sdk.android.services.network.NetworkUtils
 import timber.log.Timber
 
 
