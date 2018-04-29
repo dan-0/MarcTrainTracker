@@ -8,10 +8,12 @@ import android.support.design.widget.Snackbar
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.FragmentScheduleBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
+import org.koin.android.architecture.ext.viewModel
 import java.io.File
 
 class ScheduleFragment :
         BaseFragment<FragmentScheduleBinding, ScheduleViewModel>(), ScheduleNavigator {
+    override val fragViewModel: ScheduleViewModel by viewModel()
     override var appContentResolver : ContentResolver? = null
     override var appFilesDir : File? = null
     override var appAssets : AssetManager? = null
@@ -22,7 +24,7 @@ class ScheduleFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.navigator = this
+        fragViewModel.navigator = this
         appContentResolver = activity?.contentResolver
         appFilesDir = context?.filesDir
         appAssets = context?.assets

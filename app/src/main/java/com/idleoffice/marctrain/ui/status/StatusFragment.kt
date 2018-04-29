@@ -13,20 +13,21 @@ import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.databinding.FragmentStatusCoordinatorBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_status_coordinator.*
+import org.koin.android.architecture.ext.viewModel
+import org.koin.android.ext.android.inject
 import timber.log.Timber
-import javax.inject.Inject
 
 class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusViewModel>(), StatusNavigator {
+    override val fragViewModel: StatusViewModel by viewModel()
 
-    @Inject
-    lateinit var statusAdapter: StatusAdapter
+    private val statusAdapter: StatusAdapter by inject()
 
     override val layoutId: Int = R.layout.fragment_status_coordinator
     private val spinnerItem = R.layout.spinner_item
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.navigator = this
+        fragViewModel.navigator = this
         setTrainStatusObserver()
         setLineChangeObserver()
         setTitleChangedObserver()
@@ -57,7 +58,7 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
                 }
             }
         }
-        viewModel.currentTrainStatusData.observe(this, trainStatusObserver)
+        fragViewModel.currentTrainStatusData.observe(this, trainStatusObserver)
     }
 
     private fun setLineChangeObserver() {
@@ -68,7 +69,7 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
             }
         }
 
-        viewModel.selectedTrainLine.observe(this, lineChangeObserver)
+        fragViewModel.selectedTrainLine.observe(this, lineChangeObserver)
     }
 
     private fun setTitleChangedObserver() {
@@ -79,7 +80,7 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
             }
         }
 
-        viewModel.title.observe(this, titleChangedObserver)
+        fragViewModel.title.observe(this, titleChangedObserver)
     }
 
     /**

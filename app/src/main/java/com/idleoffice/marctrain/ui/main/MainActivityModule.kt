@@ -1,24 +1,9 @@
 package com.idleoffice.marctrain.ui.main
 
-import android.app.Application
-import android.arch.lifecycle.ViewModelProvider
-import com.idleoffice.marctrain.rx.SchedulerProvider
-import com.idleoffice.marctrain.ui.ViewModelProviderFactory
-import dagger.Module
-import dagger.Provides
+import org.koin.android.architecture.ext.viewModel
+import org.koin.dsl.module.Module
+import org.koin.dsl.module.applicationContext
 
-@Module
-class MainActivityModule {
-
-    @Provides
-    fun provideMainViewModel(
-            application: Application,
-            schedulerProvider: SchedulerProvider) : MainViewModel {
-        return MainViewModel(application, schedulerProvider)
-    }
-
-    @Provides
-    fun mainViewModelProvider(mainViewModel: MainViewModel) : ViewModelProvider.Factory {
-        return ViewModelProviderFactory<Any>(mainViewModel)
-    }
+val mainActivityModule : Module = applicationContext {
+    viewModel { MainViewModel(get(), get()) }
 }

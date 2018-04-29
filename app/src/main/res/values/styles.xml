@@ -2,13 +2,11 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:spinnerItemStyle">@style/mtItemSpinnerStyle</item>
         <item name="android:spinnerDropDownItemStyle">@style/mtSpinner</item>
-
     </style>
 
     <style name="mtItemSpinnerStyle" parent="Base.Widget.AppCompat.TextView.SpinnerItem">

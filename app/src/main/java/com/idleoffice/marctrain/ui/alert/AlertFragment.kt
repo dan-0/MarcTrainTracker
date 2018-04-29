@@ -11,19 +11,20 @@ import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.databinding.FragmentAlertBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_alert.*
+import org.koin.android.architecture.ext.viewModel
+import org.koin.android.ext.android.inject
 import timber.log.Timber
-import javax.inject.Inject
 
 class AlertFragment : BaseFragment<FragmentAlertBinding, AlertViewModel>(), AlertNavigator {
+    override val fragViewModel: AlertViewModel by viewModel()
 
-    @Inject
-    lateinit var alertAdapter: AlertAdapter
+    private val alertAdapter : AlertAdapter by inject()
 
     override val layoutId: Int = R.layout.fragment_alert
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.navigator = this
+        fragViewModel.navigator = this
         setAlertObserver()
         retainInstance = true
     }
@@ -50,7 +51,7 @@ class AlertFragment : BaseFragment<FragmentAlertBinding, AlertViewModel>(), Aler
                 }
             }
         }
-        viewModel.allAlerts.observe(this, alertObserver)
+        fragViewModel.allAlerts.observe(this, alertObserver)
     }
 
     private fun initRecyclerView() {

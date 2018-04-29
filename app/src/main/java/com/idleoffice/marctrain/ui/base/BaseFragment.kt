@@ -10,19 +10,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.idleoffice.marctrain.BR
-import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.progress_bar_frame_layout.*
 import timber.log.Timber
-import javax.inject.Inject
 
-abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel<*>> : Fragment() {
+abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel<*>> : Fragment() {
 
     private var baseActivity: BaseActivity<T,V>? = null
     private var viewDataBinding: T? = null
     private var rootView: View? = null
 
-    @Inject
-    lateinit var viewModel: V
+    abstract val fragViewModel : V
 
     private val bindingVariable = BR.viewModel
     val fragTag: String = javaClass.name
@@ -31,10 +28,9 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel<*>> : Fragmen
     abstract val layoutId: Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        performDependencyInjection()
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(false)
-        viewModel.viewInitialize()
+        fragViewModel.viewInitialize()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +42,7 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel<*>> : Fragmen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewDataBinding!!.setVariable(bindingVariable, viewModel)
+        viewDataBinding!!.setVariable(bindingVariable, fragViewModel)
         viewDataBinding!!.executePendingBindings()
     }
 
@@ -63,12 +59,8 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel<*>> : Fragmen
     override fun onDetach() {
         baseActivity = null
         Timber.d("Detaching fragment")
-        viewModel.compositeDisposable.clear()
+        fragViewModel.compositeDisposable.clear()
         super.onDetach()
-    }
-
-    private fun performDependencyInjection() {
-        AndroidSupportInjection.inject(this)
     }
 
     interface Callback {

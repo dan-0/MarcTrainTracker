@@ -1,10 +1,7 @@
 package com.idleoffice.marctrain.ui.main
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
 import android.widget.Toast
 import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.R
@@ -16,27 +13,17 @@ import com.idleoffice.marctrain.ui.base.BaseFragment
 import com.idleoffice.marctrain.ui.main.MainViewModel.Companion.BACKSTACK_EMPTY
 import com.idleoffice.marctrain.ui.schedule.ScheduleFragment
 import com.idleoffice.marctrain.ui.status.StatusFragment
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.architecture.ext.viewModel
 import timber.log.Timber
-import javax.inject.Inject
 
-class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNavigator, HasSupportFragmentInjector {
-
-    @Inject
-    lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
+class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNavigator {
+    override val actViewModel by viewModel<MainViewModel>()
     override val bindingVariable: Int = BR.viewModel
     override val layoutId: Int = R.layout.activity_main
 
 
     private var activityMainBinding : ActivityMainBinding? = null
-    private var mainViewModel : MainViewModel? = null
 
     private fun loadFragment(frag: BaseFragment<*,*>, menuItem: Int) {
 
@@ -49,7 +36,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
         ft.replace(R.id.view_content, frag, frag.fragTag)
         ft.commit()
 
-        mainViewModel?.addToBackstack(menuItem)
+        actViewModel.addToBackstack(menuItem)
 
     }
 
@@ -78,7 +65,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
 
     override fun onBackPressed() {
 
-        val backStackItem = mainViewModel?.backStackGetLast() ?: R.id.navigation_home
+        val backStackItem = actViewModel.backStackGetLast()
 
         if (backStackItem == BACKSTACK_EMPTY) {
             navigation?.selectedItemId = R.id.navigation_home
@@ -96,29 +83,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
         setContentView(R.layout.activity_main)
 
         this.activityMainBinding = viewDataBinding
-        mainViewModel?.navigator = this
+        actViewModel.navigator = this
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        if (mainViewModel?.isFragmentLoaded == false) {
+        if (!actViewModel.isFragmentLoaded) {
             loadFragment(StatusFragment(), R.id.navigation_home)
         }
     }
 
     override fun displayError(errorMsg: String) {
         Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show()
-    }
-
-    override fun getActivityViewModel(): MainViewModel {
-        if(mainViewModel == null) {
-            mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
-        }
-
-        return mainViewModel as MainViewModel
-    }
-
-
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        return fragmentDispatchingAndroidInjector
     }
 
     override fun onFragmentAttached() {

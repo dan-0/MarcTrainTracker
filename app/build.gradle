@@ -73,11 +73,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:15.0.0'
 
     // Dagger
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    implementation "com.google.dagger:dagger-android:$daggerVersion"
-    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    implementation "org.koin:koin-android:$koinVersion"
+    implementation "org.koin:koin-android-architecture:$koinVersion"
 
     // Timber for logging
     implementation 'com.jakewharton.timber:timber:4.7.0'

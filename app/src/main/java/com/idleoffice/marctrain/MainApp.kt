@@ -1,21 +1,25 @@
 package com.idleoffice.marctrain
 
-import android.app.Activity
 import android.app.Application
 import android.util.Log
 import com.crashlytics.android.Crashlytics
-import com.idleoffice.marctrain.di.DaggerAppComponent
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
+import com.idleoffice.marctrain.di.appModules
+import com.idleoffice.marctrain.ui.alert.alertFragmentModule
+import com.idleoffice.marctrain.ui.main.mainActivityModule
+import com.idleoffice.marctrain.ui.schedule.scheduleFragmentModule
+import com.idleoffice.marctrain.ui.status.statusFragmentModule
+import org.koin.android.ext.android.startKoin
 import timber.log.Timber
-import javax.inject.Inject
 
 
-class MainApp : Application(), HasActivityInjector {
+class MainApp : Application() {
 
-    @Inject
-    lateinit var activityDispatchingAndroidInjector : DispatchingAndroidInjector<Activity>
+    private val koinModules = listOf(
+            appModules,
+            scheduleFragmentModule,
+            mainActivityModule,
+            statusFragmentModule,
+            alertFragmentModule)
 
     override fun onCreate() {
         super.onCreate()
@@ -25,14 +29,7 @@ class MainApp : Application(), HasActivityInjector {
             Timber.plant(CrashlyticsTree())
         }
 
-        DaggerAppComponent.builder()
-                .application(this)
-                .build()
-                .inject(this)
-    }
-
-    override fun activityInjector(): AndroidInjector<Activity> {
-        return activityDispatchingAndroidInjector
+        startKoin(this, koinModules)
     }
 
     class CrashlyticsTree : Timber.Tree() {

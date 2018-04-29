@@ -9,31 +9,25 @@ import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.ProgressBar
-import dagger.android.AndroidInjection
 import timber.log.Timber
 
-
-abstract class BaseActivity <T : ViewDataBinding, V : BaseViewModel<*>> : AppCompatActivity(), BaseFragment.Callback {
+abstract class BaseActivity <T : ViewDataBinding, out V : BaseViewModel<*>> : AppCompatActivity(), BaseFragment.Callback {
 
     private var progressBar: ProgressBar? = null
     var viewDataBinding : T? = null
-    var viewModel : V? = null
+    abstract val actViewModel : V
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        performDependencyInjection()
         Timber.d("Base activity onCreate called")
         super.onCreate(savedInstanceState)
-        if(viewModel == null) {
-            viewModel = getActivityViewModel()
-        }
         initDataBinding()
-        viewModel?.viewInitialize()
+        actViewModel.viewInitialize()
     }
 
     private fun initDataBinding() {
         viewDataBinding = DataBindingUtil.setContentView(this, layoutId)
-        viewDataBinding?.setVariable(bindingVariable, viewModel)
+        viewDataBinding?.setVariable(bindingVariable, actViewModel)
         viewDataBinding?.executePendingBindings()
     }
 
@@ -51,12 +45,6 @@ abstract class BaseActivity <T : ViewDataBinding, V : BaseViewModel<*>> : AppCom
     }
 
     /**
-     * @return
-     *      The view model
-     */
-    abstract fun getActivityViewModel() : V
-
-    /**
      *  The variable ID
      */
     abstract val bindingVariable : Int
@@ -70,10 +58,6 @@ abstract class BaseActivity <T : ViewDataBinding, V : BaseViewModel<*>> : AppCom
      */
     @get:LayoutRes
     abstract val layoutId : Int
-
-    private fun performDependencyInjection() {
-        AndroidInjection.inject(this)
-    }
 
     fun isNetworkConnected() : Boolean {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
