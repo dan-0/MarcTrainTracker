@@ -24,6 +24,7 @@
     <string name="brunswick">BRUNSWICK</string>
     <string name="alerts">Alerts</string>
     <string name="pdf_reader_unavailable">PDF READER UNAVAILABLE</string>
+    <string name="lastDir">lastDir</string>
 
     <string-array name="line_array">
         <item>Penn</item>

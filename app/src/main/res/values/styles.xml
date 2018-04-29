@@ -5,11 +5,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:spinnerItemStyle">@style/mtItemSpinnerStyle</item>
-        <item name="android:spinnerDropDownItemStyle">@style/mtSpinner</item>
+        <item name="android:spinnerItemStyle">@style/mt.spinner.item</item>
+        <item name="android:spinnerDropDownItemStyle">@style/mt.spinner.dropdown</item>
     </style>
 
-    <style name="mtItemSpinnerStyle" parent="Base.Widget.AppCompat.TextView.SpinnerItem">
+    <style name="mt.spinner.item" parent="Base.Widget.AppCompat.TextView.SpinnerItem">
         <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
         <item name="android:layout_marginStart">@dimen/activity_horizontal_margin</item>
         <item name="android:layout_marginEnd">@dimen/activity_horizontal_margin</item>
@@ -18,10 +18,11 @@
         <item name="android:textSize">25sp</item>
     </style>
 
-    <style name="mtSpinner" parent="Base.Widget.AppCompat.DropDownItem.Spinner">
+    <style name="mt.spinner.dropdown" parent="Base.Widget.AppCompat.DropDownItem.Spinner">
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:textSize">25sp</item>
     </style>
+
 
     <style name="mt.spinner.underlined" parent="Base.Widget.AppCompat.Spinner.Underlined">
         <item name="android:backgroundTint">@color/colorAccent</item>

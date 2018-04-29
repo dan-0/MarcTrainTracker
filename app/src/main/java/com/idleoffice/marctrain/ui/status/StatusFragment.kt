@@ -8,6 +8,8 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.ArrayAdapter
+import com.idleoffice.marctrain.Const.Companion.PREF_FILE
+import com.idleoffice.marctrain.Const.Companion.PREF_LAST_LINE
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.databinding.FragmentStatusCoordinatorBinding
@@ -89,6 +91,7 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
      */
     private fun setDirSpinner(lineNum: Int) {
 
+        // Determine if we need to use North/South or East/West directions
         val array = resources.getStringArray(R.array.line_array)
         var dirArray = R.array.ns_dir_array
         if(array[lineNum] == "Brunswick") {
@@ -115,6 +118,11 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
             return
         }
 
+        val prefs = context?.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+        prefs?.edit()
+                ?.putInt(PREF_LAST_LINE, lineNum)
+                ?.apply()
+
         setDirSpinner(lineNum)
     }
 
@@ -122,16 +130,18 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
      * Initialize the line spinner
      */
     private fun initLineSpinner() {
-        val prefs = context?.getSharedPreferences(getString(R.string.pref_file), Context.MODE_PRIVATE)
-        val lastLine = prefs?.getInt(getString(R.string.last_line), 0)
-        if (lastLine != null) {
-            lineSpinner?.setSelection(lastLine)
-            setDirSpinner(lastLine)
-        }
-
         val lineAdapter = ArrayAdapter.createFromResource(context, R.array.line_array, spinnerItem)
         lineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         lineSpinner.adapter = lineAdapter
+
+        val prefs = context?.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+        val lastLine = prefs?.getInt(PREF_LAST_LINE, 0)
+        if (lastLine != null) {
+            Timber.d("Parsing new last line: $lastLine")
+            lineSpinner?.setSelection(lastLine)
+            setDirSpinner(lastLine)
+            parseNewLine(lastLine)
+        }
     }
 
     private fun initRecyclerView() {
