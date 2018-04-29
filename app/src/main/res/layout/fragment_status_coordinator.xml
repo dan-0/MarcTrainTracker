@@ -17,11 +17,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/mt.traininfo.appbar"
+            android:stateListAnimator="@animator/toolbar_dropshadow"
             android:fitsSystemWindows="true">
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/statusCollapsing"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="@dimen/collapsing_toolbar_height"
                 android:fitsSystemWindows="true"
                 style="@style/mt.collapsingtoolbarlayout"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
@@ -38,6 +39,7 @@
                     android:minHeight="?android:attr/actionBarSize">
                 </android.support.v7.widget.Toolbar>
                 <android.support.constraint.ConstraintLayout
+                    android:id="@+id/spinnerLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -78,15 +80,16 @@
             android:id="@+id/trainStatusList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:elevation="@dimen/elevation_card"
-            android:scrollbars="vertical"
+            style="@style/mt.recycler.view"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
         </android.support.v7.widget.RecyclerView>
 
-        <include layout="@layout/progress_bar_frame_layout"
+        <include
+            android:id="@+id/progressBar"
+            layout="@layout/progress_bar_frame_layout"
             android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/collapsing_toolbar_height"
             android:layout_width="match_parent"/>
+
     </android.support.design.widget.CoordinatorLayout>
 </layout>

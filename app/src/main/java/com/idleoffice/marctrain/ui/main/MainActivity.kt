@@ -13,6 +13,7 @@ import com.idleoffice.marctrain.helpers.vibrateTap
 import com.idleoffice.marctrain.ui.alert.AlertFragment
 import com.idleoffice.marctrain.ui.base.BaseActivity
 import com.idleoffice.marctrain.ui.base.BaseFragment
+import com.idleoffice.marctrain.ui.main.MainViewModel.Companion.BACKSTACK_EMPTY
 import com.idleoffice.marctrain.ui.schedule.ScheduleFragment
 import com.idleoffice.marctrain.ui.status.StatusFragment
 import dagger.android.AndroidInjector
@@ -33,7 +34,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
 
     override val bindingVariable: Int = BR.viewModel
     override val layoutId: Int = R.layout.activity_main
-    val backStack = Stack<Int>()
+
 
     private var activityMainBinding : ActivityMainBinding? = null
     private var mainViewModel : MainViewModel? = null
@@ -48,14 +49,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
         Timber.d("Replacing fragment view.")
         ft.replace(R.id.view_content, frag, frag.fragTag)
         ft.commit()
-        if(backStack.size > 10) {
-            val new = ArrayList<Int>()
-            new.addAll(backStack.subList(backStack.size - 10, backStack.size - 1))
-            backStack.clear()
-            backStack.add(0)
-            backStack.addAll(new)
-        }
-        backStack.push(menuItem)
+
+        mainViewModel?.addToBackstack(menuItem)
+
     }
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -82,15 +78,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
     }
 
     override fun onBackPressed() {
-        if(backStack.empty()) {
-            navigation?.selectedItemId = 0
+
+        val backStackItem = mainViewModel?.backStackGetLast() ?: R.id.navigation_home
+
+        if (backStackItem == BACKSTACK_EMPTY) {
+            navigation?.selectedItemId = R.id.navigation_home
             super.onBackPressed()
             return
+        } else {
+            navigation?.selectedItemId = backStackItem
         }
-        backStack.pop()
 
-        val item = backStack.pop() ?: 0
-        navigation?.selectedItemId = item
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,7 +100,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
         mainViewModel?.navigator = this
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        loadFragment(StatusFragment(), 1)
+        if (mainViewModel?.isFragmentLoaded == false) {
+            loadFragment(StatusFragment(), R.id.navigation_home)
+        }
     }
 
     override fun displayError(errorMsg: String) {

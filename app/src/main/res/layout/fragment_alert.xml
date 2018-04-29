@@ -10,11 +10,13 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/alertLayout">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/alertAppBarLayout"
             style="@style/mt.traininfo.appbar"
             android:fitsSystemWindows="true">
             <android.support.v7.widget.Toolbar
@@ -34,13 +36,12 @@
             android:id="@+id/trainAlertList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:elevation="@dimen/elevation_card"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:scrollbars="vertical">
+            style="@style/mt.recycler.view"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
         </android.support.v7.widget.RecyclerView>
-        <include layout="@layout/progress_bar_frame_layout"
+        <include
+            layout="@layout/progress_bar_frame_layout"
+            android:id="@+id/progressBar"
             android:layout_height="match_parent"
             android:layout_width="match_parent"/>
     </android.support.design.widget.CoordinatorLayout>

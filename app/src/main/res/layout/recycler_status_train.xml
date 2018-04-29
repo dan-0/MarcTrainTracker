@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="2dp"
-    android:layout_marginTop="2dp"
-    android:background="@drawable/rounded_corners"
-    android:layout_margin="8dp"
-    android:elevation="@dimen/elevation_card">
+    style="@style/mt.card">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/trainNumberBadge"
@@ -60,6 +55,7 @@
             style="@style/mt.traininfo.label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:id="@+id/trainInfoTextLayout"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -69,24 +65,28 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/textLabelLayout"
                 android:orientation="vertical">
 
                 <TextView
                     style="@style/mt.traininfo.label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/textLabelNextStation"
                     android:text="@string/next_station" />
 
                 <TextView
                     style="@style/mt.traininfo.label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/textLabelDeparture"
                     android:text="@string/est_departure" />
 
                 <TextView
                     style="@style/mt.traininfo.label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/textLabelStatus"
                     android:text="@string/status" />
 
                 <TextView
@@ -100,6 +100,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/textDataLayout"
                 android:layout_marginStart="8dp"
                 android:orientation="vertical">
 
