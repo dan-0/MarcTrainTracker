@@ -107,9 +107,7 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
      * Parse a new line selection
      */
     private fun parseNewLine(lineNum: Int) {
-        if(directionSpinner == null) {
-            return
-        }
+        directionSpinner ?: return
 
         val array = resources.getStringArray(R.array.line_array)
 
