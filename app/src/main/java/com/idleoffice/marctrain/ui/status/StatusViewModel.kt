@@ -15,51 +15,47 @@ import java.util.concurrent.TimeUnit
 
 class StatusViewModel(app: Application,
                       schedulerProvider: SchedulerProvider,
-                      trainDataService: TrainDataService):
+                      private val trainDataService: TrainDataService):
         BaseViewModel<StatusNavigator>(app, schedulerProvider) {
 
-    val currentTrainStatusData = MutableLiveData<List<TrainStatus>>()
-    private val allTrainStatusData = MutableLiveData<List<TrainStatus>>()
-    val selectedTrainLine = MutableLiveData<Int>()
-    private val selectedTrainDirection = MutableLiveData<Int>()
-    val title = MutableLiveData<String>()
-
-    init {
-        currentTrainStatusData.value = emptyList()
-        allTrainStatusData.value = emptyList()
-        selectedTrainLine.value = 0
-        selectedTrainDirection.value = 0
-        title.value = ""
-    }
+    val currentTrainStatusData = MutableLiveData<List<TrainStatus>>().apply { value = emptyList() }
+    val allTrainStatusData = MutableLiveData<List<TrainStatus>>().apply { value = emptyList() }
+    val selectedTrainLine = MutableLiveData<Int>().apply { value = 0 }
+    private val selectedTrainDirection = MutableLiveData<Int>().apply { value = 0 }
+    val title = MutableLiveData<String>().apply { value = "" }
 
     val resources: Resources = app.resources
 
-    private val statusObservable = Observable.interval(0, BuildConfig.STATUS_POLL_INTERVAL, TimeUnit.SECONDS)
-            .flatMap { trainDataService.getTrainStatus() }
-            .doOnError {
-                Timber.e(it, "Error attempting to get current train status")
-            }
-            .retryWhen {
-                it.flatMap {
-                    Observable.timer(10, TimeUnit.SECONDS)
-                }
-            }
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())!!
+    private val observableInterval = Observable.interval(0, BuildConfig.STATUS_POLL_INTERVAL, TimeUnit.SECONDS)
+
 
     override fun initialize() {
-        Timber.d("Init")
-        doGetTrainStatus(statusObservable)
         super.initialize()
+        Timber.d("Init")
+        doGetTrainStatus(observableInterval)
     }
 
-    fun doGetTrainStatus(statusObservable: Observable<List<TrainStatus>>) {
-        val statusDisposable = statusObservable.subscribe(
+    fun doGetTrainStatus(observableInterval: Observable<Long>) {
+        val statusDisposable = observableInterval
+                .flatMap { trainDataService.getTrainStatus() }
+                .doOnError {
+                    Timber.w(it, "Error attempting to get current train status: $it")
+                }
+                .retryWhen {
+                    it.flatMap {
+                        Observable.timer(10, TimeUnit.SECONDS)
+                    }
+                }
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())!!
+                .subscribe(
                 { n ->
                     allTrainStatusData.value = n
                     updateCurrentTrains()
                 },
-                {e -> Timber.e(e)})
+                { e ->
+                    Timber.e(e)
+                })
 
         compositeDisposable.add(statusDisposable)
     }
