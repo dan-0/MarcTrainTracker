@@ -21,29 +21,30 @@ class StatusViewModel(app: Application,
     val currentTrainStatusData = MutableLiveData<List<TrainStatus>>().apply { value = emptyList() }
     val allTrainStatusData = MutableLiveData<List<TrainStatus>>().apply { value = emptyList() }
     val selectedTrainLine = MutableLiveData<Int>().apply { value = 0 }
-    private val selectedTrainDirection = MutableLiveData<Int>().apply { value = 0 }
+    val selectedTrainDirection = MutableLiveData<Int>().apply { value = 0 }
     val title = MutableLiveData<String>().apply { value = "" }
 
     val resources: Resources = app.resources
 
-    private val observableInterval = Observable.interval(0, BuildConfig.STATUS_POLL_INTERVAL, TimeUnit.SECONDS)
-
-
     override fun initialize() {
         super.initialize()
         Timber.d("Init")
-        doGetTrainStatus(observableInterval)
+        doGetTrainStatus()
     }
 
-    fun doGetTrainStatus(observableInterval: Observable<Long>) {
-        val statusDisposable = observableInterval
+    private fun doGetTrainStatus() {
+        val statusDisposable = Observable
+                .interval(0, BuildConfig.STATUS_POLL_INTERVAL, TimeUnit.SECONDS, schedulerProvider.io())
                 .flatMap { trainDataService.getTrainStatus() }
                 .doOnError {
                     Timber.w(it, "Error attempting to get current train status: $it")
                 }
                 .retryWhen {
                     it.flatMap {
-                        Observable.timer(10, TimeUnit.SECONDS)
+                        Observable.timer(
+                                BuildConfig.STATUS_POLL_RETRY_INTERVAL,
+                                TimeUnit.SECONDS,
+                                schedulerProvider.io())
                     }
                 }
                 .subscribeOn(schedulerProvider.io())
@@ -73,7 +74,8 @@ class StatusViewModel(app: Application,
     }
 
     private fun updateCurrentTrains() {
-        val line = resources.getStringArray(R.array.line_array)[selectedTrainLine.value!!]
+        val selectedLine = selectedTrainLine.value!!
+        val line = resources.getStringArray(R.array.line_array)[selectedLine]
 
         val direction = when(line) {
             "Brunswick" -> resources.getStringArray(R.array.ew_dir_array)[selectedTrainDirection.value!!]
@@ -84,7 +86,10 @@ class StatusViewModel(app: Application,
             (it.direction == direction && it.line == line)
         }
 
-        title.value = "$line $direction"
+        // Don't set it if its the same, otherwise we'll trigger the observable behavior
+        if (title.value != "$line $direction") {
+            title.value = "$line $direction"
+        }
     }
 
 }

@@ -1,9 +1,15 @@
 package com.idleoffice.marctrain
 
+import android.arch.core.executor.ArchTaskExecutor
+import android.arch.core.executor.TaskExecutor
+import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.rx.SchedulerProvider
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
+import org.junit.jupiter.api.extension.AfterEachCallback
+import org.junit.jupiter.api.extension.BeforeEachCallback
+import org.junit.jupiter.api.extension.ExtensionContext
 import org.mockito.Mockito
 
 class TrampolineSchedulerProvider : SchedulerProvider {
@@ -19,4 +25,101 @@ class TestSchedulerProvider(private val ts: TestScheduler) : SchedulerProvider {
 fun <T> any(): T {
     Mockito.any<T>()
     return null as T
+}
+
+/**
+ * Builder to simplify creating TrainStatuses
+ */
+class DummyTrainStatusBuilder {
+    private var number = "0"
+    private var line = "Penn"
+    private var direction = "South"
+    private var nextStation = "Edgewood"
+    private var departure = "13:05"
+    private var status = "On Time"
+    private var delay = "5 min"
+    private var lastUpdate = "10:27 PM 5/5/18"
+    private var message = "Test message"
+
+    fun number(value: String): DummyTrainStatusBuilder {
+        number = value
+        return this
+    }
+
+    fun line(value: String): DummyTrainStatusBuilder {
+        line = value
+        return this
+    }
+
+    fun direction(value: String): DummyTrainStatusBuilder {
+        direction = value
+        return this
+    }
+
+    fun nextStation(value: String): DummyTrainStatusBuilder {
+        nextStation = value
+        return this
+    }
+
+    fun departure(value: String): DummyTrainStatusBuilder {
+        departure = value
+        return this
+    }
+
+    fun status(value: String): DummyTrainStatusBuilder {
+        status = value
+        return this
+    }
+
+    fun delay(value: String): DummyTrainStatusBuilder {
+        delay = value
+        return this
+    }
+
+    fun message(value: String): DummyTrainStatusBuilder {
+        message = value
+        return this
+    }
+
+    fun build(): TrainStatus {
+        return TrainStatus(
+                number,
+                line,
+                direction,
+                nextStation,
+                departure,
+                status,
+                delay,
+                lastUpdate,
+                message
+        )
+    }
+
+
+}
+
+/**
+ * Custom extension to replace the functionality of InstantTaskExecutorRule from JUnit 4
+ */
+class InstantTaskExecutorExtension: BeforeEachCallback, AfterEachCallback {
+
+    override fun beforeEach(context: ExtensionContext?) {
+        ArchTaskExecutor.getInstance().setDelegate(object : TaskExecutor() {
+            override fun executeOnDiskIO(runnable: Runnable) {
+                runnable.run()
+            }
+
+            override fun postToMainThread(runnable: Runnable) {
+                runnable.run()
+            }
+
+            override fun isMainThread(): Boolean {
+                return true
+            }
+        })
+    }
+
+    override fun afterEach(context: ExtensionContext?) {
+        ArchTaskExecutor.getInstance().setDelegate(null)
+    }
 }
