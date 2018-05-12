@@ -14,14 +14,14 @@ import timber.log.Timber
 class StatusAdapter(val trainStatuses: MutableList<TrainStatus>) : RecyclerView.Adapter<BaseViewHolder>() {
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : BaseViewHolder {
         val statusLayout = LayoutInflater.from(parent.context)
                 .inflate(R.layout.recycler_status_train, parent, false) as ConstraintLayout
 
         return ViewHolder(statusLayout)
     }
 
-    override fun getItemCount(): Int {
+    override fun getItemCount() : Int {
         return trainStatuses.size
     }
 

@@ -15,17 +15,17 @@ class ScheduleViewModel(val app: Application,
         BaseViewModel<ScheduleNavigator>(app, schedulerProvider) {
 
     companion object {
-        val lineBaseDir = "tables"
-        val pennFileName = "pennFull.pdf"
-        val camdenFileName = "camdenFull.pdf"
-        val brunswickFileName = "brunswickFull.pdf"
+        const val lineBaseDir = "tables"
+        const val pennFileName = "pennFull.pdf"
+        const val camdenFileName = "camdenFull.pdf"
+        const val brunswickFileName = "brunswickFull.pdf"
     }
 
     init {
         Timber.d("Initialized...")
     }
 
-    fun generateTempFile(tempFileName: String): File {
+    fun generateTempFile(tempFileName: String) : File {
         val appFileDir: File = navigator?.appFilesDir ?:
                 throw NullNavigatorValueException("App file directory was null")
         val tablesDir = File(appFileDir, lineBaseDir)

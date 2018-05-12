@@ -40,7 +40,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
 
     }
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
         when (item.itemId) {
 
@@ -85,9 +85,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
         this.activityMainBinding = viewDataBinding
         actViewModel.navigator = this
 
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         if (!actViewModel.isFragmentLoaded) {
-            loadFragment(StatusFragment(), R.id.navigation_home)
+            loadFragment(StatusFragment(), navigation.selectedItemId)
         }
     }
 

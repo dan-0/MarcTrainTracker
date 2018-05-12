@@ -11,14 +11,14 @@ import com.idleoffice.marctrain.ui.base.BaseViewHolder
 
 class AlertAdapter(val alerts: MutableList<TrainAlert>) : RecyclerView.Adapter<BaseViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : BaseViewHolder {
         val alertLayout = LayoutInflater.from(parent.context)
                 .inflate(R.layout.recycler_alert_train, parent, false) as ConstraintLayout
 
         return ViewHolder(alertLayout)
     }
 
-    override fun getItemCount(): Int {
+    override fun getItemCount() : Int {
         return alerts.size
     }
 

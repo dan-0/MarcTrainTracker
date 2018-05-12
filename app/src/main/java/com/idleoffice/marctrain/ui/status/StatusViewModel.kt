@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 
 class StatusViewModel(app: Application,
                       schedulerProvider: SchedulerProvider,
-                      private val trainDataService: TrainDataService):
+                      private val trainDataService: TrainDataService) :
         BaseViewModel<StatusNavigator>(app, schedulerProvider) {
 
     val currentTrainStatusData = MutableLiveData<List<TrainStatus>>().apply { value = emptyList() }

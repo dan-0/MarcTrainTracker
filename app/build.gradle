@@ -26,6 +26,7 @@ android {
         all {
             buildConfigField "String", "POLL_URL", "\"https://d2jr231zyecel4.cloudfront.net/\""
             buildConfigField "long", "ALERT_POLL_INTERVAL", "60"
+            buildConfigField "long", "ALERT_POLL_RETRY_INTERVAL", "10"
             buildConfigField "long", "STATUS_POLL_INTERVAL", "60"
             buildConfigField "long", "STATUS_POLL_RETRY_INTERVAL", "10"
         }
@@ -75,11 +76,12 @@ dependencies {
 //    implementation('com.crashlytics.sdk.android:crashlytics:2.9.0@aar') {
 //        transitive = true
 //    }
-    implementation 'com.google.firebase:firebase-core:15.0.0'
+    implementation 'com.google.firebase:firebase-core:15.0.2'
 
-    // Dagger
+    // DI
     implementation "org.koin:koin-android:$koinVersion"
     implementation "org.koin:koin-android-architecture:$koinVersion"
+    testImplementation "org.koin:koin-test:$koinVersion"
 
     // Timber for logging
     implementation 'com.jakewharton.timber:timber:4.7.0'

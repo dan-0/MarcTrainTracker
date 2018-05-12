@@ -34,7 +34,7 @@ abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel<*>> : Fra
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?) : View? {
         viewDataBinding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         rootView = viewDataBinding!!.root
         return rootView

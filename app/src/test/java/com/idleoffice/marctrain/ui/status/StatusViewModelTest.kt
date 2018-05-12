@@ -5,13 +5,13 @@ import com.idleoffice.marctrain.*
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.schedulers.TestScheduler
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.*
-import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -19,15 +19,11 @@ import java.util.concurrent.TimeUnit
 @ExtendWith(InstantTaskExecutorExtension::class)
 internal class StatusViewModelTest {
 
-    @Mock
-    private lateinit var mockApp : MainApp
-
-    @Mock
-    private lateinit var mockResources: Resources
+    private var mockApp : MainApp = mock()
+    private var mockResources: Resources = mock()
 
     init {
         MockitoAnnotations.initMocks(this)
-        Timber.plant(Timber.DebugTree())
     }
 
     private val stubScheduler = TrampolineSchedulerProvider()
@@ -38,7 +34,7 @@ internal class StatusViewModelTest {
         }
 
         override fun getTrainAlerts(): Observable<List<TrainAlert>> {
-            return Observable.fromArray(listOf())
+            throw IllegalArgumentException("This shouldn't be called here")
         }
     }
 
@@ -54,8 +50,7 @@ internal class StatusViewModelTest {
     /**
      * Test the initialization of the app. Primarily the doGetTrainStatus functionality
      */
-    @Nested
-    inner class ViewInitializeHelper {
+    private inner class InitilializeHelper {
         private val ts = TestScheduler()
         val scheduler = TestSchedulerProvider(ts)
 
@@ -77,7 +72,7 @@ internal class StatusViewModelTest {
 
             override fun getTrainStatus(): Observable<List<TrainStatus>> {
                 counter++
-                System.out.println("counter: $counter, time: ${scheduler.io().now(TimeUnit.SECONDS)}")
+
                 return when {
                     counter == 3 -> {
                         errorOccurred = true
@@ -138,7 +133,7 @@ internal class StatusViewModelTest {
 
     @Test
     fun `test ordered set of events from doGetTrainStatus`() {
-        val helper = ViewInitializeHelper()
+        val helper = InitilializeHelper()
         helper.`test first and second return dummyTrainStatus`()
         helper.`test errors from third and fourth events are handled`()
         helper.`test fifth event provides new train status`()
