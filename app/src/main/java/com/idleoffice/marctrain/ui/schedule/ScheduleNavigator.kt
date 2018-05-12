@@ -7,10 +7,7 @@ import android.content.res.AssetManager
 import java.io.File
 
 interface ScheduleNavigator {
-    fun startActivity(intent: Intent)
+    fun startActivity(destination: File)
     var appFilesDir : File?
     var appAssets : AssetManager?
-    var appContentResolver : ContentResolver?
-    var appContext : Context?
-    fun displayActivityNotFound()
 }

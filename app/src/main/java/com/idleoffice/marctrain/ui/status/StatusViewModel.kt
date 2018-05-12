@@ -48,7 +48,7 @@ class StatusViewModel(app: Application,
                     }
                 }
                 .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())!!
+                .observeOn(schedulerProvider.ui())
                 .subscribe(
                 { n ->
                     allTrainStatusData.value = n

@@ -8,18 +8,14 @@ import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.schedulers.TestScheduler
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.*
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantTaskExecutorExtension::class)
 internal class StatusViewModelTest {
 
@@ -28,6 +24,11 @@ internal class StatusViewModelTest {
 
     @Mock
     private lateinit var mockResources: Resources
+
+    init {
+        MockitoAnnotations.initMocks(this)
+        Timber.plant(Timber.DebugTree())
+    }
 
     private val stubScheduler = TrampolineSchedulerProvider()
 
@@ -39,12 +40,6 @@ internal class StatusViewModelTest {
         override fun getTrainAlerts(): Observable<List<TrainAlert>> {
             return Observable.fromArray(listOf())
         }
-    }
-
-    @BeforeAll
-    fun before() {
-        MockitoAnnotations.initMocks(this)
-        Timber.plant(Timber.DebugTree())
     }
 
     @BeforeEach
@@ -59,14 +54,14 @@ internal class StatusViewModelTest {
     /**
      * Test the initialization of the app. Primarily the doGetTrainStatus functionality
      */
-    @Test
-    fun viewInitialize() {
-        val ts = TestScheduler()
+    @Nested
+    inner class ViewInitializeHelper {
+        private val ts = TestScheduler()
         val scheduler = TestSchedulerProvider(ts)
 
         val dummyTrainStatusNumber = "0"
         val dummyTrainStatusNumber2 = "-1"
-        val trainDataService = object: TrainDataService {
+        private val trainDataService = object: TrainDataService {
             var counter = 0
             var errorOccurred = false
 
@@ -102,37 +97,57 @@ internal class StatusViewModelTest {
             }
         }
 
-        val ut = StatusViewModel(mockApp, scheduler, trainDataService)
+        private val ut = StatusViewModel(mockApp, scheduler, trainDataService)
 
-        ut.viewInitialize()
+        init {
+            ut.viewInitialize()
+            ts.advanceTimeBy(1, TimeUnit.SECONDS)
+        }
 
-        // Make sure we get our first event value: dummyTrainStatus
-        ts.advanceTimeBy(1, TimeUnit.SECONDS)
-        assertEquals(dummyTrainStatusNumber, ut.allTrainStatusData.value!![0].number)
 
-        // Second event: dummyTrainStatus
-        ts.advanceTimeBy(BuildConfig.STATUS_POLL_INTERVAL, TimeUnit.SECONDS)
-        assertEquals(dummyTrainStatusNumber, ut.allTrainStatusData.value!![0].number)
+        fun `test first and second return dummyTrainStatus`() {
+            // Make sure we get our first event value: dummyTrainStatus
+            assertEquals(dummyTrainStatusNumber, ut.allTrainStatusData.value!![0].number)
 
-        // Third event: error
-        ts.advanceTimeBy(BuildConfig.STATUS_POLL_INTERVAL, TimeUnit.SECONDS)
-        assertTrue(trainDataService.errorOccurred)
+            // Second event: dummyTrainStatus
+            ts.advanceTimeBy(BuildConfig.STATUS_POLL_INTERVAL, TimeUnit.SECONDS)
+            assertEquals(dummyTrainStatusNumber, ut.allTrainStatusData.value!![0].number)
+        }
 
-        // Fourth event: Exception from updateCurrentTrains, fails, then continues
-        // using retry interval to ensure error timing
-        ts.advanceTimeBy(BuildConfig.STATUS_POLL_RETRY_INTERVAL, TimeUnit.SECONDS)
+        fun `test errors from third and fourth events are handled`() {
+            // Third event: error
+            ts.advanceTimeBy(BuildConfig.STATUS_POLL_INTERVAL, TimeUnit.SECONDS)
+            assertTrue(trainDataService.errorOccurred)
 
-        // Fifth event: dummyTrainStatus2
-        // using retry interval to ensure error timing
-        ts.advanceTimeBy(BuildConfig.STATUS_POLL_RETRY_INTERVAL, TimeUnit.SECONDS)
-        assertEquals(dummyTrainStatusNumber2, ut.allTrainStatusData.value!![0].number)
+            // Fourth event: Exception from updateCurrentTrains, fails, then continues
+            // using retry interval to ensure error timing
+            ts.advanceTimeBy(BuildConfig.STATUS_POLL_RETRY_INTERVAL, TimeUnit.SECONDS)
+        }
 
-        // Correct number of calls to the train data service for the time interval provided
-        assertEquals(5, trainDataService.counter)
+        fun `test fifth event provides new train status`() {
+            // Fifth event: dummyTrainStatus2
+            // using retry interval to ensure error timing
+            ts.advanceTimeBy(BuildConfig.STATUS_POLL_RETRY_INTERVAL, TimeUnit.SECONDS)
+            assertEquals(dummyTrainStatusNumber2, ut.allTrainStatusData.value!![0].number)
+        }
+
+        fun `assert number of calls`(number: Int) {
+            assertEquals(number, trainDataService.counter)
+        }
     }
 
     @Test
-    fun trainLineSelected() {
+    fun `test ordered set of events from doGetTrainStatus`() {
+        val helper = ViewInitializeHelper()
+        helper.`test first and second return dummyTrainStatus`()
+        helper.`test errors from third and fourth events are handled`()
+        helper.`test fifth event provides new train status`()
+        // Assert we have 5 calls
+        helper.`assert number of calls`(5)
+    }
+
+    @Test
+    fun `test train line selected`() {
         val ut = StatusViewModel(mockApp, stubScheduler, stubTrainDataService)
 
         for (i in stubLineArray.indices) {
@@ -163,7 +178,7 @@ internal class StatusViewModelTest {
     }
 
     @Test
-    fun trainDirectionSelected() {
+    fun `test train direction selected`() {
         val ut = StatusViewModel(mockApp, stubScheduler, stubTrainDataService)
 
         // Test North South
