@@ -47,7 +47,10 @@ class AlertFragment : BaseFragment<FragmentAlertBinding, AlertViewModel>(), Aler
                     }
                     addAll(it)
                     hideLoading()
-                    trainAlertList?.adapter?.notifyDataSetChanged()
+                    // Can have a race, so post as runnable
+                    trainAlertList?.post {
+                        Runnable { trainAlertList.adapter?.notifyDataSetChanged() }
+                    }
                 }
             }
         }

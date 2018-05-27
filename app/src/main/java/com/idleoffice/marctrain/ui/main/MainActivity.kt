@@ -10,7 +10,6 @@ import com.idleoffice.marctrain.helpers.vibrateTap
 import com.idleoffice.marctrain.ui.alert.AlertFragment
 import com.idleoffice.marctrain.ui.base.BaseActivity
 import com.idleoffice.marctrain.ui.base.BaseFragment
-import com.idleoffice.marctrain.ui.main.MainViewModel.Companion.BACKSTACK_EMPTY
 import com.idleoffice.marctrain.ui.schedule.ScheduleFragment
 import com.idleoffice.marctrain.ui.status.StatusFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -22,59 +21,36 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
     override val bindingVariable: Int = BR.viewModel
     override val layoutId: Int = R.layout.activity_main
 
+    private fun loadMenuFragment(frag: BaseFragment<*,*>) {
+        // Reuse same fragment if it happens to exist already
+        val fragment = supportFragmentManager
+                .findFragmentByTag(frag.fragTag) as? BaseFragment<*, *> ?: frag
 
-    private var activityMainBinding : ActivityMainBinding? = null
-
-    private fun loadFragment(frag: BaseFragment<*,*>, menuItem: Int) {
-
-        if(supportFragmentManager.findFragmentByTag(frag.fragTag) != null) {
-            Timber.d("Fragment already exists, skipping.")
-            return
-        }
-        val ft = supportFragmentManager.beginTransaction()
         Timber.d("Replacing fragment view.")
-        ft.replace(R.id.view_content, frag, frag.fragTag)
-        ft.commit()
-
-        actViewModel.addToBackstack(menuItem)
-
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.view_content, fragment, fragment.fragTag)
+                .commit()
     }
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-
+    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
-
-            R.id.navigation_home -> {
+            R.id.navigation_status -> {
                 vibrateTap(this)
-                loadFragment(StatusFragment(), item.itemId)
+                loadMenuFragment(StatusFragment())
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_notifications -> {
+            R.id.navigation_alert -> {
                 vibrateTap(this)
-                loadFragment(AlertFragment(), item.itemId)
+                loadMenuFragment(AlertFragment())
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_dashboard -> {
+            R.id.navigation_schedule -> {
                 vibrateTap(this)
-                loadFragment(ScheduleFragment(), item.itemId)
+                loadMenuFragment(ScheduleFragment())
                 return@OnNavigationItemSelectedListener true
             }
         }
         false
-    }
-
-    override fun onBackPressed() {
-
-        val backStackItem = actViewModel.backStackGetLast()
-
-        if (backStackItem == BACKSTACK_EMPTY) {
-            navigation?.selectedItemId = R.id.navigation_home
-            super.onBackPressed()
-            return
-        } else {
-            navigation?.selectedItemId = backStackItem
-        }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,23 +58,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        this.activityMainBinding = viewDataBinding
         actViewModel.navigator = this
-
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        if (!actViewModel.isFragmentLoaded) {
-            loadFragment(StatusFragment(), R.id.navigation_home)
-        }
+        navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        loadMenuFragment(StatusFragment())
     }
 
     override fun displayError(errorMsg: String) {
         Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onFragmentAttached() {
-
-    }
-
-    override fun onFragmentDetached(tag: String) {
     }
 }

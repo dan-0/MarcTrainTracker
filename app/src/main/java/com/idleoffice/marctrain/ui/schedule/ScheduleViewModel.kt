@@ -1,82 +1,82 @@
 package com.idleoffice.marctrain.ui.schedule
 
 import android.app.Application
-import android.content.ActivityNotFoundException
-import android.content.Intent
-import android.support.v4.content.FileProvider
-import com.idleoffice.marctrain.BuildConfig
+import android.content.res.AssetManager
 import com.idleoffice.marctrain.helpers.vibrateTap
 import com.idleoffice.marctrain.rx.SchedulerProvider
 import com.idleoffice.marctrain.ui.base.BaseViewModel
+import io.reactivex.Single
 import timber.log.Timber
-import java.io.BufferedInputStream
 import java.io.File
-import java.io.FileOutputStream
 
 
-class ScheduleViewModel(app: Application,
+class ScheduleViewModel(val app: Application,
                         schedulerProvider: SchedulerProvider) :
-        BaseViewModel<ScheduleNavigator>(app, schedulerProvider){
+        BaseViewModel<ScheduleNavigator>(app, schedulerProvider) {
+
+    companion object {
+        const val lineBaseDir = "tables"
+        const val pennFileName = "pennFull.pdf"
+        const val camdenFileName = "camdenFull.pdf"
+        const val brunswickFileName = "brunswickFull.pdf"
+    }
 
     init {
         Timber.d("Initialized...")
     }
 
-    private fun launchTable(fileName: String, saveFileName: String) {
-        if (navigator == null) {
+    fun generateTempFile(tempFileName: String) : File {
+        val appFileDir: File = navigator?.appFilesDir ?:
+                throw NullNavigatorValueException("App file directory was null")
+        val tablesDir = File(appFileDir, lineBaseDir)
+        tablesDir.mkdirs()
+        tablesDir.deleteOnExit()
+        return File(tablesDir, tempFileName)
+    }
+
+
+    @Synchronized
+    private fun launchTable(fileName: String) {
+
+        val filePath = "$lineBaseDir${File.separator}$fileName"
+
+        vibrateTap(app)
+
+        // We can silently fail, if these are null its because this ViewModel is not attached to an activity
+        val appAssets: AssetManager = navigator?.appAssets ?: return
+
+        val fis = appAssets.open(filePath)
+        val destination = try {
+             generateTempFile(fileName)
+        } catch (e: NullNavigatorValueException) {
+            Timber.w(e, "Error generating temp file.")
             return
         }
 
-        val tablesDir = File(navigator!!.appFilesDir, "tables")
-        tablesDir.mkdirs()
-        tablesDir.deleteOnExit()
-        val tempFile = File(tablesDir, saveFileName)
-        val fos = FileOutputStream(tempFile)
-        val fullTable = BufferedInputStream(navigator!!.appAssets?.open(fileName))
-        val buffer = ByteArray(2048)
+        val fos = destination.outputStream()
 
-        fullTable.use { input ->
-            fos.use {
-                while (true) {
-                    val len = input.read(buffer)
-                    if (len <= 0) {
-                        break
-                    }
-                    it.write(buffer, 0, len)
-                }
-                it.flush()
-            }
-        }
-
-        val fileUri = FileProvider.getUriForFile(navigator!!.appContext!!,
-                "${BuildConfig.APPLICATION_ID}.fileprovider", tempFile)
-        val pdfIntent = Intent(Intent.ACTION_VIEW)
-
-        pdfIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_GRANT_READ_URI_PERMISSION
-        val mimeType = navigator!!.appContentResolver!!.getType(fileUri)
-        pdfIntent.setDataAndType(fileUri, mimeType)
-
-        try {
-            navigator?.startActivity(pdfIntent)
-        } catch (e: ActivityNotFoundException) {
-            navigator?.displayActivityNotFound()
-            Timber.w("Activity not found: ${e.message}")
-        }
+        Single.fromCallable({ fis.copyTo(fos) })
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe( {
+                    navigator?.startPdfActivity(destination)
+                }, {
+                    Timber.e(it)
+                })
     }
 
     fun launchPennTable() {
-        vibrateTap(navigator?.appContext!!)
-        launchTable("tables/pennFull.pdf", "PENN LINE.pdf")
+        launchTable(pennFileName)
     }
 
     fun launchCamdenTable() {
-        vibrateTap(navigator?.appContext!!)
-        launchTable("tables/camdenFull.pdf", "CAMDEN LINE.pdf")
+        launchTable(camdenFileName)
     }
 
     fun launchBrunswickTable() {
-        vibrateTap(navigator?.appContext!!)
-        launchTable("tables/brunswickFull.pdf", "BRUNSWICK LINE.pdf")
+        launchTable(brunswickFileName)
     }
+
+    class NullNavigatorValueException(msg: String) : Exception(msg)
 }
 

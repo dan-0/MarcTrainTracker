@@ -26,7 +26,9 @@ android {
         all {
             buildConfigField "String", "POLL_URL", "\"https://d2jr231zyecel4.cloudfront.net/\""
             buildConfigField "long", "ALERT_POLL_INTERVAL", "60"
+            buildConfigField "long", "ALERT_POLL_RETRY_INTERVAL", "10"
             buildConfigField "long", "STATUS_POLL_INTERVAL", "60"
+            buildConfigField "long", "STATUS_POLL_RETRY_INTERVAL", "10"
         }
     }
     compileOptions {
@@ -35,6 +37,11 @@ android {
     }
     dataBinding {
         enabled = true
+    }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
     }
 }
 
@@ -51,9 +58,14 @@ dependencies {
     implementation "com.android.support.constraint:constraint-layout:1.1.0"
     implementation "com.android.support:support-vector-drawable:$supportLibVersion"
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.2.0"
+    testImplementation 'org.mockito:mockito-core:2.15.0'
+    testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
+    testImplementation "org.robolectric:robolectric:$robolectricVersion"
+    testImplementation "org.robolectric:shadows-supportv4:$robolectricVersion"
+    testImplementation "org.robolectric:shadows-playservices:$robolectricVersion"
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     // Java Rx
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
@@ -70,11 +82,12 @@ dependencies {
 //    implementation('com.crashlytics.sdk.android:crashlytics:2.9.0@aar') {
 //        transitive = true
 //    }
-    implementation 'com.google.firebase:firebase-core:15.0.0'
+    implementation 'com.google.firebase:firebase-core:15.0.2'
 
-    // Dagger
+    // DI
     implementation "org.koin:koin-android:$koinVersion"
     implementation "org.koin:koin-android-architecture:$koinVersion"
+    testImplementation "org.koin:koin-test:$koinVersion"
 
     // Timber for logging
     implementation 'com.jakewharton.timber:timber:4.7.0'

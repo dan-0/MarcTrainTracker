@@ -1,0 +1,32 @@
+image: jangrewe/gitlab-ci-android
+
+stages:
+- build
+
+before_script:
+- export GRADLE_USER_HOME=$(pwd)/.gradle
+- chmod +x ./gradlew
+- echo $PRIVATE_PROPERTIES > ./app/private.properties
+- echo $GOOGLE_PLUGIN > ./app/google-services.json
+- ls -al
+
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  script:
+    - ./gradlew app:assembleDebug
+  artifacts:
+    paths:
+    - app/build/outputs/
+
+unitTests:
+  stage: test
+  script:
+    - ./gradlew app:test
+
+after_script:
+ - rm ./app/private.properties
+ - rm ./app/google-services.json
