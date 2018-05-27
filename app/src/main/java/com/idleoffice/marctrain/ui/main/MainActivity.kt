@@ -35,17 +35,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_status -> {
-                vibrateTap(this)
+                vibrateTap()
                 loadMenuFragment(StatusFragment())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_alert -> {
-                vibrateTap(this)
+                vibrateTap()
                 loadMenuFragment(AlertFragment())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_schedule -> {
-                vibrateTap(this)
+                vibrateTap()
                 loadMenuFragment(ScheduleFragment())
                 return@OnNavigationItemSelectedListener true
             }

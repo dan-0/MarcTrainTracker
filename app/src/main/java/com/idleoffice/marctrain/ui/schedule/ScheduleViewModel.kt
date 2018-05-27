@@ -40,7 +40,7 @@ class ScheduleViewModel(val app: Application,
 
         val filePath = "$lineBaseDir${File.separator}$fileName"
 
-        vibrateTap(app)
+        app.vibrateTap()
 
         // We can silently fail, if these are null its because this ViewModel is not attached to an activity
         val appAssets: AssetManager = navigator?.appAssets ?: return
