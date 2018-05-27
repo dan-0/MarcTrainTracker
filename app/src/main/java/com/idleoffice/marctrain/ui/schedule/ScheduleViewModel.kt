@@ -36,36 +36,45 @@ class ScheduleViewModel(val app: Application,
 
 
     @Synchronized
-    private fun launchTable(fileName: String, saveFileName: String) {
+    private fun launchTable(fileName: String) {
+
+        val filePath = "$lineBaseDir${File.separator}$fileName"
+
         vibrateTap(app)
 
-        val appAssets: AssetManager = navigator?.appAssets ?:
-            throw NullNavigatorValueException("App AssetManager was null")
+        // We can silently fail, if these are null its because this ViewModel is not attached to an activity
+        val appAssets: AssetManager = navigator?.appAssets ?: return
 
-        val fis = appAssets.open(fileName)
-        val destination = generateTempFile(saveFileName)
+        val fis = appAssets.open(filePath)
+        val destination = try {
+             generateTempFile(fileName)
+        } catch (e: NullNavigatorValueException) {
+            Timber.w(e, "Error generating temp file.")
+            return
+        }
+
         val fos = destination.outputStream()
 
         Single.fromCallable({ fis.copyTo(fos) })
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribe( {
-                    navigator?.startActivity(destination)
+                    navigator?.startPdfActivity(destination)
                 }, {
                     Timber.e(it)
                 })
     }
 
     fun launchPennTable() {
-        launchTable(lineBaseDir + File.pathSeparator + pennFileName, pennFileName)
+        launchTable(pennFileName)
     }
 
     fun launchCamdenTable() {
-        launchTable(lineBaseDir + File.pathSeparator + camdenFileName, camdenFileName)
+        launchTable(camdenFileName)
     }
 
     fun launchBrunswickTable() {
-        launchTable(lineBaseDir + File.pathSeparator + brunswickFileName, brunswickFileName)
+        launchTable(brunswickFileName)
     }
 
     class NullNavigatorValueException(msg: String) : Exception(msg)

@@ -38,6 +38,11 @@ android {
     dataBinding {
         enabled = true
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -53,11 +58,12 @@ dependencies {
     implementation "com.android.support.constraint:constraint-layout:1.1.0"
     implementation "com.android.support:support-vector-drawable:$supportLibVersion"
 
-//    testImplementation 'junit:junit:4.12'
-    // JUnit 5, remove if we decide against using it
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.2.0"
     testImplementation 'org.mockito:mockito-core:2.15.0'
     testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
+    testImplementation "org.robolectric:robolectric:$robolectricVersion"
+    testImplementation "org.robolectric:shadows-supportv4:$robolectricVersion"
+    testImplementation "org.robolectric:shadows-playservices:$robolectricVersion"
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 

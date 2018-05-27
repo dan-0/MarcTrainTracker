@@ -1,8 +1,6 @@
 package com.idleoffice.marctrain.ui.schedule
 
 import android.content.ActivityNotFoundException
-import android.content.ContentResolver
-import android.content.Context
 import android.content.Intent
 import android.content.res.AssetManager
 import android.os.Bundle
@@ -39,7 +37,7 @@ class ScheduleFragment :
         }
     }
 
-    override fun startActivity(destination: File) {
+    override fun startPdfActivity(destination: File) {
         context?.let {
             val fileUri = FileProvider.getUriForFile(it,
                     "${BuildConfig.APPLICATION_ID}.fileprovider", destination)

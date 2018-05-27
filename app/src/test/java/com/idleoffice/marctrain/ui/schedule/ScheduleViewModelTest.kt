@@ -1,7 +1,5 @@
 package com.idleoffice.marctrain.ui.schedule
 
-import android.content.ActivityNotFoundException
-import android.content.ContentResolver
 import android.content.res.AssetManager
 import android.os.Vibrator
 import com.idleoffice.marctrain.MainApp
@@ -10,11 +8,10 @@ import com.idleoffice.marctrain.TrampolineSchedulerProvider
 import com.idleoffice.marctrain.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.io.File
 import java.nio.file.Path
@@ -145,7 +142,7 @@ internal class ScheduleViewModelTest(@TempDirectory.TempDir val tempDir: Path) {
         var startActivityCalls = 0
         var currentfile: File? = null
 
-        override fun startActivity(destination: File) {
+        override fun startPdfActivity(destination: File) {
             startActivityCalls++
             currentfile = destination
         }

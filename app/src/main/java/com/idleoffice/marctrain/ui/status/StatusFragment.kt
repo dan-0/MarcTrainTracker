@@ -1,14 +1,13 @@
 package com.idleoffice.marctrain.ui.status
 
 import android.arch.lifecycle.Observer
-import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.ArrayAdapter
-import com.idleoffice.marctrain.Const.Companion.PREF_FILE
 import com.idleoffice.marctrain.Const.Companion.PREF_LAST_LINE
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainStatus
@@ -23,6 +22,7 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
     override val fragViewModel: StatusViewModel by viewModel()
 
     private val statusAdapter: StatusAdapter by inject()
+    private val prefs: SharedPreferences by inject()
 
     override val layoutId: Int = R.layout.fragment_status_coordinator
     private val spinnerItem = R.layout.spinner_item
@@ -56,7 +56,9 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
                     }
                     addAll(it)
                     hideLoading()
-                    trainStatusList?.adapter?.notifyDataSetChanged()
+                    trainStatusList?.post {
+                        Runnable { trainStatusList.adapter?.notifyDataSetChanged() }
+                    }
                 }
             }
         }
@@ -116,10 +118,7 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
             return
         }
 
-        val prefs = context?.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-        prefs?.edit()
-                ?.putInt(PREF_LAST_LINE, lineNum)
-                ?.apply()
+        prefs.edit().putInt(PREF_LAST_LINE, lineNum).apply()
 
         setDirSpinner(lineNum)
     }
@@ -132,14 +131,11 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
         lineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         lineSpinner.adapter = lineAdapter
 
-        val prefs = context?.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-        val lastLine = prefs?.getInt(PREF_LAST_LINE, 0)
-        if (lastLine != null) {
-            Timber.d("Parsing new last line: $lastLine")
-            lineSpinner?.setSelection(lastLine)
-            setDirSpinner(lastLine)
-            parseNewLine(lastLine)
-        }
+        val lastLine = prefs.getInt(PREF_LAST_LINE, 0)
+        Timber.d("Parsing new last line: $lastLine")
+        lineSpinner?.setSelection(lastLine)
+        setDirSpinner(lastLine)
+        parseNewLine(lastLine)
     }
 
     private fun initRecyclerView() {
@@ -147,11 +143,10 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
         val viewManager = LinearLayoutManager(context)
         trainStatusList.apply {
             setHasFixedSize(true)
-            layoutManager = viewManager
-
             itemAnimator = DefaultItemAnimator()
             adapter = statusAdapter
 
+            layoutManager = viewManager
             val divider = DividerItemDecoration(context, viewManager.orientation)
 
             val drawable = ContextCompat.getDrawable(context, R.drawable.status_divider)

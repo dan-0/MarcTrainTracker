@@ -10,7 +10,10 @@ import io.reactivex.schedulers.TestScheduler
 import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
+import org.junit.runner.RunWith
 import org.mockito.Mockito
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 class TrampolineSchedulerProvider : SchedulerProvider {
     override fun ui(): Scheduler {return Schedulers.trampoline()}
@@ -22,8 +25,13 @@ class TestSchedulerProvider(private val ts: TestScheduler) : SchedulerProvider {
     override fun io(): Scheduler { return ts }
 }
 
+/**
+ * Helper to simulate a "any()" type parameter for testing
+ */
 fun <T> any(): T {
     Mockito.any<T>()
+    // Intentionally allowing this to pretend to be of type 'T'
+    @Suppress("UNCHECKED_CAST")
     return null as T
 }
 
@@ -123,3 +131,11 @@ class InstantTaskExecutorExtension: BeforeEachCallback, AfterEachCallback {
         ArchTaskExecutor.getInstance().setDelegate(null)
     }
 }
+
+/**
+ * Abstract class to simplify generation of Robolectric tests.
+ * Note: Robolectric uses JUnit 4.
+  */
+@RunWith(RobolectricTestRunner::class)
+@Config(constants = BuildConfig::class)
+abstract class RobolectricTest

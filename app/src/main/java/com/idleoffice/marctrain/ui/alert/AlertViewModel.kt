@@ -4,6 +4,7 @@ import android.app.Application
 import android.arch.lifecycle.MutableLiveData
 import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.data.model.TrainAlert
+import com.idleoffice.marctrain.observeSubscribe
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.idleoffice.marctrain.rx.SchedulerProvider
 import com.idleoffice.marctrain.ui.base.BaseViewModel
@@ -16,25 +17,17 @@ class AlertViewModel(app: Application,
                      private val trainDataService: TrainDataService) :
         BaseViewModel<AlertNavigator>(app, schedulerProvider)
 {
-    init {
-        Timber.d("Initialized...")
-    }
-
     val allAlerts = MutableLiveData<List<TrainAlert>>().apply { value = emptyList() }
 
     override fun initialize() {
+        super.initialize()
         Timber.d("Init")
         doGetTrainAlerts()
-        super.initialize()
     }
 
     private fun doGetTrainAlerts() {
         val alertDisposable = Observable
-                .interval(0,
-                        BuildConfig.ALERT_POLL_INTERVAL,
-                        TimeUnit.SECONDS,
-                        schedulerProvider.io()
-                )
+                .interval(0, BuildConfig.ALERT_POLL_INTERVAL, TimeUnit.SECONDS, schedulerProvider.io())
                 .flatMap {trainDataService.getTrainAlerts() }
                 .doOnError {
                     val logMessage = it.message ?: ""
@@ -53,14 +46,13 @@ class AlertViewModel(app: Application,
                         )
                     }
                 }
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
+                .observeSubscribe(schedulerProvider)
                 .subscribe(
-                { n ->
-                    Timber.d("Data: $n")
-                    allAlerts.value = n
+                {
+                    Timber.d("Data: $it")
+                    allAlerts.value = it
                 },
-                { e -> Timber.e(e)}
+                { Timber.e(it) }
         )
 
         compositeDisposable.add(alertDisposable)

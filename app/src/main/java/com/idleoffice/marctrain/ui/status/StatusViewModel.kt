@@ -6,6 +6,7 @@ import android.content.res.Resources
 import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainStatus
+import com.idleoffice.marctrain.observeSubscribe
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.idleoffice.marctrain.rx.SchedulerProvider
 import com.idleoffice.marctrain.ui.base.BaseViewModel
@@ -47,8 +48,7 @@ class StatusViewModel(app: Application,
                                 schedulerProvider.io())
                     }
                 }
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
+                .observeSubscribe(schedulerProvider)
                 .subscribe(
                 { n ->
                     allTrainStatusData.value = n

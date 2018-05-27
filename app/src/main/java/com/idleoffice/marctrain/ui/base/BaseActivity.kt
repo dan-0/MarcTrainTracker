@@ -64,4 +64,7 @@ abstract class BaseActivity <T : ViewDataBinding, out V : BaseViewModel<*>> : Ap
         val network = cm?.activeNetworkInfo
         return network != null && network.isConnectedOrConnecting
     }
+
+    override fun onFragmentAttached() {}
+    override fun onFragmentDetached(tag: String) {}
 }
