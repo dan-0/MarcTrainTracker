@@ -1,7 +1,6 @@
-package com.idleoffice.marctrain.di
+package com.idleoffice.marctrain
 
 import android.content.Context
-import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.idleoffice.marctrain.rx.AppSchedulerProvider
 import com.idleoffice.marctrain.rx.SchedulerProvider

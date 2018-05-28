@@ -56,9 +56,7 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
                     }
                     addAll(it)
                     hideLoading()
-                    trainStatusList?.post {
-                        Runnable { trainStatusList.adapter?.notifyDataSetChanged() }
-                    }
+                    trainStatusList.adapter?.notifyDataSetChanged()
                 }
             }
         }
@@ -96,7 +94,7 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
         // Determine if we need to use North/South or East/West directions
         val array = resources.getStringArray(R.array.line_array)
         var dirArray = R.array.ns_dir_array
-        if(array[lineNum] == "Brunswick") {
+        if(array[lineNum] == array[2]) {
             dirArray = R.array.ew_dir_array
         }
 

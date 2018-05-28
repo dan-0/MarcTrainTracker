@@ -2,6 +2,7 @@ package com.idleoffice.marctrain.ui.status
 
 import android.content.res.Resources
 import com.idleoffice.marctrain.*
+import com.idleoffice.marctrain.data.comparator.TrainStatusComparator
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
@@ -9,11 +10,11 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.schedulers.TestScheduler
-import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.extension.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.MockitoAnnotations
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -210,6 +211,64 @@ internal class StatusViewModelTest {
 
             assertEquals("$ewLine $direction", ut.title.value)
         }
+    }
+
+    @Test
+    fun `results are sorted`() {
+        val statuses = listOf(
+                DummyTrainStatusBuilder().line("Penn").direction("South")
+                        .nextStation("Edgewood").departure("2:34 PM").build(),
+
+                DummyTrainStatusBuilder().line("Penn").direction("North")
+                        .nextStation("Halethorpe").departure("2:34 PM").build(),
+
+                DummyTrainStatusBuilder().line("Penn").direction("South")
+                        .nextStation("Perryville").departure("2:34 PM").build(),
+
+                DummyTrainStatusBuilder().line("Penn").direction("North")
+                        .nextStation("Perryville").departure("2:34 PM").build(),
+
+                DummyTrainStatusBuilder().line("Penn").direction("North")
+                        .nextStation("Seabrook").departure("2:34 PM").build(),
+
+                DummyTrainStatusBuilder().line("Penn").direction("North")
+                        .nextStation("Seabrook").departure("2:36 PM").build(),
+
+                DummyTrainStatusBuilder().line("Penn").direction("North")
+                        .nextStation("Seabrook").departure("2:35 PM").build(),
+
+                DummyTrainStatusBuilder().line("Penn").direction("South")
+                        .nextStation("Seabrook").departure("2:34 PM").build()
+        )
+
+        val trainDataService = object: TrainDataService {
+            override fun getTrainStatus(): Observable<List<TrainStatus>> {
+                return Observable.fromCallable {statuses}
+            }
+            override fun getTrainAlerts(): Observable<List<TrainAlert>> { throw NotImplementedError("Shouldn't be here")}
+        }
+
+        val ts = TestScheduler()
+        val scheduler = TestSchedulerProvider(ts)
+        val ut = StatusViewModel(mockApp, scheduler, trainDataService)
+        ut.viewInitialize()
+        ts.triggerActions()
+
+        // South sort
+        val southPenn = statuses.filter {
+            (it.direction == "South") && (it.line == "Penn")
+        }.sortedWith(TrainStatusComparator(Const.PENN_STATIONS))
+        ut.trainLineSelected(0)
+        ut.trainDirectionSelected(stubNsDirArray.indexOf("South"))
+        assertArrayEquals(southPenn.toTypedArray(), ut.currentTrainStatusData.value?.toTypedArray())
+
+        // North sort
+        val northPenn = statuses.filter {
+            (it.direction == "North") && (it.line == "Penn")
+        }.sortedWith(TrainStatusComparator(Const.PENN_STATIONS.asReversed()))
+        ut.trainLineSelected(0)
+        ut.trainDirectionSelected(stubNsDirArray.indexOf("North"))
+        assertArrayEquals(northPenn.toTypedArray(), ut.currentTrainStatusData.value?.toTypedArray())
     }
 
     private val stubLineArray = arrayOf("Penn", "Camden", "Brunswick")

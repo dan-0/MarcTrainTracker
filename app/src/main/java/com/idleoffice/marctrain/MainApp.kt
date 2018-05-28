@@ -3,7 +3,6 @@ package com.idleoffice.marctrain
 import android.app.Application
 import android.util.Log
 import com.crashlytics.android.Crashlytics
-import com.idleoffice.marctrain.di.appModules
 import com.idleoffice.marctrain.ui.alert.alertFragmentModule
 import com.idleoffice.marctrain.ui.main.mainActivityModule
 import com.idleoffice.marctrain.ui.schedule.scheduleFragmentModule
