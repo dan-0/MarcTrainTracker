@@ -1,4 +1,4 @@
-package com.idleoffice.marctrain.data.comparator
+package com.idleoffice.marctrain.data.tools
 
 import com.idleoffice.marctrain.data.model.TrainStatus
 import timber.log.Timber

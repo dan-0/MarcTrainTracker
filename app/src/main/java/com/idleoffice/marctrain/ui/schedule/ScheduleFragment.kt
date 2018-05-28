@@ -10,12 +10,14 @@ import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.FragmentScheduleBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
+import com.idleoffice.marctrain.vibrateTap
 import org.koin.android.architecture.ext.viewModel
 import timber.log.Timber
 import java.io.File
 
 class ScheduleFragment :
         BaseFragment<FragmentScheduleBinding, ScheduleViewModel>(), ScheduleNavigator {
+
     override val fragViewModel: ScheduleViewModel by viewModel()
     override var appFilesDir : File? = null
     override var appAssets : AssetManager? = null
@@ -56,5 +58,9 @@ class ScheduleFragment :
             }
         }
 
+    }
+
+    override fun vibrateTap() {
+        context?.vibrateTap()
     }
 }

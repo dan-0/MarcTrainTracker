@@ -1,7 +1,6 @@
 package com.idleoffice.marctrain.ui.schedule
 
 import android.content.res.AssetManager
-import android.os.Vibrator
 import com.idleoffice.marctrain.MainApp
 import com.idleoffice.marctrain.TempDirectory
 import com.idleoffice.marctrain.TrampolineSchedulerProvider
@@ -32,7 +31,7 @@ internal class ScheduleViewModelTest(@TempDirectory.TempDir val tempDir: Path) {
         ut = ScheduleViewModel(mockApp, trampolineScheduler)
         ut.navigator = TestScheduleNavigator()
 
-        whenever(ut.app.getSystemService(any())).then { mock() as Vibrator }
+//        whenever(ut.app.getSystemService(any())).then { mock() as Vibrator }
     }
     
     @Nested
@@ -72,22 +71,6 @@ internal class ScheduleViewModelTest(@TempDirectory.TempDir val tempDir: Path) {
             setUp()
         }
 
-        @Test
-        fun `test appFileDir is null`() {
-            ut.navigator!!.appFilesDir = null
-
-            var exceptionOccurred = false
-            try {
-                ut.launchPennTable()
-                fail<Any>("Should have thrown an exception")
-            } catch (e: ScheduleViewModel.NullNavigatorValueException) {
-                // This is desired
-                exceptionOccurred = true
-            }
-
-            assertTrue(exceptionOccurred, "NullNavigatorValueException should have occurred, but did not.")
-        }
-
         private fun launchTableHelper(unit: () -> Unit): TestScheduleNavigator {
             val utNav = ut.navigator as TestScheduleNavigator
 
@@ -123,21 +106,23 @@ internal class ScheduleViewModelTest(@TempDirectory.TempDir val tempDir: Path) {
 
         @Test
         fun `launchTable null assets`() {
-            ut.navigator!!.appAssets = null
+            val utNav = ut.navigator as TestScheduleNavigator
+            utNav.appAssets = null
+            ut.launchPennTable()
+            assertNull(utNav.currentfile)
+        }
 
-            var exceptionOccurred = false
-            try {
-                launchTableHelper({ut.launchPennTable()})
-            } catch (e: ScheduleViewModel.NullNavigatorValueException) {
-                // Desired
-                exceptionOccurred = true
-            }
-
-            assertTrue(exceptionOccurred)
+        @Test
+        fun `appFileDir is null`() {
+            val utNav = ut.navigator as TestScheduleNavigator
+            utNav.appFilesDir = null
+            ut.launchPennTable()
+            assertNull(utNav.currentfile)
         }
     }
 
     open inner class TestScheduleNavigator: ScheduleNavigator {
+        override fun vibrateTap() {}
 
         var startActivityCalls = 0
         var currentfile: File? = null

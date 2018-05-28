@@ -64,6 +64,8 @@ class ScheduleFragmentTest: RobolectricTest() {
         }
 
         class TestScheduleNavigator(override var appFilesDir: File?, override var appAssets: AssetManager?): ScheduleNavigator {
+            override fun vibrateTap() {}
+
             var startPdfCalledTimes = 0
             var lastPdfFilePath = ""
 

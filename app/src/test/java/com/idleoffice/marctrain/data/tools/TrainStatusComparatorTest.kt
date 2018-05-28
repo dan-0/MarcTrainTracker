@@ -1,7 +1,7 @@
-package com.idleoffice.marctrain.data.comparator
+package com.idleoffice.marctrain.data.tools
 
-import com.idleoffice.marctrain.Const.Companion.PENN_STATIONS
 import com.idleoffice.marctrain.DummyTrainStatusBuilder
+import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.PENN_STATIONS
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

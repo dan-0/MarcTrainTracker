@@ -6,6 +6,9 @@ import com.idleoffice.marctrain.RobolectricTest
 import com.idleoffice.marctrain.TestSchedulerProvider
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.data.model.TrainStatus
+import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.DIRECTION_FROM_DC
+import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.DIRECTION_TO_DC
+import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.PENN_LINE_IDX
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import io.reactivex.Observable
 import io.reactivex.schedulers.TestScheduler
@@ -45,11 +48,11 @@ internal class StatusFragmentTest: RobolectricTest() {
         assertNotNull(ut.lineSpinner.adapter)
 
         // Make sure we're equalling the first appropriate item
-        val initLine = ut.resources.getStringArray(R.array.line_array)[0]
+        val initLine = ut.resources.getStringArray(R.array.line_array)[PENN_LINE_IDX]
         assertEquals(initLine, ut.lineSpinner.selectedItem)
 
         // Make sure we're equalling the first appropriate item
-        val initDirection = ut.resources.getStringArray(R.array.ns_dir_array)[0]
+        val initDirection = ut.resources.getStringArray(R.array.ns_dir_array)[DIRECTION_FROM_DC]
         assertEquals(initDirection, ut.directionSpinner.selectedItem)
     }
 
@@ -68,17 +71,17 @@ internal class StatusFragmentTest: RobolectricTest() {
 
         lines.forEachIndexed { i, s ->
             ut.lineSpinner.setSelection(i)
-            ut.directionSpinner.setSelection(0)
+            ut.directionSpinner.setSelection(DIRECTION_FROM_DC)
             when(s) {
                 "Brunswick" -> {
                     assertEquals("$s East", ut.statusCollapsing.title)
-                    ut.directionSpinner.setSelection(1)
+                    ut.directionSpinner.setSelection(DIRECTION_TO_DC)
                     assertEquals("$s West", ut.statusCollapsing.title)
                 }
 
                 else -> {
                     assertEquals("$s North", ut.statusCollapsing.title)
-                    ut.directionSpinner.setSelection(1)
+                    ut.directionSpinner.setSelection(DIRECTION_TO_DC)
                     assertEquals("$s South", ut.statusCollapsing.title)
                 }
             }

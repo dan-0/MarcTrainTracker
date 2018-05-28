@@ -7,4 +7,5 @@ interface ScheduleNavigator {
     fun startPdfActivity(destination: File)
     var appFilesDir : File?
     var appAssets : AssetManager?
+    fun vibrateTap()
 }

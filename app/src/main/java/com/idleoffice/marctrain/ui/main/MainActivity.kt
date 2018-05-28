@@ -6,12 +6,12 @@ import android.widget.Toast
 import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.ActivityMainBinding
-import com.idleoffice.marctrain.helpers.vibrateTap
 import com.idleoffice.marctrain.ui.alert.AlertFragment
 import com.idleoffice.marctrain.ui.base.BaseActivity
 import com.idleoffice.marctrain.ui.base.BaseFragment
 import com.idleoffice.marctrain.ui.schedule.ScheduleFragment
 import com.idleoffice.marctrain.ui.status.StatusFragment
+import com.idleoffice.marctrain.vibrateTap
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.architecture.ext.viewModel
 import timber.log.Timber

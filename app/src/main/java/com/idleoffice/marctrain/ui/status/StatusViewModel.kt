@@ -4,12 +4,16 @@ import android.app.Application
 import android.arch.lifecycle.MutableLiveData
 import android.content.res.Resources
 import com.idleoffice.marctrain.BuildConfig
-import com.idleoffice.marctrain.Const.Companion.BRUNSWICK_STATIONS
-import com.idleoffice.marctrain.Const.Companion.CAMDEN_STATIONS
-import com.idleoffice.marctrain.Const.Companion.PENN_STATIONS
 import com.idleoffice.marctrain.R
-import com.idleoffice.marctrain.data.comparator.TrainStatusComparator
 import com.idleoffice.marctrain.data.model.TrainStatus
+import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.BRUNSWICK_LINE_IDX
+import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.BRUNSWICK_STATIONS
+import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.CAMDEN_LINE_IDX
+import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.CAMDEN_STATIONS
+import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.DIRECTION_TO_DC
+import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.PENN_LINE_IDX
+import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.PENN_STATIONS
+import com.idleoffice.marctrain.data.tools.TrainStatusComparator
 import com.idleoffice.marctrain.observeSubscribe
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.idleoffice.marctrain.rx.SchedulerProvider
@@ -84,20 +88,19 @@ class StatusViewModel(app: Application,
 
         val lineDirectionValue = selectedTrainDirection.value!!
 
-        val direction = when(lineDirectionValue) {
-            2 -> resources.getStringArray(R.array.ew_dir_array)[lineDirectionValue]
-            else -> resources.getStringArray(R.array.ns_dir_array)[lineDirectionValue]
-        }
-
         var compareArray = when(selectedLine) {
-            0 -> PENN_STATIONS
-            1 -> CAMDEN_STATIONS
+            PENN_LINE_IDX -> PENN_STATIONS
+            CAMDEN_LINE_IDX -> CAMDEN_STATIONS
             else -> BRUNSWICK_STATIONS
         }
 
-        val toWashington = lineDirectionValue == 1
-        if (!toWashington) {
+        if (lineDirectionValue == DIRECTION_TO_DC) {
             compareArray = compareArray.asReversed()
+        }
+
+        val direction = when(selectedLine) {
+            BRUNSWICK_LINE_IDX -> resources.getStringArray(R.array.ew_dir_array)[lineDirectionValue]
+            else -> resources.getStringArray(R.array.ns_dir_array)[lineDirectionValue]
         }
 
         val current =  allTrainStatusData.value?.filter {

@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import com.idleoffice.marctrain.Const.Companion.PREF_LAST_LINE
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainStatus
+import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.DIRECTION_FROM_DC
 import com.idleoffice.marctrain.databinding.FragmentStatusCoordinatorBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_status_coordinator.*
@@ -129,7 +130,7 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
         lineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         lineSpinner.adapter = lineAdapter
 
-        val lastLine = prefs.getInt(PREF_LAST_LINE, 0)
+        val lastLine = prefs.getInt(PREF_LAST_LINE, DIRECTION_FROM_DC)
         Timber.d("Parsing new last line: $lastLine")
         lineSpinner?.setSelection(lastLine)
         setDirSpinner(lastLine)

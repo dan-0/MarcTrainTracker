@@ -26,20 +26,20 @@
     <string name="pdf_reader_unavailable">PDF READER UNAVAILABLE</string>
     <string name="lastDir">lastDir</string>
 
-    <string-array name="line_array">
-        <item>Penn</item>
-        <item>Camden</item>
-        <item>Brunswick</item>
+    <string-array name="line_array" translatable="false">
+        <item translatable="false">Penn</item>
+        <item translatable="false">Camden</item>
+        <item translatable="false">Brunswick</item>
     </string-array>
 
     <string-array name="ns_dir_array">
-        <item>North</item>
-        <item>South</item>
+        <item translatable="false">North</item>
+        <item translatable="false">South</item>
     </string-array>
 
     <string-array name="ew_dir_array">
-        <item>East</item>
-        <item>West</item>
+        <item translatable="false">East</item>
+        <item translatable="false">West</item>
     </string-array>
 
 </resources>

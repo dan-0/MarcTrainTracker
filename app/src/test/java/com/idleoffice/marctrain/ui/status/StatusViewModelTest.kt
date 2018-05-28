@@ -2,9 +2,12 @@ package com.idleoffice.marctrain.ui.status
 
 import android.content.res.Resources
 import com.idleoffice.marctrain.*
-import com.idleoffice.marctrain.data.comparator.TrainStatusComparator
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.data.model.TrainStatus
+import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.DIRECTION_FROM_DC
+import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.PENN_LINE_IDX
+import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.PENN_STATIONS
+import com.idleoffice.marctrain.data.tools.TrainStatusComparator
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
@@ -157,7 +160,7 @@ internal class StatusViewModelTest {
                 else -> stubNsDirArray
             }
 
-            assertEquals(directionArray[0],
+            assertEquals(directionArray[DIRECTION_FROM_DC],
                     directionArray[ut.selectedTrainDirection.value!!],
                     "Bad direction state")
 
@@ -167,7 +170,7 @@ internal class StatusViewModelTest {
                     assertEquals("Brunswick East", ut.title.value, badTitle)
                 }
                 else -> {
-                    assertEquals("$line ${directionArray[0]}", ut.title.value, badTitle)
+                    assertEquals("$line ${directionArray[DIRECTION_FROM_DC]}", ut.title.value, badTitle)
                 }
             }
         }
@@ -257,16 +260,16 @@ internal class StatusViewModelTest {
         // South sort
         val southPenn = statuses.filter {
             (it.direction == "South") && (it.line == "Penn")
-        }.sortedWith(TrainStatusComparator(Const.PENN_STATIONS))
-        ut.trainLineSelected(0)
+        }.sortedWith(TrainStatusComparator(PENN_STATIONS))
+        ut.trainLineSelected(PENN_LINE_IDX)
         ut.trainDirectionSelected(stubNsDirArray.indexOf("South"))
         assertArrayEquals(southPenn.toTypedArray(), ut.currentTrainStatusData.value?.toTypedArray())
 
         // North sort
         val northPenn = statuses.filter {
             (it.direction == "North") && (it.line == "Penn")
-        }.sortedWith(TrainStatusComparator(Const.PENN_STATIONS.asReversed()))
-        ut.trainLineSelected(0)
+        }.sortedWith(TrainStatusComparator(PENN_STATIONS.asReversed()))
+        ut.trainLineSelected(PENN_LINE_IDX)
         ut.trainDirectionSelected(stubNsDirArray.indexOf("North"))
         assertArrayEquals(northPenn.toTypedArray(), ut.currentTrainStatusData.value?.toTypedArray())
     }
