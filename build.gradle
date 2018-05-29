@@ -8,6 +8,7 @@ buildscript {
     ext.moshiVersion = "1.5.0"
     ext.koinVersion = "0.9.2"
     ext.robolectricVersion = "3.7.1"
+    ext.leakCanaryVersion = "1.5.4"
 
     repositories {
         mavenLocal()
