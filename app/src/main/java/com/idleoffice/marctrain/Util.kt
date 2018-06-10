@@ -13,7 +13,9 @@ fun <T: Any> Observable<T>.observeSubscribe(schedulerProvider: SchedulerProvider
 }
 
 internal fun Context.vibrateTap() {
-    val vibe = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    val vibe = this.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+
+    vibe ?: return
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         vibe.vibrate(VibrationEffect.createOneShot(HapticFeedbackConstants.KEYBOARD_TAP.toLong(), 1))
     } else {
