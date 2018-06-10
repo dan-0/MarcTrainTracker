@@ -29,8 +29,8 @@ internal class StatusFragmentTest: RobolectricTest() {
 
     @Before
     fun setUp() {
-        StandAloneContext.loadKoinModules(helper.statusTestModule)
         ut = StatusFragment()
+        StandAloneContext.loadKoinModules(helper.statusTestModule)
         SupportFragmentTestUtil.startFragment(ut)
     }
 
@@ -97,6 +97,7 @@ internal class StatusFragmentTest: RobolectricTest() {
         ut.lineSpinner.setSelection(lines.indexOf(testValue.line))
         ut.directionSpinner.setSelection(directions.indexOf(testValue.direction))
 
+        helper.ts.triggerActions()
         helper.ts.triggerActions()
 
         val adapter = ut.trainStatusList.adapter as StatusAdapter

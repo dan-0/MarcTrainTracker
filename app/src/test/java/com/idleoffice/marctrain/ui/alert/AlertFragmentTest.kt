@@ -28,8 +28,8 @@ internal class AlertFragmentTest: RobolectricTest() {
 
     @Before
     fun setUp() {
-        StandAloneContext.loadKoinModules(helper.alertTestModule)
         ut = AlertFragment()
+        StandAloneContext.loadKoinModules(helper.alertTestModule)
         SupportFragmentTestUtil.startFragment(ut)
     }
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MARC Tracker</string>
+    <string name="app_name">MARC Commuter</string>
     <string name="title_status">Status</string>
     <string name="title_alerts">Alerts</string>
     <string name="title_schedule">Schedule</string>
