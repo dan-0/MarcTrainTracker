@@ -14,15 +14,18 @@ stages:
   - build
   - test
 
+cache:
+    paths:
+    - /builds/dan-0/MarcTrainTracker/.gradle/*
+
 build:
   stage: build
   script:
-    - ./gradlew app:build
+    - ./gradlew app:assemble
   artifacts:
     paths:
     - app/build/outputs/
-  cache:
-    policy: pull
+
 
 unitTests:
   stage: test
@@ -32,8 +35,6 @@ unitTests:
     untracked: true
     expire_in: 1 week
     when: on_failure
-  cache:
-    policy: pull
 
 after_script:
  - rm ./app/private.properties
