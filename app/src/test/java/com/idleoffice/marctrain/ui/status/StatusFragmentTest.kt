@@ -30,6 +30,7 @@ internal class StatusFragmentTest: RobolectricTest() {
     @Before
     fun setUp() {
         ut = StatusFragment()
+
         StandAloneContext.loadKoinModules(helper.statusTestModule)
         SupportFragmentTestUtil.startFragment(ut)
     }
