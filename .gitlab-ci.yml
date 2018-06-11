@@ -8,7 +8,6 @@ before_script:
 - chmod +x ./gradlew
 - echo $PRIVATE_PROPERTIES > ./app/private.properties
 - echo $GOOGLE_PLUGIN > ./app/google-services.json
-- ls -al
 
 stages:
   - build
