@@ -23,6 +23,7 @@ build:
   script:
     - ./gradlew app:assemble
   artifacts:
+    expire_in: 1 year
     paths:
     - app/build/outputs/
 
