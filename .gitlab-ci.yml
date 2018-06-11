@@ -26,6 +26,12 @@ unitTests:
   stage: test
   script:
     - ./gradlew app:test
+  artifacts:
+    untracked: true
+    paths:
+    - builds/*
+    expire_in: 1 week
+    when: on_failure
 
 after_script:
  - rm ./app/private.properties

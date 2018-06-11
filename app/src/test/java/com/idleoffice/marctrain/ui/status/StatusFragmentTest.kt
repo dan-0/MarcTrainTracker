@@ -30,7 +30,6 @@ import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.DIRECTION_FR
 import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.DIRECTION_TO_DC
 import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.PENN_LINE_IDX
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
-import com.idleoffice.marctrain.ui.main.MainActivity
 import io.reactivex.Observable
 import io.reactivex.schedulers.TestScheduler
 import kotlinx.android.synthetic.main.fragment_status_coordinator.*
@@ -42,7 +41,6 @@ import org.koin.android.architecture.ext.viewModel
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.applicationContext
 import org.koin.standalone.StandAloneContext
-import org.robolectric.Robolectric
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil
 
 internal class StatusFragmentTest: RobolectricTest() {
@@ -52,7 +50,6 @@ internal class StatusFragmentTest: RobolectricTest() {
     @Before
     fun setUp() {
         ut = StatusFragment()
-        Robolectric.setupActivity(MainActivity::class.java)
         StandAloneContext.loadKoinModules(helper.statusTestModule)
         SupportFragmentTestUtil.startFragment(ut)
     }
@@ -145,20 +142,19 @@ internal class StatusFragmentTest: RobolectricTest() {
         val ts = TestScheduler()
         private val scheduler = TestSchedulerProvider(ts)
 
+        class TestTrainDataService(val testTrainStatus: TrainStatus): TrainDataService {
+            override fun getTrainStatus(): Observable<List<TrainStatus>> {
+                println("Getting train status")
+                return Observable.fromCallable { listOf(testTrainStatus) }
+            }
+
+            override fun getTrainAlerts(): Observable<List<TrainAlert>> {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        }
+
         val statusTestModule : Module = applicationContext {
-            viewModel { StatusViewModel(get(), scheduler, object: TrainDataService {
-                override fun getTrainStatus(): Observable<List<TrainStatus>> {
-                    return Observable.fromCallable { listOf(testTrainStatus) }
-                }
-
-                override fun getTrainAlerts(): Observable<List<TrainAlert>> {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-
-            }) }
+            viewModel { StatusViewModel(get(), scheduler, TestTrainDataService(testTrainStatus)) }
         }
     }
-
-
-
 }
