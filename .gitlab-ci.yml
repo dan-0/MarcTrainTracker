@@ -17,10 +17,12 @@ stages:
 build:
   stage: build
   script:
-    - ./gradlew app:assembleDebug
+    - ./gradlew app:build
   artifacts:
     paths:
     - app/build/outputs/
+  cache:
+    policy: pull
 
 unitTests:
   stage: test
@@ -28,10 +30,10 @@ unitTests:
     - ./gradlew app:test
   artifacts:
     untracked: true
-    paths:
-    - builds/*
     expire_in: 1 week
     when: on_failure
+  cache:
+    policy: pull
 
 after_script:
  - rm ./app/private.properties

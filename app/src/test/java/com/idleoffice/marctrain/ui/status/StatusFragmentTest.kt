@@ -144,7 +144,6 @@ internal class StatusFragmentTest: RobolectricTest() {
 
         class TestTrainDataService(val testTrainStatus: TrainStatus): TrainDataService {
             override fun getTrainStatus(): Observable<List<TrainStatus>> {
-                println("Getting train status")
                 return Observable.fromCallable { listOf(testTrainStatus) }
             }
 
