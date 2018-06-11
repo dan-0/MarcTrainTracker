@@ -30,7 +30,6 @@ import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import io.reactivex.Observable
 import io.reactivex.schedulers.TestScheduler
 import kotlinx.android.synthetic.main.fragment_alert.*
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -48,14 +47,9 @@ internal class AlertFragmentTest: RobolectricTest() {
 
     @Before
     fun setUp() {
-        ut = AlertFragment()
         StandAloneContext.loadKoinModules(helper.alertTestModule)
+        ut = AlertFragment()
         SupportFragmentTestUtil.startFragment(ut)
-    }
-
-    @After
-    fun tearDown() {
-        StandAloneContext.closeKoin()
     }
 
     @Test

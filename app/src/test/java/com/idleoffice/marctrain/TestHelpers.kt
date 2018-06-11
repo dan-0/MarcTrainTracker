@@ -31,6 +31,7 @@ import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.runner.RunWith
+import org.koin.test.AutoCloseKoinTest
 import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -158,4 +159,4 @@ class InstantTaskExecutorExtension: BeforeEachCallback, AfterEachCallback {
   */
 @RunWith(RobolectricTestRunner::class)
 @Config(constants = BuildConfig::class)
-abstract class RobolectricTest
+abstract class RobolectricTest: AutoCloseKoinTest()

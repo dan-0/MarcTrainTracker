@@ -16,7 +16,7 @@ stages:
 
 cache:
     paths:
-    - /builds/dan-0/MarcTrainTracker/.gradle/*
+    - $GRADLE_USER_HOME
 
 build:
   stage: build

@@ -33,7 +33,6 @@ import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import io.reactivex.Observable
 import io.reactivex.schedulers.TestScheduler
 import kotlinx.android.synthetic.main.fragment_status_coordinator.*
-import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -49,14 +48,9 @@ internal class StatusFragmentTest: RobolectricTest() {
 
     @Before
     fun setUp() {
-        ut = StatusFragment()
         StandAloneContext.loadKoinModules(helper.statusTestModule)
+        ut = StatusFragment()
         SupportFragmentTestUtil.startFragment(ut)
-    }
-
-    @After
-    fun tearDown() {
-        StandAloneContext.closeKoin()
     }
 
     @Test

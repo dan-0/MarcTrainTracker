@@ -54,6 +54,7 @@ class MainApp : Application() {
             Timber.plant(CrashlyticsTree())
         }
 
+
         startKoin(this, koinModules)
     }
 
