@@ -15,8 +15,9 @@ stages:
   - test
 
 cache:
-    paths:
-    - $GRADLE_USER_HOME
+  key: ${CI_PROJECT_ID}
+  paths:
+  - .gradle/
 
 build:
   stage: build
