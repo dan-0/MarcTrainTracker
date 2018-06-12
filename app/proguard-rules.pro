@@ -50,3 +50,16 @@
 }
 -keepattributes InnerClasses,EnclosingMethod
 
+# Moshi
+-dontwarn org.jetbrains.annotations.**
+-keep class kotlin.Metadata { *; }
+-keepclassmembers class * {
+    @com.squareup.moshi.FromJson <methods>;
+    @com.squareup.moshi.ToJson <methods>;
+}
+
+# App
+-keepclassmembers class com.idleoffice.marctrain.data.model.** {
+  <init>(...);
+  <fields>;
+}
