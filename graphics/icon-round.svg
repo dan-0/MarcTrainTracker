@@ -16,9 +16,9 @@
    sodipodi:docname="icon-round.svg"
    width="700"
    height="700"
-   inkscape:export-filename="/home/devuser/Downloads/marctracker.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-filename="/home/devuser/workspace/marc-commuter-website/static/img/icon-round-x250.png"
+   inkscape:export-xdpi="77.139999"
+   inkscape:export-ydpi="77.139999">
   <metadata
      id="metadata15001">
     <rdf:RDF>
@@ -27,7 +27,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -230,17 +230,17 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1855"
-     inkscape:window-height="1056"
+     inkscape:window-width="1727"
+     inkscape:window-height="943"
      id="namedview14997"
      showgrid="false"
      inkscape:zoom="0.92187499"
-     inkscape:cx="200.12815"
+     inkscape:cx="-66.176938"
      inkscape:cy="378.06773"
-     inkscape:window-x="3905"
+     inkscape:window-x="104"
      inkscape:window-y="24"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="layer2"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer4"
      inkscape:snap-others="false" />
   <g
      inkscape:groupmode="layer"
@@ -249,7 +249,7 @@
      style="display:inline">
     <path
        inkscape:connector-curvature="0"
-       style="display:inline;opacity:1;fill:#981e32;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:20;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:103;stroke-opacity:1"
+       style="display:inline;opacity:1;fill:#b71c1c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:20;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:103;stroke-opacity:1"
        d="M 350,0 C 543.9,0 700,156.1 700,350 700,543.9 543.9,700 350,700 156.1,700 0,543.9 0,350 0,156.1 156.1,0 350,0 Z"
        id="rect19475" />
   </g>

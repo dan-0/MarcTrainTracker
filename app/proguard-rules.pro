@@ -25,6 +25,10 @@
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception
+-keep class com.google.android.gms.measurement.AppMeasurement { *; }
+-keep class com.google.android.gms.measurement.AppMeasurement$OnEventListener { *; }
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
 
 # dontwarns
 -dontwarn retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
