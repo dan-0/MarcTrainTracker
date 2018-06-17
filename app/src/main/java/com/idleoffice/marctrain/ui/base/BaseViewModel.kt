@@ -25,6 +25,7 @@ import android.arch.lifecycle.AndroidViewModel
 import android.databinding.ObservableBoolean
 import com.idleoffice.marctrain.rx.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.exceptions.UndeliverableException
 import timber.log.Timber
 
 
@@ -54,7 +55,14 @@ abstract class BaseViewModel<T>(app : Application,
 
     override fun onCleared() {
         Timber.d("Clearing disposables")
-        compositeDisposable.dispose()
+        try {
+            compositeDisposable.dispose()
+        } catch (e: UndeliverableException) {
+            // This occurs if an action attempts to call on error after the subscriber is destroyed
+            // which is OK here because we're forcibly destroying everything.
+            Timber.e(e, "Undeliverable exception occurred")
+        }
+
         super.onCleared()
     }
 }

@@ -30,6 +30,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.idleoffice.marctrain.BR
+import io.reactivex.exceptions.UndeliverableException
 import kotlinx.android.synthetic.main.progress_bar_frame_layout.*
 import timber.log.Timber
 
@@ -79,7 +80,14 @@ abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel<*>> : Fra
     override fun onDetach() {
         baseActivity = null
         Timber.d("Detaching fragment")
-        fragViewModel.compositeDisposable.clear()
+        try {
+            fragViewModel.compositeDisposable.clear()
+        } catch (e: UndeliverableException) {
+            // This occurs if an action attempts to call on error after the subscriber is destroyed
+            // which is OK here because we're forcibly destroying everything.
+            Timber.e(e, "Undeliverable exception occurred")
+        }
+
         super.onDetach()
     }
 
