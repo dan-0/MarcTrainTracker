@@ -60,7 +60,7 @@
         </android.support.v7.widget.RecyclerView>
         <include
             layout="@layout/progress_bar_frame_layout"
-            android:id="@+id/progressBar"
+            android:id="@+id/progressBarFrame"
             android:layout_height="match_parent"
             android:layout_width="match_parent"/>
     </android.support.design.widget.CoordinatorLayout>
