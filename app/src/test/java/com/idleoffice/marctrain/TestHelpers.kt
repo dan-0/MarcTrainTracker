@@ -158,5 +158,5 @@ class InstantTaskExecutorExtension: BeforeEachCallback, AfterEachCallback {
  * Note: Robolectric uses JUnit 4.
   */
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class)
+//@Config(constants = BuildConfig::class)
 abstract class RobolectricTest: AutoCloseKoinTest()

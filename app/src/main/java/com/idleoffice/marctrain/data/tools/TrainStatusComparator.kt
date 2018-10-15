@@ -22,6 +22,7 @@ package com.idleoffice.marctrain.data.tools
 
 import com.idleoffice.marctrain.data.model.TrainStatus
 import timber.log.Timber
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -60,8 +61,18 @@ class TrainStatusComparator(private val stations: List<String>): Comparator<Trai
 
         return when (o1Val) {
             o2Val -> {
-                val o1Date = departureFormatter.parse(o1.departure)
-                val o2Date = departureFormatter.parse(o2.departure)
+                val o1Date: Date
+                val o2Date: Date
+                try {
+                    o1Date = departureFormatter.parse(o1.departure)
+                } catch (e: ParseException) {
+                    return -1
+                }
+                try {
+                    o2Date = departureFormatter.parse(o2.departure)
+                } catch (e: ParseException) {
+                    return 1
+                }
                 o1Date.compareTo(o2Date)
             }
             else -> o1Val.compareTo(o2Val)
