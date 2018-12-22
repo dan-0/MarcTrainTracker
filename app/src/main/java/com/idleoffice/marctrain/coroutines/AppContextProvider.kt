@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 IdleOffice Inc.
  *
- * AppSchedulerProvider.kt is part of MarcTrainTracker.
+ * AppContextProvidert is part of MarcTrainTracker.
  *
  * MarcTrainTracker is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,19 +18,12 @@
  *
  */
 
-package com.idleoffice.marctrain.rx
+package com.idleoffice.marctrain.coroutines
 
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
 
 
-class AppSchedulerProvider : SchedulerProvider {
-    override fun ui() : Scheduler {
-        return AndroidSchedulers.mainThread()
-    }
-
-    override fun io() : Scheduler {
-        return Schedulers.io()
-    }
+class AppContextProvider: ContextProvider {
+    override val io = Dispatchers.IO
+    override val ui = Dispatchers.Main
 }

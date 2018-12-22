@@ -22,8 +22,8 @@ package com.idleoffice.marctrain.ui.schedule
 
 import android.content.res.AssetManager
 import com.idleoffice.marctrain.RobolectricTest
-import com.idleoffice.marctrain.TestSchedulerProvider
-import com.idleoffice.marctrain.rx.SchedulerProvider
+import com.idleoffice.marctrain.TestContextProvider
+import com.idleoffice.marctrain.coroutines.ContextProvider
 import io.reactivex.schedulers.TestScheduler
 import kotlinx.android.synthetic.main.fragment_schedule.*
 import org.junit.After
@@ -77,10 +77,10 @@ class ScheduleFragmentTest: RobolectricTest() {
 
     private class ScheduleTestHelper {
         val ts = TestScheduler()
-        private val scheduler = TestSchedulerProvider(ts)
+        private val scheduler = TestContextProvider(ts)
 
         val scheduleTestModule = applicationContext {
-            bean { scheduler as SchedulerProvider }
+            bean { scheduler as ContextProvider }
         }
 
         class TestScheduleNavigator(override var appFilesDir: File?, override var appAssets: AssetManager?): ScheduleNavigator {

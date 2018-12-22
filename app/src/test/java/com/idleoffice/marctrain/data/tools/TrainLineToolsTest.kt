@@ -43,7 +43,7 @@ class TrainLineToolsTest: RobolectricTest() {
         assertEquals("Camden", lineArray[CAMDEN_LINE_IDX])
         assertEquals("Brunswick", lineArray[BRUNSWICK_LINE_IDX])
 
-        val ewArray = ut.resources.getStringArray(R.array.ew_dir_array)
+        val ewArray = ut.resources.getStringArray(R.array.we_dir_array)
         assertEquals("East", ewArray[DIRECTION_FROM_DC])
         assertEquals("West", ewArray[DIRECTION_TO_DC])
 

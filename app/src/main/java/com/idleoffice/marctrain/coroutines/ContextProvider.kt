@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 IdleOffice Inc.
  *
- * SchedulerProvider.kt is part of MarcTrainTracker.
+ * ContextProvider.kts part of MarcTrainTracker.
  *
  * MarcTrainTracker is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@
  *
  */
 
-package com.idleoffice.marctrain.rx
+package com.idleoffice.marctrain.coroutines
 
-import io.reactivex.Scheduler
+import kotlin.coroutines.CoroutineContext
 
 
-interface SchedulerProvider {
-    fun ui() : Scheduler
-    fun io() : Scheduler
+interface ContextProvider {
+    val io: CoroutineContext
+    val ui: CoroutineContext
 }

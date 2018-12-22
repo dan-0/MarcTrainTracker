@@ -23,7 +23,7 @@ package com.idleoffice.marctrain.ui.alert
 import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.InstantTaskExecutorExtension
 import com.idleoffice.marctrain.MainApp
-import com.idleoffice.marctrain.TestSchedulerProvider
+import com.idleoffice.marctrain.TestContextProvider
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
@@ -42,7 +42,7 @@ internal class AlertViewModelTest {
 
     private inner class InitializeHelper {
         private val ts = TestScheduler()
-        private val scheduler = TestSchedulerProvider(ts)
+        private val scheduler = TestContextProvider(ts)
 
         val dummyAlert1 = TrainAlert("testDescription1", "testPubDate1")
         val dummyAlert2 = TrainAlert("testDescription2", "testPubDate2")

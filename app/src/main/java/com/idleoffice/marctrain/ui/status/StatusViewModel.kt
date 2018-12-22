@@ -20,26 +20,29 @@
 
 package com.idleoffice.marctrain.ui.status
 
+import androidx.databinding.Observable
 import androidx.lifecycle.MutableLiveData
 import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.data.model.TrainStatus
-import com.idleoffice.marctrain.observeSubscribe
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
-import com.idleoffice.marctrain.rx.SchedulerProvider
+import com.idleoffice.marctrain.coroutines.ContextProvider
+import com.idleoffice.marctrain.network.NetworkProvider
 import com.idleoffice.marctrain.ui.base.BaseViewModel
-import io.reactivex.Observable
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
+import java.io.IOException
 
-class StatusViewModel(schedulerProvider: SchedulerProvider,
-                      private val trainDataService: TrainDataService) :
-        BaseViewModel<StatusNavigator>(schedulerProvider) {
+class StatusViewModel(
+        contextProvider: ContextProvider,
+        private val trainDataService: TrainDataService,
+        private val networkProvider: NetworkProvider
+) : BaseViewModel<StatusNavigator>(contextProvider) {
 
-    val currentTrainStatusData = MutableLiveData<List<TrainStatus>>().apply { value = emptyList() }
     val allTrainStatusData = MutableLiveData<List<TrainStatus>>().apply { value = emptyList() }
     val selectedTrainLine = MutableLiveData<Int>().apply { value = 0 }
     val selectedTrainDirection = MutableLiveData<Int>().apply { value = 0 }
-    val title = MutableLiveData<String>().apply { value = "" }
 
     override fun initialize() {
         super.initialize()
@@ -47,77 +50,32 @@ class StatusViewModel(schedulerProvider: SchedulerProvider,
         doGetTrainStatus()
     }
 
+    private suspend fun loadTrainData() {
+        Timber.d("Loading train data")
+        val call = trainDataService.getTrainStatus()
+        val trains = try {
+            call.await()
+        } catch (e: IOException) {
+            Timber.w(e, "Error getting train information.")
+            return
+        }
+        withContext(contextProvider.ui) {
+            allTrainStatusData.value = trains
+        }
+    }
 
     private fun doGetTrainStatus() {
-        val statusDisposable = Observable
-                .interval(0, BuildConfig.STATUS_POLL_INTERVAL, TimeUnit.SECONDS, schedulerProvider.io())
-                .flatMap { trainDataService.getTrainStatus() }
-                .doOnError {
-                    Timber.w(it, "Error attempting to get current train status: $it")
+
+        ioScope.launch {
+            while (true) {
+                val delayInterval = if (networkProvider.isNetworkConnected()) {
+                    loadTrainData()
+                    BuildConfig.STATUS_POLL_INTERVAL
+                } else {
+                    BuildConfig.STATUS_POLL_RETRY_INTERVAL
                 }
-                .retryWhen {
-                    it.flatMap {
-                        Observable.timer(
-                                BuildConfig.STATUS_POLL_RETRY_INTERVAL,
-                                TimeUnit.SECONDS,
-                                schedulerProvider.io())
-                    }
-                }
-                .observeSubscribe(schedulerProvider)
-                .subscribe(
-                { n ->
-                    allTrainStatusData.value = n
-                    navigator?.tempUpdateTrains(selectedTrainLine.value!!, selectedTrainDirection.value!!, allTrainStatusData.value!!, currentTrainStatusData.value!!, title.value!!)
-                },
-                { e ->
-                    Timber.e(e)
-                })
-
-        compositeDisposable.add(statusDisposable)
+                delay(delayInterval)
+            }
+        }
     }
-
-    fun trainLineSelected(position: Int) {
-        Timber.d("Line selected at: $position")
-        selectedTrainLine.value = position
-    }
-
-    fun trainDirectionSelected(position: Int) {
-        Timber.d("Direction selected at: $position")
-        selectedTrainDirection.value = position
-        navigator?.tempUpdateTrains(selectedTrainLine.value!!, selectedTrainDirection.value!!, allTrainStatusData.value!!, currentTrainStatusData.value!!, title.value!!)
-//        compositeDisposable.add(updateCurrentTrains.subscribe())
-    }
-
-//    private val updateCurrentTrains = Flowable.fromCallable {
-//        val selectedLine = selectedTrainLine.value!!
-//        val line = resources.getStringArray(R.array.line_array)[selectedLine]
-//
-//        val lineDirectionValue = selectedTrainDirection.value!!
-//
-//        var compareArray = when(selectedLine) {
-//            PENN_LINE_IDX -> PENN_STATIONS
-//            CAMDEN_LINE_IDX -> CAMDEN_STATIONS
-//            else -> BRUNSWICK_STATIONS
-//        }
-//
-//        if (lineDirectionValue == DIRECTION_TO_DC) {
-//            compareArray = compareArray.asReversed()
-//        }
-//
-//        val direction = when(selectedLine) {
-//            BRUNSWICK_LINE_IDX -> resources.getStringArray(R.array.ew_dir_array)[lineDirectionValue]
-//            else -> resources.getStringArray(R.array.ns_dir_array)[lineDirectionValue]
-//        }
-//
-//        val current =  allTrainStatusData.value?.filter {
-//            (it.direction == direction && it.line == line)
-//        }?.sortedWith(TrainStatusComparator(compareArray))
-//
-//        currentTrainStatusData.value = current
-//
-//        // Don't set it if its the same, otherwise we'll trigger the observable behavior
-//        if (title.value != "$line $direction") {
-//            title.value = "$line $direction"
-//        }
-//    }.onBackpressureLatest()
 }

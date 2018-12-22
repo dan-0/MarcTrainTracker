@@ -1,4 +1,5 @@
 package com.idleoffice.marctrain.network
 
-interface NetworkServiceProvider {
+interface NetworkProvider {
+    fun isNetworkConnected(): Boolean
 }

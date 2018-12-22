@@ -50,7 +50,7 @@ internal class StatusViewModelTest {
         MockitoAnnotations.initMocks(this)
     }
 
-    private val stubScheduler = TrampolineSchedulerProvider()
+    private val stubScheduler = TrampolineContextProvider()
 
     private val stubTrainDataService = object: TrainDataService {
         override fun getTrainStatus(): Observable<List<TrainStatus>> {
@@ -67,7 +67,7 @@ internal class StatusViewModelTest {
         // We're doing this here so we can simulate bad values later
         whenever(mockResources.getStringArray(R.array.line_array)).thenReturn(stubLineArray)
         whenever(mockResources.getStringArray(R.array.ns_dir_array)).thenReturn(stubNsDirArray)
-        whenever(mockResources.getStringArray(R.array.ew_dir_array)).thenReturn(stubEwDirArray)
+        whenever(mockResources.getStringArray(R.array.we_dir_array)).thenReturn(stubEwDirArray)
         whenever(mockApp.resources).thenReturn(mockResources)
     }
 
@@ -76,7 +76,7 @@ internal class StatusViewModelTest {
      */
     private inner class InitilializeHelper {
         private val ts = TestScheduler()
-        val scheduler = TestSchedulerProvider(ts)
+        val scheduler = TestContextProvider(ts)
 
         val dummyTrainStatusNumber = "0"
         val dummyTrainStatusNumber2 = "-1"
@@ -272,7 +272,7 @@ internal class StatusViewModelTest {
         }
 
         val ts = TestScheduler()
-        val scheduler = TestSchedulerProvider(ts)
+        val scheduler = TestContextProvider(ts)
         val ut = StatusViewModel(mockApp, scheduler, trainDataService)
         ut.viewInitialize()
         ts.triggerActions()

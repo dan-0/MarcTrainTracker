@@ -56,7 +56,8 @@
                 android:onClick="@{() -> viewModel.launchPennTable() }"
                 style="@style/mt.btn"
                 android:layout_marginTop="@dimen/button_margin"
-                android:text="@string/penn" />
+                android:text="@string/penn"
+                android:textAllCaps="true"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTablesCamden"
@@ -64,7 +65,8 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{() -> viewModel.launchCamdenTable() }"
                 style="@style/mt.btn"
-                android:text="@string/camden" />
+                android:text="@string/camden"
+                android:textAllCaps="true"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTablesBrunswick"
@@ -73,7 +75,7 @@
                 android:onClick="@{() -> viewModel.launchBrunswickTable() }"
                 style="@style/mt.btn"
                 android:text="@string/brunswick"
-                />
+                android:textAllCaps="true"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

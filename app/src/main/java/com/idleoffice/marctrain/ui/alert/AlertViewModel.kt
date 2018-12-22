@@ -23,17 +23,20 @@ package com.idleoffice.marctrain.ui.alert
 import androidx.lifecycle.MutableLiveData
 import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.data.model.TrainAlert
-import com.idleoffice.marctrain.observeSubscribe
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
-import com.idleoffice.marctrain.rx.SchedulerProvider
+import com.idleoffice.marctrain.coroutines.ContextProvider
+import com.idleoffice.marctrain.network.NetworkProvider
 import com.idleoffice.marctrain.ui.base.BaseViewModel
-import io.reactivex.Observable
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
+import java.io.IOException
 
-class AlertViewModel(schedulerProvider: SchedulerProvider,
-                     private val trainDataService: TrainDataService) :
-        BaseViewModel<AlertNavigator>(schedulerProvider)
+class AlertViewModel(contextProvider: ContextProvider,
+                     private val trainDataService: TrainDataService,
+                     private val networkProvider: NetworkProvider
+) : BaseViewModel<AlertNavigator>(contextProvider)
 {
     val allAlerts = MutableLiveData<List<TrainAlert>>().apply { value = emptyList() }
 
@@ -43,36 +46,33 @@ class AlertViewModel(schedulerProvider: SchedulerProvider,
         doGetTrainAlerts()
     }
 
-    private fun doGetTrainAlerts() {
-        val alertDisposable = Observable
-                .interval(0, BuildConfig.ALERT_POLL_INTERVAL, TimeUnit.SECONDS, schedulerProvider.io())
-                .flatMap {trainDataService.getTrainAlerts() }
-                .doOnError {
-                    val logMessage = it.message ?: ""
-                    if(logMessage.contains("HTTP 404 Not Found")) {
-                        Timber.w(it, "404 attempting to get MARC alerts.")
-                    } else {
-                        Timber.e(it, "Error attempting to get alerts.")
-                    }
-                }
-                .retryWhen {
-                    it.flatMap {
-                        Observable.timer(
-                                BuildConfig.ALERT_POLL_RETRY_INTERVAL,
-                                TimeUnit.SECONDS,
-                                schedulerProvider.io()
-                        )
-                    }
-                }
-                .observeSubscribe(schedulerProvider)
-                .subscribe(
-                {
-                    Timber.d("Data: $it")
-                    allAlerts.value = it
-                },
-                { Timber.e(it) }
-        )
+    private suspend fun loadAlertData() {
+        val call = trainDataService.getTrainAlerts()
 
-        compositeDisposable.add(alertDisposable)
+        val alerts = try {
+            call.await()
+        } catch (e: IOException) {
+            Timber.w(e, "Error retrieving alerts")
+            return
+        }
+
+        withContext(contextProvider.ui) {
+            allAlerts.value = alerts
+        }
+    }
+
+    private fun doGetTrainAlerts() {
+
+        ioScope.launch {
+            while (true) {
+                val delayInterval = if (networkProvider.isNetworkConnected()) {
+                    loadAlertData()
+                    BuildConfig.STATUS_POLL_INTERVAL
+                } else {
+                    BuildConfig.STATUS_POLL_RETRY_INTERVAL
+                }
+                delay(delayInterval)
+            }
+        }
     }
 }

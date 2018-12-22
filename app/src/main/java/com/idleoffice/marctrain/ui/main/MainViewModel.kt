@@ -20,11 +20,10 @@
 
 package com.idleoffice.marctrain.ui.main
 
-import android.app.Application
-import com.idleoffice.marctrain.rx.SchedulerProvider
+import com.idleoffice.marctrain.coroutines.ContextProvider
 import com.idleoffice.marctrain.ui.base.BaseViewModel
 
 
 class MainViewModel(
-        schedulerProvider: SchedulerProvider)
-    : BaseViewModel<MainNavigator>(schedulerProvider)
+        contextProvider: ContextProvider)
+    : BaseViewModel<MainNavigator>(contextProvider)

@@ -23,7 +23,7 @@ package com.idleoffice.marctrain.ui.status
 import android.support.v7.widget.DefaultItemAnimator
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.RobolectricTest
-import com.idleoffice.marctrain.TestSchedulerProvider
+import com.idleoffice.marctrain.TestContextProvider
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.DIRECTION_FROM_DC
@@ -75,7 +75,7 @@ internal class StatusFragmentTest: RobolectricTest() {
         val ewLine = ut.resources.getStringArray(R.array.line_array).indexOf("Brunswick")
         ut.lineSpinner.setSelection(ewLine)
 
-        val ewDirection = ut.resources.getStringArray(R.array.ew_dir_array)[0]
+        val ewDirection = ut.resources.getStringArray(R.array.we_dir_array)[0]
         assertEquals(ewDirection, ut.directionSpinner.selectedItem)
     }
 
@@ -134,7 +134,7 @@ internal class StatusFragmentTest: RobolectricTest() {
         )
 
         val ts = TestScheduler()
-        private val scheduler = TestSchedulerProvider(ts)
+        private val scheduler = TestContextProvider(ts)
 
         class TestTrainDataService(val testTrainStatus: TrainStatus): TrainDataService {
             override fun getTrainStatus(): Observable<List<TrainStatus>> {

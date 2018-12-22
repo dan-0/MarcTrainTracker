@@ -22,18 +22,20 @@ package com.idleoffice.marctrain
 
 import android.content.Context
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
-import com.idleoffice.marctrain.rx.AppSchedulerProvider
-import com.idleoffice.marctrain.rx.SchedulerProvider
+import com.idleoffice.marctrain.coroutines.AppContextProvider
+import com.idleoffice.marctrain.coroutines.ContextProvider
+import com.idleoffice.marctrain.network.LiveNetworkProvider
+import com.idleoffice.marctrain.network.NetworkProvider
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module.module
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 val appModules = module {
-    single { AppSchedulerProvider() as SchedulerProvider}
+    single { AppContextProvider() as ContextProvider}
     single {
         val moshi = Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
@@ -41,10 +43,11 @@ val appModules = module {
         Retrofit.Builder()
                 .baseUrl(BuildConfig.POLL_URL)
                 .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(CoroutineCallAdapterFactory.invoke())
                 .build()
                 .create(TrainDataService::class.java)
     }
 
     single { this.androidApplication().getSharedPreferences("prefs", Context.MODE_PRIVATE)  }
+    single { LiveNetworkProvider(get()) as NetworkProvider }
 }

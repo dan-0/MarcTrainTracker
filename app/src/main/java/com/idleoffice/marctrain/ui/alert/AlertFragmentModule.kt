@@ -25,6 +25,6 @@ import org.koin.dsl.module.module
 
 
 val alertFragmentModule = module {
-    viewModel { AlertViewModel(get(), get()) }
+    viewModel { AlertViewModel(get(), get(), get()) }
     single { AlertAdapter(mutableListOf()) }
 }

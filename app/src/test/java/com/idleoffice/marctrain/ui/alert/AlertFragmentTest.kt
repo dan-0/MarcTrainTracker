@@ -23,7 +23,7 @@ package com.idleoffice.marctrain.ui.alert
 import android.support.v7.widget.DefaultItemAnimator
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.RobolectricTest
-import com.idleoffice.marctrain.TestSchedulerProvider
+import com.idleoffice.marctrain.TestContextProvider
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
@@ -79,7 +79,7 @@ internal class AlertFragmentTest: RobolectricTest() {
         )
 
         val ts = TestScheduler()
-        private val scheduler = TestSchedulerProvider(ts)
+        private val scheduler = TestContextProvider(ts)
 
         val alertTestModule : Module = applicationContext {
             viewModel {

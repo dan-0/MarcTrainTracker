@@ -22,13 +22,13 @@ package com.idleoffice.marctrain.retrofit.ts
 
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.data.model.TrainStatus
-import io.reactivex.Observable
+import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 
 interface TrainDataService {
     @GET("trainData")
-    fun getTrainStatus() : Observable<List<TrainStatus>>
+    fun getTrainStatus() : Deferred<List<TrainStatus>>
 
     @GET("alertData")
-    fun getTrainAlerts() : Observable<List<TrainAlert>>
+    fun getTrainAlerts() : Deferred<List<TrainAlert>>
 }

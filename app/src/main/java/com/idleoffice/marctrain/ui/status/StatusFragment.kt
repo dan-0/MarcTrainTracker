@@ -20,6 +20,7 @@
 
 package com.idleoffice.marctrain.ui.status
 
+import android.app.Fragment
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -31,8 +32,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.idleoffice.marctrain.Const.Companion.PREF_LAST_LINE
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainStatus
+import com.idleoffice.marctrain.data.tools.Direction
+import com.idleoffice.marctrain.data.tools.Line
 import com.idleoffice.marctrain.data.tools.TrainLineTools
-import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.DIRECTION_FROM_DC
 import com.idleoffice.marctrain.data.tools.TrainStatusComparator
 import com.idleoffice.marctrain.databinding.FragmentStatusCoordinatorBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
@@ -42,21 +44,19 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusViewModel>(), StatusNavigator {
+
     override val fragViewModel: StatusViewModel by viewModel()
 
     private val statusAdapter: StatusAdapter by inject()
     private val prefs: SharedPreferences by inject()
 
     override val layoutId: Int = R.layout.fragment_status_coordinator
-    private val spinnerItem = R.layout.spinner_item
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fragViewModel.navigator = this
-        setTrainStatusObserver()
-        setLineChangeObserver()
-        setTitleChangedObserver()
         retainInstance = true
+        setObservers()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -66,96 +66,100 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
         super.onActivityCreated(savedInstanceState)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        trainStatusList?.adapter = null
+    }
+
+    private fun setObservers() {
+        setTrainStatusObserver()
+        setLineChangeObserver()
+        setDirectionChangeObserver()
+    }
+
     private fun setTrainStatusObserver() {
         val trainStatusObserver = Observer<List<TrainStatus>> @Synchronized {
             if (it != null) {
                 Timber.d("New train status received")
-                with(statusAdapter.trainStatuses) {
-                    clear()
-                    if(it.isEmpty()) {
-                        showLoading(getString(R.string.no_active_trains))
-                        trainStatusList?.adapter?.notifyDataSetChanged()
-                        return@with
-                    }
-                    addAll(it)
-                    hideLoading()
-                    trainStatusList.adapter?.notifyDataSetChanged()
-                }
+                updateTrains()
             }
         }
-        fragViewModel.currentTrainStatusData.observe(this, trainStatusObserver)
+        fragViewModel.allTrainStatusData.observe(this, trainStatusObserver)
     }
 
     private fun setLineChangeObserver() {
         val lineChangeObserver = Observer<Int> @Synchronized {
             if (it != null) {
                 Timber.d("New line selected: $it")
-                parseNewLine(it)
+                val lineString = resources.getStringArray(R.array.line_array)[it]
+                val line = Line.resolveLine(lineString)
+
+                parseNewLine(line)
             }
         }
-
         fragViewModel.selectedTrainLine.observe(this, lineChangeObserver)
     }
 
-    private fun setTitleChangedObserver() {
-        val titleChangedObserver = Observer<String> @Synchronized {
+    private fun setDirectionChangeObserver() {
+        val directionChangeObserver = Observer<Int> @Synchronized {
             if (it != null) {
-                Timber.d("Direction changed $it")
-                statusCollapsing?.title = it
+                updateTrains()
             }
         }
 
-        fragViewModel.title.observe(this, titleChangedObserver)
+        fragViewModel.selectedTrainDirection.observe(this, directionChangeObserver)
+    }
+
+    private fun createLineAdapter(): ArrayAdapter<CharSequence> {
+        val adapter = ArrayAdapter.createFromResource(requireContext(), R.array.line_array, R.layout.spinner_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        return adapter
+    }
+
+    private fun createDirAdapter(line: Line): ArrayAdapter<CharSequence> {
+        val dirArray = when (line) {
+            Line.BRUNSWICK -> R.array.we_dir_array
+            else -> R.array.ns_dir_array
+        }
+
+        val dirAdapter = ArrayAdapter.createFromResource(requireContext(), dirArray, R.layout.spinner_item)
+        dirAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        return dirAdapter
     }
 
     /**
      * Set the direction spinner based on the line number, necessary because some go North-South,
      * some go East-West
      */
-    private fun setDirSpinner(lineNum: Int) {
-
-        // Determine if we need to use North/South or East/West directions
-        val array = resources.getStringArray(R.array.line_array)
-        var dirArray = R.array.ns_dir_array
-        if(array[lineNum] == array[2]) {
-            dirArray = R.array.ew_dir_array
-        }
-
-        val dirAdapter = ArrayAdapter.createFromResource(context, dirArray, spinnerItem)
-        dirAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        directionSpinner?.adapter = dirAdapter
+    private fun setDirSpinnerOptions(line: Line) {
+        directionSpinner?.adapter = createDirAdapter(line)
+        directionSpinner?.setSelection(fragViewModel.selectedTrainDirection.value!!)
     }
 
     /**
      * Parse a new line selection
      */
-    private fun parseNewLine(lineNum: Int) {
+    private fun parseNewLine(line: Line) {
         directionSpinner ?: return
-
-        val array = resources.getStringArray(R.array.line_array)
-
-        if( lineNum < 0 || lineNum >= array.size) {
-            Timber.d("Invalid array item: $lineNum of ${array.size - 1}")
-            return
-        }
-
-        prefs.edit().putInt(PREF_LAST_LINE, lineNum).apply()
-
-        setDirSpinner(lineNum)
+        prefs.edit().putString(PREF_LAST_LINE, line.name).apply()
+        setDirSpinnerOptions(line)
     }
 
     /**
      * Initialize the line spinner
      */
     private fun initLineSpinner() {
-        val lineAdapter = ArrayAdapter.createFromResource(context, R.array.line_array, spinnerItem)
-        lineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        lineSpinner.adapter = lineAdapter
+        lineSpinner.adapter = createLineAdapter()
 
-        val lastLine = prefs.getInt(PREF_LAST_LINE, DIRECTION_FROM_DC)
+        // TODO retained shared prefs will cause and exception!
+        val lineString = prefs.getString(PREF_LAST_LINE, Line.PENN.toString())
+        val lastLine = Line.valueOf(lineString!!)
+
         Timber.d("Parsing new last line: $lastLine")
-        lineSpinner?.setSelection(lastLine)
-        setDirSpinner(lastLine)
+        val lineIndex = resources.getStringArray(R.array.line_array)
+                .indexOfFirst { it.equals(lineString, true) }
+
+        lineSpinner?.setSelection(lineIndex)
         parseNewLine(lastLine)
     }
 
@@ -191,34 +195,68 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
         super.hideLoading()
     }
 
-    override fun tempUpdateTrains(selectedTrainLine: Int, selectedTrainDirection: Int, allTrainStatusData: List<TrainStatus>, currentTrainStatusData: List<TrainStatus>, title: String) {
-        val line = resources.getStringArray(R.array.line_array)[selectedTrainLine]
+    private fun updateTrains() {
+        val selectedLine =
+                resolveLineFromPosition(fragViewModel.selectedTrainLine.value!!)
+        val selectedDirection =
+                Direction.resolveDirectionFromPosition(fragViewModel.selectedTrainDirection.value!!)
 
+        val lineString = when (selectedLine) {
+            Line.PENN -> getString(R.string.penn)
+            Line.CAMDEN -> getString(R.string.camden)
+            else -> getString(R.string.brunswick)
+        }
 
-        var compareArray = when(selectedTrainLine) {
-            TrainLineTools.PENN_LINE_IDX -> TrainLineTools.PENN_STATIONS
-            TrainLineTools.CAMDEN_LINE_IDX -> TrainLineTools.CAMDEN_STATIONS
+        val directionString = resolveDirectionString(selectedLine, selectedDirection)
+
+        var compareArray = when(selectedLine) {
+            Line.PENN -> TrainLineTools.PENN_STATIONS
+            Line.CAMDEN -> TrainLineTools.CAMDEN_STATIONS
             else -> TrainLineTools.BRUNSWICK_STATIONS
         }
 
-        if (selectedTrainDirection == TrainLineTools.DIRECTION_TO_DC) {
+        if (selectedDirection == Direction.TO_DC) {
             compareArray = compareArray.asReversed()
         }
 
-        val direction = when(selectedTrainLine) {
-            TrainLineTools.BRUNSWICK_LINE_IDX -> resources.getStringArray(R.array.ew_dir_array)[selectedTrainDirection]
-            else -> resources.getStringArray(R.array.ns_dir_array)[selectedTrainDirection]
-        }
-
-        val current =  allTrainStatusData.filter {
-            (it.direction == direction && it.line == line)
+        val currentTrains = fragViewModel.allTrainStatusData.value!!.filter {
+            (it.direction == directionString && it.line == lineString)
         }.sortedWith(TrainStatusComparator(compareArray))
 
-        fragViewModel.currentTrainStatusData.value = current
+        with(statusAdapter.trainStatuses) {
+            clear()
+            if(currentTrains.isEmpty()) {
+                trainStatusList?.adapter?.notifyDataSetChanged()
+                showLoading(getString(R.string.no_active_trains))
+                return@with
+            }
+            addAll(currentTrains)
+            hideLoading()
+            trainStatusList?.adapter?.notifyDataSetChanged()
+        }
 
-        // Don't set it if its the same, otherwise we'll trigger the observable behavior
-        if (title != "$line $direction") {
-            statusCollapsing?.title = "$line $direction"
+        statusCollapsing?.title = "$lineString $directionString"
+    }
+
+    private fun resolveLineFromPosition(position: Int): Line {
+        val lineString = resources.getStringArray(R.array.line_array)[position]
+        return Line.resolveLine(lineString)
+    }
+
+    private fun resolveDirectionString(line: Line, selectedDirection: Direction): String {
+        return when(line) {
+            Line.BRUNSWICK -> {
+                when (selectedDirection) {
+                    Direction.FROM_DC -> resources.getString(R.string.west)
+                    else -> resources.getString(R.string.east)
+                }
+            }
+            else -> {
+                when (selectedDirection) {
+                    Direction.FROM_DC -> resources.getString(R.string.north)
+                    else -> resources.getString(R.string.south)
+                }
+            }
         }
     }
 }

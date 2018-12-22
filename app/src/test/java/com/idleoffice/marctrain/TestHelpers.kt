@@ -23,7 +23,7 @@ package com.idleoffice.marctrain
 import android.arch.core.executor.ArchTaskExecutor
 import android.arch.core.executor.TaskExecutor
 import com.idleoffice.marctrain.data.model.TrainStatus
-import com.idleoffice.marctrain.rx.SchedulerProvider
+import com.idleoffice.marctrain.coroutines.ContextProvider
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
@@ -36,12 +36,12 @@ import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-class TrampolineSchedulerProvider : SchedulerProvider {
+class TrampolineContextProvider : ContextProvider {
     override fun ui(): Scheduler {return Schedulers.trampoline()}
     override fun io(): Scheduler {return Schedulers.trampoline()}
 }
 
-class TestSchedulerProvider(private val ts: TestScheduler) : SchedulerProvider {
+class TestContextProvider(private val ts: TestScheduler) : ContextProvider {
     override fun ui(): Scheduler { return ts }
     override fun io(): Scheduler { return ts }
 }

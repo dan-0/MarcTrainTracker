@@ -20,17 +20,17 @@
 
 package com.idleoffice.marctrain.ui.schedule
 
-import android.app.Application
 import android.content.res.AssetManager
-import com.idleoffice.marctrain.rx.SchedulerProvider
+import com.idleoffice.marctrain.coroutines.ContextProvider
 import com.idleoffice.marctrain.ui.base.BaseViewModel
-import io.reactivex.Single
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
 
 
-class ScheduleViewModel(schedulerProvider: SchedulerProvider) :
-        BaseViewModel<ScheduleNavigator>(schedulerProvider) {
+class ScheduleViewModel(contextProvider: ContextProvider) :
+        BaseViewModel<ScheduleNavigator>(contextProvider) {
 
     companion object {
         const val lineBaseDir = "tables"
@@ -73,14 +73,12 @@ class ScheduleViewModel(schedulerProvider: SchedulerProvider) :
 
         val fos = destination.outputStream()
 
-        Single.fromCallable({ fis.copyTo(fos) })
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribe( {
-                    navigator?.startPdfActivity(destination)
-                }, {
-                    Timber.e(it)
-                })
+        ioScope.launch {
+            fis.copyTo(fos)
+            withContext(contextProvider.ui) {
+                navigator?.startPdfActivity(destination)
+            }
+        }
     }
 
     fun launchPennTable() {

@@ -31,18 +31,20 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import timber.log.Timber
 
-abstract class BaseActivity <T : ViewDataBinding, out V : BaseViewModel<*>> : AppCompatActivity(), BaseFragment.Callback {
+abstract class BaseActivity <T : ViewDataBinding, out V : BaseViewModel<*>> : AppCompatActivity() {
 
     private var progressBar: ProgressBar? = null
-    var viewDataBinding : T? = null
+    private var viewDataBinding : T? = null
     abstract val actViewModel : V
 
+    @get:LayoutRes
+    abstract val layoutId : Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.d("Base activity onCreate called")
+        lifecycle.addObserver(actViewModel)
         super.onCreate(savedInstanceState)
         initDataBinding()
-        actViewModel.viewInitialize()
     }
 
     private fun initDataBinding() {
@@ -73,18 +75,9 @@ abstract class BaseActivity <T : ViewDataBinding, out V : BaseViewModel<*>> : Ap
         return null
     }
 
-    /**
-     *  The Layout ID
-     */
-    @get:LayoutRes
-    abstract val layoutId : Int
-
     fun isNetworkConnected() : Boolean {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
         val network = cm?.activeNetworkInfo
         return network != null && network.isConnectedOrConnecting
     }
-
-    override fun onFragmentAttached() {}
-    override fun onFragmentDetached(tag: String) {}
 }

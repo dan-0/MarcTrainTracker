@@ -20,15 +20,40 @@
 
 package com.idleoffice.marctrain.data.tools
 
+enum class Line {
+    PENN,
+    CAMDEN,
+    BRUNSWICK;
+
+    companion object {
+
+        /**
+         * Resolves a line given a matching [stringLine]
+         */
+        fun resolveLine(stringLine: String): Line {
+            return values().first { stringLine.equals(it.name, true) }
+        }
+    }
+}
+
+enum class Direction(val position: Int) {
+    FROM_DC(0),
+    TO_DC(1);
+
+    companion object {
+
+        /**
+         * Resolves a direction given a [position]
+         */
+        fun resolveDirectionFromPosition(position: Int): Direction {
+            return values().first { it.position == position }
+        }
+    }
+}
+
 class TrainLineTools {
 
     companion object {
-        const val PENN_LINE_IDX = 0
-        const val CAMDEN_LINE_IDX = 1
-        const val BRUNSWICK_LINE_IDX = 2
-
-        const val DIRECTION_FROM_DC = 0
-        const val DIRECTION_TO_DC = 1
 
         val PENN_STATIONS = listOf(
                 "Perryville",

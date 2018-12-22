@@ -25,12 +25,6 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.HapticFeedbackConstants
-import com.idleoffice.marctrain.rx.SchedulerProvider
-import io.reactivex.Observable
-
-fun <T: Any> Observable<T>.observeSubscribe(schedulerProvider: SchedulerProvider): Observable<T> {
-    return this.observeOn(schedulerProvider.ui()).subscribeOn(schedulerProvider.io())
-}
 
 internal fun Context.vibrateTap() {
     val vibe = this.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
@@ -47,6 +41,6 @@ internal fun Context.vibrateTap() {
 
 class Const {
     companion object {
-        const val PREF_LAST_LINE = "lastLine"
+        const val PREF_LAST_LINE = "lastLinev2"
     }
 }

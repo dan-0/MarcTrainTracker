@@ -39,7 +39,8 @@ class MainApp : Application() {
             scheduleFragmentModule,
             mainActivityModule,
             statusFragmentModule,
-            alertFragmentModule)
+            alertFragmentModule
+    )
 
     override fun onCreate() {
         super.onCreate()

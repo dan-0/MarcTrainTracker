@@ -23,7 +23,7 @@ package com.idleoffice.marctrain.ui.schedule
 import android.content.res.AssetManager
 import com.idleoffice.marctrain.MainApp
 import com.idleoffice.marctrain.TempDirectory
-import com.idleoffice.marctrain.TrampolineSchedulerProvider
+import com.idleoffice.marctrain.TrampolineContextProvider
 import com.idleoffice.marctrain.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
@@ -40,7 +40,7 @@ internal class ScheduleViewModelTest(@TempDirectory.TempDir val tempDir: Path) {
 
     val mockApp: MainApp = mock()
 
-    private val trampolineScheduler = TrampolineSchedulerProvider()
+    private val trampolineScheduler = TrampolineContextProvider()
 
     private lateinit var ut: ScheduleViewModel
 

@@ -39,27 +39,33 @@
     <string name="description">Description:</string>
     <string name="no_alerts_reported_looking">No alerts reported at this time, but we\'ll keep looking.</string>
     <string name="looking_for_alerts">Looking for active alerts</string>
-    <string name="penn">PENN</string>
-    <string name="camden">CAMDEN</string>
-    <string name="brunswick">BRUNSWICK</string>
+    <string translatable="false" name="penn">Penn</string>
+    <string translatable="false" name="camden">Camden</string>
+    <string translatable="false" name="brunswick">Brunswick</string>
     <string name="alerts">Alerts</string>
     <string name="pdf_reader_unavailable">PDF READER UNAVAILABLE</string>
     <string name="lastDir">lastDir</string>
 
     <string-array name="line_array" translatable="false">
-        <item translatable="false">Penn</item>
-        <item translatable="false">Camden</item>
-        <item translatable="false">Brunswick</item>
+        <item>@string/penn</item>
+        <item>@string/camden</item>
+        <item>@string/brunswick</item>
     </string-array>
+
+    <string name="north">North</string>
+    <string name="south">South</string>
+    <string name="west">West</string>
+    <string name="east">East</string>
 
     <string-array name="ns_dir_array">
-        <item translatable="false">North</item>
-        <item translatable="false">South</item>
+        <item>@string/north</item>
+        <item>@string/south</item>
     </string-array>
 
-    <string-array name="ew_dir_array">
-        <item translatable="false">East</item>
-        <item translatable="false">West</item>
+    <string-array name="we_dir_array">
+        <item>@string/west</item>
+        <item>@string/east</item>
     </string-array>
+
 
 </resources>
