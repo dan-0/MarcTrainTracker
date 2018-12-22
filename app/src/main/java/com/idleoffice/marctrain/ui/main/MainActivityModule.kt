@@ -20,10 +20,10 @@
 
 package com.idleoffice.marctrain.ui.main
 
-import org.koin.android.architecture.ext.viewModel
-import org.koin.dsl.module.Module
-import org.koin.dsl.module.applicationContext
+import org.koin.androidx.viewmodel.ext.koin.viewModel
+import org.koin.dsl.module.module
 
-val mainActivityModule : Module = applicationContext {
-    viewModel { MainViewModel(get(), get()) }
+
+val mainActivityModule = module {
+    viewModel { MainViewModel(get()) }
 }

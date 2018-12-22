@@ -20,12 +20,12 @@
 
 package com.idleoffice.marctrain.ui.status
 
-import android.support.constraint.ConstraintLayout
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.ViewManager
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.ui.base.BaseViewHolder

@@ -21,8 +21,8 @@
 package com.idleoffice.marctrain.ui.main
 
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
 import android.widget.Toast
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.ActivityMainBinding
@@ -33,7 +33,7 @@ import com.idleoffice.marctrain.ui.schedule.ScheduleFragment
 import com.idleoffice.marctrain.ui.status.StatusFragment
 import com.idleoffice.marctrain.vibrateTap
 import kotlinx.android.synthetic.main.activity_main.*
-import org.koin.android.architecture.ext.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNavigator {

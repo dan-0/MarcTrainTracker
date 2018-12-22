@@ -29,9 +29,8 @@ import timber.log.Timber
 import java.io.File
 
 
-class ScheduleViewModel(app: Application,
-                        schedulerProvider: SchedulerProvider) :
-        BaseViewModel<ScheduleNavigator>(app, schedulerProvider) {
+class ScheduleViewModel(schedulerProvider: SchedulerProvider) :
+        BaseViewModel<ScheduleNavigator>(schedulerProvider) {
 
     companion object {
         const val lineBaseDir = "tables"

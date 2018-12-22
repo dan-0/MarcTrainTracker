@@ -28,7 +28,7 @@
             type="com.idleoffice.marctrain.ui.schedule.ScheduleViewModel" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/scheduleLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -49,7 +49,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.v7.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTablesPenn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                 android:layout_marginTop="@dimen/button_margin"
                 android:text="@string/penn" />
 
-            <android.support.v7.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTablesCamden"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                 style="@style/mt.btn"
                 android:text="@string/camden" />
 
-            <android.support.v7.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTablesBrunswick"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,5 +75,5 @@
                 android:text="@string/brunswick"
                 />
         </LinearLayout>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

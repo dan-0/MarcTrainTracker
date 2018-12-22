@@ -20,8 +20,7 @@
 
 package com.idleoffice.marctrain.ui.alert
 
-import android.app.Application
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.observeSubscribe
@@ -32,10 +31,9 @@ import io.reactivex.Observable
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class AlertViewModel(app: Application,
-                     schedulerProvider: SchedulerProvider,
+class AlertViewModel(schedulerProvider: SchedulerProvider,
                      private val trainDataService: TrainDataService) :
-        BaseViewModel<AlertNavigator>(app, schedulerProvider)
+        BaseViewModel<AlertNavigator>(schedulerProvider)
 {
     val allAlerts = MutableLiveData<List<TrainAlert>>().apply { value = emptyList() }
 

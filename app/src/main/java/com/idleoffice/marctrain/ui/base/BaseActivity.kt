@@ -21,14 +21,14 @@
 package com.idleoffice.marctrain.ui.base
 
 import android.content.Context
-import android.databinding.DataBindingUtil
-import android.databinding.ViewDataBinding
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.support.annotation.LayoutRes
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.ProgressBar
+import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import timber.log.Timber
 
 abstract class BaseActivity <T : ViewDataBinding, out V : BaseViewModel<*>> : AppCompatActivity(), BaseFragment.Callback {

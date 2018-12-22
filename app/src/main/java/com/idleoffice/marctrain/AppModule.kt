@@ -27,14 +27,14 @@ import com.idleoffice.marctrain.rx.SchedulerProvider
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import org.koin.android.ext.koin.androidApplication
-import org.koin.dsl.module.applicationContext
+import org.koin.dsl.module.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-val appModules = applicationContext {
-    bean { AppSchedulerProvider() as SchedulerProvider}
-    bean {
+val appModules = module {
+    single { AppSchedulerProvider() as SchedulerProvider}
+    single {
         val moshi = Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
                 .build()
@@ -46,5 +46,5 @@ val appModules = applicationContext {
                 .create(TrainDataService::class.java)
     }
 
-    bean { this.androidApplication().getSharedPreferences("prefs", Context.MODE_PRIVATE)  }
+    single { this.androidApplication().getSharedPreferences("prefs", Context.MODE_PRIVATE)  }
 }

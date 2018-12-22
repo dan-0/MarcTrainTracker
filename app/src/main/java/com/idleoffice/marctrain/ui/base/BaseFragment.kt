@@ -21,14 +21,15 @@
 package com.idleoffice.marctrain.ui.base
 
 import android.content.Context
-import android.databinding.DataBindingUtil
-import android.databinding.ViewDataBinding
+
 import android.os.Bundle
-import android.support.annotation.LayoutRes
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 import com.idleoffice.marctrain.BR
 import io.reactivex.exceptions.UndeliverableException
 import kotlinx.android.synthetic.main.progress_bar_frame_layout.*

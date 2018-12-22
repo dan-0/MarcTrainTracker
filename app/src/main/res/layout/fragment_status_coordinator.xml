@@ -28,18 +28,18 @@
             type="com.idleoffice.marctrain.ui.status.StatusViewModel" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/statusLayout">
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/statusAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/mt.traininfo.appbar"
             android:stateListAnimator="@animator/toolbar_dropshadow">
-            <android.support.design.widget.CollapsingToolbarLayout
+            <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/statusCollapsing"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/collapsing_toolbar_height"
@@ -48,7 +48,7 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:collapsedTitleTextAppearance="@style/mt.toolbar.title"
                 app:expandedTitleTextAppearance="@style/mt.toolbar.title.transparent">
-                <android.support.v7.widget.Toolbar
+                <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?android:attr/actionBarSize"
@@ -57,8 +57,8 @@
                     app:layout_collapseMode="parallax"
                     android:fitsSystemWindows="true"
                     android:minHeight="?android:attr/actionBarSize">
-                </android.support.v7.widget.Toolbar>
-                <android.support.constraint.ConstraintLayout
+                </androidx.appcompat.widget.Toolbar>
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/spinnerLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -70,7 +70,7 @@
                     app:layout_scrollFlags="scroll|exitUntilCollapsed"
                     >
 
-                    <android.support.v7.widget.AppCompatSpinner
+                    <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/lineSpinner"
                         style="@style/mt.spinner.underlined"
                         android:layout_width="match_parent"
@@ -80,7 +80,7 @@
                         android:onItemSelected="@{(par,v,pos,id) -> viewModel.trainLineSelected(pos)}"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <android.support.v7.widget.AppCompatSpinner
+                    <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/directionSpinner"
                         style="@style/mt.spinner.underlined"
                         android:layout_width="match_parent"
@@ -89,17 +89,17 @@
                         android:onItemSelected="@{(par,v,pos,id) -> viewModel.trainDirectionSelected(pos)}"
                         app:layout_constraintTop_toBottomOf="@id/lineSpinner"
                         app:layout_constraintBottom_toBottomOf="parent"/>
-                </android.support.constraint.ConstraintLayout>
-            </android.support.design.widget.CollapsingToolbarLayout>
-        </android.support.design.widget.AppBarLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/trainStatusList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             style="@style/mt.recycler.view"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        </android.support.v7.widget.RecyclerView>
+        </androidx.recyclerview.widget.RecyclerView>
 
         <include
             android:id="@+id/progressBarFrame"
@@ -108,5 +108,5 @@
             android:layout_marginTop="@dimen/collapsing_toolbar_height"
             android:layout_width="match_parent"/>
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

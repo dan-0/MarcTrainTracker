@@ -24,14 +24,14 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.res.AssetManager
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.content.FileProvider
+import androidx.core.content.FileProvider
+import com.google.android.material.snackbar.Snackbar
 import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.FragmentScheduleBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
 import com.idleoffice.marctrain.vibrateTap
-import org.koin.android.architecture.ext.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.io.File
 

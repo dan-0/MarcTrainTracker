@@ -20,17 +20,15 @@
 
 package com.idleoffice.marctrain.ui.base
 
-import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.databinding.ObservableBoolean
+import androidx.databinding.ObservableBoolean
+import androidx.lifecycle.ViewModel
 import com.idleoffice.marctrain.rx.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.exceptions.UndeliverableException
 import timber.log.Timber
 
 
-abstract class BaseViewModel<T>(app : Application,
-                                var schedulerProvider: SchedulerProvider) : AndroidViewModel(app) {
+abstract class BaseViewModel<T>(var schedulerProvider: SchedulerProvider) : ViewModel() {
 
     var navigator : T? = null
 

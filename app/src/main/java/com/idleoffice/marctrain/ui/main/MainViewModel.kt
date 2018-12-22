@@ -26,6 +26,5 @@ import com.idleoffice.marctrain.ui.base.BaseViewModel
 
 
 class MainViewModel(
-        app : Application,
         schedulerProvider: SchedulerProvider)
-    : BaseViewModel<MainNavigator>(app, schedulerProvider)
+    : BaseViewModel<MainNavigator>(schedulerProvider)

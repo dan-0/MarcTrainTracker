@@ -20,11 +20,11 @@
 
 package com.idleoffice.marctrain.ui.alert
 
-import android.support.constraint.ConstraintLayout
-import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.ui.base.BaseViewHolder

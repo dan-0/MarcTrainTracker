@@ -20,19 +20,19 @@
 
 package com.idleoffice.marctrain.ui.alert
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.databinding.FragmentAlertBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_alert.*
-import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class AlertFragment : BaseFragment<FragmentAlertBinding, AlertViewModel>(), AlertNavigator {

@@ -20,23 +20,25 @@
 
 package com.idleoffice.marctrain.ui.status
 
-import android.arch.lifecycle.Observer
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
 import android.widget.ArrayAdapter
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.idleoffice.marctrain.Const.Companion.PREF_LAST_LINE
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainStatus
+import com.idleoffice.marctrain.data.tools.TrainLineTools
 import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.DIRECTION_FROM_DC
+import com.idleoffice.marctrain.data.tools.TrainStatusComparator
 import com.idleoffice.marctrain.databinding.FragmentStatusCoordinatorBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_status_coordinator.*
-import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusViewModel>(), StatusNavigator {
@@ -187,5 +189,36 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
         lineSpinner?.isClickable = true
         directionSpinner?.isClickable = true
         super.hideLoading()
+    }
+
+    override fun tempUpdateTrains(selectedTrainLine: Int, selectedTrainDirection: Int, allTrainStatusData: List<TrainStatus>, currentTrainStatusData: List<TrainStatus>, title: String) {
+        val line = resources.getStringArray(R.array.line_array)[selectedTrainLine]
+
+
+        var compareArray = when(selectedTrainLine) {
+            TrainLineTools.PENN_LINE_IDX -> TrainLineTools.PENN_STATIONS
+            TrainLineTools.CAMDEN_LINE_IDX -> TrainLineTools.CAMDEN_STATIONS
+            else -> TrainLineTools.BRUNSWICK_STATIONS
+        }
+
+        if (selectedTrainDirection == TrainLineTools.DIRECTION_TO_DC) {
+            compareArray = compareArray.asReversed()
+        }
+
+        val direction = when(selectedTrainLine) {
+            TrainLineTools.BRUNSWICK_LINE_IDX -> resources.getStringArray(R.array.ew_dir_array)[selectedTrainDirection]
+            else -> resources.getStringArray(R.array.ns_dir_array)[selectedTrainDirection]
+        }
+
+        val current =  allTrainStatusData.filter {
+            (it.direction == direction && it.line == line)
+        }.sortedWith(TrainStatusComparator(compareArray))
+
+        fragViewModel.currentTrainStatusData.value = current
+
+        // Don't set it if its the same, otherwise we'll trigger the observable behavior
+        if (title != "$line $direction") {
+            statusCollapsing?.title = "$line $direction"
+        }
     }
 }

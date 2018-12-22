@@ -20,10 +20,9 @@
 
 package com.idleoffice.marctrain.ui.schedule
 
-import org.koin.android.architecture.ext.viewModel
-import org.koin.dsl.module.Module
-import org.koin.dsl.module.applicationContext
+import org.koin.androidx.viewmodel.ext.koin.viewModel
+import org.koin.dsl.module.module
 
-val scheduleFragmentModule : Module = applicationContext {
-    viewModel { ScheduleViewModel(get(), get()) }
+val scheduleFragmentModule = module {
+    viewModel { ScheduleViewModel(get()) }
 }

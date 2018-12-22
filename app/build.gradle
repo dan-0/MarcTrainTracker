@@ -80,40 +80,39 @@ dependencies {
 
     // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.0"
 
-    implementation "com.android.support:appcompat-v7:$supportLibVersion"
-    implementation "com.android.support:design:$supportLibVersion"
-    implementation "com.android.support.constraint:constraint-layout:1.1.3"
-    implementation "com.android.support:support-vector-drawable:$supportLibVersion"
+    implementation "androidx.appcompat:appcompat:$androidXVersion"
+    implementation "androidx.constraintlayout:constraintlayout:1.1.3"
+    implementation "com.google.android.material:material:1.0.0"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.2.0"
-    testImplementation 'org.mockito:mockito-core:2.15.0'
+    testImplementation 'org.mockito:mockito-core:2.23.4'
     testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
-    testImplementation "org.robolectric:robolectric:$robolectricVersion"
-    testImplementation "org.robolectric:shadows-supportv4:$robolectricVersion"
-    testImplementation "org.robolectric:shadows-playservices:$robolectricVersion"
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation "androidx.arch.core:core-testing:2.0.0"
+
+    androidTestImplementation "androidx.test.ext:junit:$androidXTestVersion"
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$espressoVersion"
 
     // Java Rx
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
 
     // ViewModel and LiveData
-    implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
-    implementation "android.arch.lifecycle:common-java8:$lifecycleVersion"
-    implementation "android.arch.lifecycle:reactivestreams:$lifecycleVersion"
-    testImplementation "android.arch.core:core-testing:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$archVersion"
+    kapt "androidx.lifecycle:lifecycle-compiler:$archVersion"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$archVersion"
+    implementation "androidx.lifecycle:lifecycle-reactivestreams:$archVersion"
 
     // Crashlytics
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
-    implementation 'com.google.firebase:firebase-core:16.0.4'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.7'
+    implementation 'com.google.firebase:firebase-core:16.0.6'
 
     // DI
     implementation "org.koin:koin-android:$koinVersion"
-    implementation "org.koin:koin-android-architecture:$koinVersion"
+    implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
     testImplementation "org.koin:koin-test:$koinVersion"
 
     // Timber for logging

@@ -20,11 +20,11 @@
 
 package com.idleoffice.marctrain.ui.alert
 
-import org.koin.android.architecture.ext.viewModel
-import org.koin.dsl.module.Module
-import org.koin.dsl.module.applicationContext
+import org.koin.androidx.viewmodel.ext.koin.viewModel
+import org.koin.dsl.module.module
 
-val alertFragmentModule : Module = applicationContext {
-    viewModel { AlertViewModel(get(), get(), get()) }
-    bean { AlertAdapter(mutableListOf()) }
+
+val alertFragmentModule = module {
+    viewModel { AlertViewModel(get(), get()) }
+    single { AlertAdapter(mutableListOf()) }
 }
