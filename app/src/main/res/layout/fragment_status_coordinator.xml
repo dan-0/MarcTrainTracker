@@ -102,7 +102,6 @@
         </androidx.recyclerview.widget.RecyclerView>
 
         <include
-            android:id="@+id/progressBarFrame"
             layout="@layout/progress_bar_frame_layout"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/collapsing_toolbar_height"
