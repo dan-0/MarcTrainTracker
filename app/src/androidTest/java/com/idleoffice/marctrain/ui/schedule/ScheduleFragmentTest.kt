@@ -21,9 +21,15 @@
 package com.idleoffice.marctrain.ui.schedule
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class ScheduleFragmentTest {
-    // Placeholder for schedule fragment test. Will be getting rid of the current functionality, so we don't want/need to test it.
+
+  // Placeholder for schedule fragment test. Will be getting rid of the current functionality, so we don't want/need to test it.
+  @Test
+  fun dummyTest() {
+
+  }
 }

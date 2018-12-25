@@ -29,7 +29,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.databinding.FragmentAlertBinding
-import com.idleoffice.marctrain.idling.IdlingResource
 import com.idleoffice.marctrain.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_alert.*
 import org.koin.android.ext.android.inject
@@ -40,7 +39,6 @@ class AlertFragment : BaseFragment<FragmentAlertBinding, AlertViewModel>(), Aler
     override val fragViewModel: AlertViewModel by viewModel()
 
     private val alertAdapter: AlertAdapter by inject()
-    private val idlingResource: IdlingResource by inject()
 
     override val layoutId: Int = R.layout.fragment_alert
 
