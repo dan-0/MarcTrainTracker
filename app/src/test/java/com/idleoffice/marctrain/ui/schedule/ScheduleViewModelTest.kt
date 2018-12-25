@@ -20,7 +20,7 @@
 
 package com.idleoffice.marctrain.ui.schedule
 
-internal class ScheduleViewModelTest() {
+internal class ScheduleViewModelTest {
 
     // Placeholder due to this method changing behavior in near future update
 }

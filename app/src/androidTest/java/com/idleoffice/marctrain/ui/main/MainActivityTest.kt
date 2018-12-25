@@ -20,28 +20,17 @@
 
 package com.idleoffice.marctrain.ui.main
 
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.idleoffice.marctrain.R.id
-import com.idleoffice.marctrain.data.model.TrainAlert
-import com.idleoffice.marctrain.data.model.TrainStatus
-import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.idleoffice.marctrain.testsupport.KoinActivityTestRule
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
 
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {

@@ -21,7 +21,6 @@
 package com.idleoffice.marctrain.ui.base
 
 import android.content.Context
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,8 +30,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.idleoffice.marctrain.BR
-import com.idleoffice.marctrain.MainApp
-import kotlinx.android.synthetic.main.progress_bar_frame_layout.*
+import kotlinx.android.synthetic.main.progress_bar_frame_layout.loadingTextView
+import kotlinx.android.synthetic.main.progress_bar_frame_layout.loadingView
 import timber.log.Timber
 
 abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel<*>> : Fragment() {

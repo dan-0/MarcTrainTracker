@@ -44,12 +44,6 @@ android {
             manifestPlaceholders = [enableCrashlytics: "true"]
         }
 
-        debug {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
-                'proguard-rules.pro'
-        }
-
         all {
             buildConfigField "String", "POLL_URL", "\"https://d2jr231zyecel4.cloudfront.net/\""
             buildConfigField "long", "ALERT_POLL_INTERVAL", "60000"

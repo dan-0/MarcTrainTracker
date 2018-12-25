@@ -29,7 +29,7 @@ class TrainStatusComparatorTest {
 
     private val ut = TrainStatusComparator(PENN_STATIONS)
 
-    val basicTrainStatus = TrainStatus(
+    private val basicTrainStatus = TrainStatus(
             "0",
             "Penn",
             "South",

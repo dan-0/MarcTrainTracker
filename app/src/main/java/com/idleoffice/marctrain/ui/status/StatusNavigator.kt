@@ -20,10 +20,6 @@
 
 package com.idleoffice.marctrain.ui.status
 
-import com.idleoffice.marctrain.data.model.TrainStatus
-import com.idleoffice.marctrain.data.tools.Direction
-import com.idleoffice.marctrain.data.tools.Line
-
 interface StatusNavigator {
     fun showLoading(msg: String)
     fun hideLoading()

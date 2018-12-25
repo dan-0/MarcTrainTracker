@@ -1,6 +1,5 @@
 package com.idleoffice.marctrain.idling
 
-import com.idleoffice.marctrain.MainApp
 import org.koin.dsl.module.module
 
 interface IdlingResource {

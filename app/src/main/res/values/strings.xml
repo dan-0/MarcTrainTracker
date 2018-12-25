@@ -44,7 +44,6 @@
     <string translatable="false" name="brunswick">Brunswick</string>
     <string name="alerts">Alerts</string>
     <string name="pdf_reader_unavailable">PDF READER UNAVAILABLE</string>
-    <string name="lastDir">lastDir</string>
 
     <string-array name="line_array" translatable="false">
         <item>@string/penn</item>

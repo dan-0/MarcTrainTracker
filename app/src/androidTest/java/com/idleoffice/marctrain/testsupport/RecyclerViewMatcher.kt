@@ -4,12 +4,8 @@ import android.content.res.Resources
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.ViewAssertion
-import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.`is`
 import org.hamcrest.TypeSafeMatcher
 
 class RecyclerViewMatcher(@IdRes private val recyclerViewId: Int) {

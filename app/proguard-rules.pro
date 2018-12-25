@@ -22,10 +22,6 @@
 -keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
 
 # kotlin
-# See: https://youtrack.jetbrains.com/issue/KT-7652#comment=27-993857
--keep class kotlin.** {
-    public protected *;
-}
 -keep enum ** {
     public protected *;
 }
