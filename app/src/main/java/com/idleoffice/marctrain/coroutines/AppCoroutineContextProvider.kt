@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 IdleOffice Inc.
  *
- * ScheduleViewModelTest.kt is part of MarcTrainTracker.
+ * AppContextProvidert is part of MarcTrainTracker.
  *
  * MarcTrainTracker is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,12 @@
  *
  */
 
-package com.idleoffice.marctrain.ui.schedule
+package com.idleoffice.marctrain.coroutines
 
-internal class ScheduleViewModelTest() {
+import kotlinx.coroutines.Dispatchers
 
-    // Placeholder due to this method changing behavior in near future update
+
+class AppCoroutineContextProvider: CoroutineContextProvider {
+    override val io = Dispatchers.IO
+    override val ui = Dispatchers.Main
 }

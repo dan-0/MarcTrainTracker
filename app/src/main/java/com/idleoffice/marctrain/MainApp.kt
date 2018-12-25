@@ -23,6 +23,7 @@ package com.idleoffice.marctrain
 import android.app.Application
 import android.util.Log
 import com.crashlytics.android.Crashlytics
+import com.idleoffice.marctrain.idling.idlingResourceModule
 import com.idleoffice.marctrain.ui.alert.alertFragmentModule
 import com.idleoffice.marctrain.ui.main.mainActivityModule
 import com.idleoffice.marctrain.ui.schedule.scheduleFragmentModule
@@ -39,7 +40,8 @@ class MainApp : Application() {
             scheduleFragmentModule,
             mainActivityModule,
             statusFragmentModule,
-            alertFragmentModule
+            alertFragmentModule,
+            idlingResourceModule
     )
 
     override fun onCreate() {

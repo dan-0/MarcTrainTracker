@@ -25,13 +25,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ViewModel
-import com.idleoffice.marctrain.coroutines.ContextProvider
+import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import timber.log.Timber
 
 
-abstract class BaseViewModel<T>(val contextProvider: ContextProvider)
+abstract class BaseViewModel<T>(val coroutineContextProvider: CoroutineContextProvider)
     : ViewModel(), LifecycleObserver {
 
     var navigator : T? = null
@@ -46,8 +46,8 @@ abstract class BaseViewModel<T>(val contextProvider: ContextProvider)
      */
     private var job: Job = Job()
 
-    protected var ioScope = CoroutineScope(contextProvider.io + job)
-    protected var mainScope = CoroutineScope(contextProvider.ui + job)
+    protected var ioScope = CoroutineScope(coroutineContextProvider.io + job)
+    protected var mainScope = CoroutineScope(coroutineContextProvider.ui + job)
 
     /**
      * A one time initialization function to help with testing. `init{}` isn't as controllable

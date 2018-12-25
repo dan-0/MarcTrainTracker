@@ -20,12 +20,12 @@
 
 package com.idleoffice.marctrain.ui.status
 
-import androidx.databinding.Observable
 import androidx.lifecycle.MutableLiveData
 import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
-import com.idleoffice.marctrain.coroutines.ContextProvider
+import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
+import com.idleoffice.marctrain.idling.IdlingResource
 import com.idleoffice.marctrain.network.NetworkProvider
 import com.idleoffice.marctrain.ui.base.BaseViewModel
 import kotlinx.coroutines.delay
@@ -35,12 +35,13 @@ import timber.log.Timber
 import java.io.IOException
 
 class StatusViewModel(
-        contextProvider: ContextProvider,
+        coroutineContextProvider: CoroutineContextProvider,
         private val trainDataService: TrainDataService,
-        private val networkProvider: NetworkProvider
-) : BaseViewModel<StatusNavigator>(contextProvider) {
+        private val networkProvider: NetworkProvider,
+        private val idlingResource: IdlingResource
+) : BaseViewModel<StatusNavigator>(coroutineContextProvider) {
 
-    val allTrainStatusData = MutableLiveData<List<TrainStatus>>().apply { value = emptyList() }
+    val allTrainStatusData = MutableLiveData<List<TrainStatus>>()
     val selectedTrainLine = MutableLiveData<Int>().apply { value = 0 }
     val selectedTrainDirection = MutableLiveData<Int>().apply { value = 0 }
 
@@ -53,13 +54,14 @@ class StatusViewModel(
     private suspend fun loadTrainData() {
         Timber.d("Loading train data")
         val call = trainDataService.getTrainStatus()
+
         val trains = try {
             call.await()
         } catch (e: IOException) {
             Timber.w(e, "Error getting train information.")
             return
         }
-        withContext(contextProvider.ui) {
+        withContext(coroutineContextProvider.ui) {
             allTrainStatusData.value = trains
         }
     }
@@ -68,12 +70,14 @@ class StatusViewModel(
 
         ioScope.launch {
             while (true) {
+                idlingResource.startIdlingAction()
                 val delayInterval = if (networkProvider.isNetworkConnected()) {
                     loadTrainData()
                     BuildConfig.STATUS_POLL_INTERVAL
                 } else {
                     BuildConfig.STATUS_POLL_RETRY_INTERVAL
                 }
+                idlingResource.stopIdlingAction()
                 delay(delayInterval)
             }
         }

@@ -20,10 +20,10 @@
 
 package com.idleoffice.marctrain.ui.main
 
-import com.idleoffice.marctrain.coroutines.ContextProvider
+import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
 import com.idleoffice.marctrain.ui.base.BaseViewModel
 
 
 class MainViewModel(
-        contextProvider: ContextProvider)
-    : BaseViewModel<MainNavigator>(contextProvider)
+        coroutineContextProvider: CoroutineContextProvider)
+    : BaseViewModel<MainNavigator>(coroutineContextProvider)

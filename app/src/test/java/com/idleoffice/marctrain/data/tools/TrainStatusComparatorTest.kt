@@ -20,21 +20,42 @@
 
 package com.idleoffice.marctrain.data.tools
 
-import com.idleoffice.marctrain.DummyTrainStatusBuilder
+import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.PENN_STATIONS
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 class TrainStatusComparatorTest {
 
     private val ut = TrainStatusComparator(PENN_STATIONS)
 
+    val basicTrainStatus = TrainStatus(
+            "0",
+            "Penn",
+            "South",
+            "Edgewood",
+            "13:05",
+            "On Time",
+            "5 min",
+            "10:27 PM 5/5/18",
+            "Test message"
+    )
+
     @Test
     fun `compare two equal stations with different times`() {
-        val o1 = DummyTrainStatusBuilder().line("Penn").direction("North")
-                .nextStation("Seabrook").departure("2:35 PM").build()
-        val o2 = DummyTrainStatusBuilder().line("Penn").direction("South")
-                .nextStation("Seabrook").departure("2:34 PM").build()
+        val o1 = basicTrainStatus.copy(
+                line = "Penn",
+                direction = "North",
+                nextStation = "Seabrook",
+                departure = "2:35 PM"
+        )
+
+        val o2 = basicTrainStatus.copy(
+                line = "Penn",
+                direction = "South",
+                nextStation = "Seabrook",
+                departure = "2:34 PM"
+        )
 
         assertEquals(1, ut.compare(o1, o2))
         // flip and ensure
@@ -43,10 +64,19 @@ class TrainStatusComparatorTest {
 
     @Test
     fun `test equal stations`() {
-        val o1 = DummyTrainStatusBuilder().line("Penn").direction("North")
-                .nextStation("Seabrook").departure("2:34 PM").build()
-        val o2 = DummyTrainStatusBuilder().line("Penn").direction("South")
-                .nextStation("Seabrook").departure("2:34 PM").build()
+        val o1 = basicTrainStatus.copy(
+                line = "Penn",
+                direction = "North",
+                nextStation = "Seabrook",
+                departure = "2:34 PM"
+        )
+
+        val o2 = basicTrainStatus.copy(
+                line = "Penn",
+                direction = "South",
+                nextStation = "Seabrook",
+                departure = "2:34 PM"
+        )
 
         assertEquals(0, ut.compare(o1, o2))
         // flip
@@ -55,8 +85,12 @@ class TrainStatusComparatorTest {
 
     @Test
     fun `null stations`() {
-        val notNull = DummyTrainStatusBuilder().line("Penn").direction("North")
-                .nextStation("Seabrook").departure("2:34 PM").build()
+        val notNull = basicTrainStatus.copy(
+                line = "Penn",
+                direction = "North",
+                nextStation = "Seabrook",
+                departure = "2:34 PM"
+        )
 
         assertEquals(-1, ut.compare(null, notNull))
         assertEquals(1, ut.compare(notNull, null))
@@ -65,10 +99,18 @@ class TrainStatusComparatorTest {
 
     @Test
     fun `station not found`() {
-        val validStation = DummyTrainStatusBuilder().line("Penn").direction("North")
-                .nextStation("Seabrook").departure("2:34 PM").build()
-        val badStation = DummyTrainStatusBuilder().line("Penn").direction("North")
-                .nextStation("asefa4323").departure("2:34 PM").build()
+        val validStation = basicTrainStatus.copy(
+                line = "Penn",
+                direction = "North",
+                nextStation = "Seabrook",
+                departure = "2:34 PM"
+        )
+        val badStation = basicTrainStatus.copy(
+                line = "Penn",
+                direction = "North",
+                nextStation = "asefa4323",
+                departure = "2:34 PM"
+        )
 
         assertEquals(1, ut.compare(validStation, badStation))
         assertEquals(-1, ut.compare(badStation, validStation))

@@ -20,99 +20,104 @@
 
 package com.idleoffice.marctrain.ui.alert
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.idleoffice.marctrain.BuildConfig
-import com.idleoffice.marctrain.InstantTaskExecutorExtension
-import com.idleoffice.marctrain.MainApp
-import com.idleoffice.marctrain.TestContextProvider
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.data.model.TrainStatus
+import com.idleoffice.marctrain.idling.FalseIdle
+import com.idleoffice.marctrain.network.NetworkProvider
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
-import com.nhaarman.mockito_kotlin.mock
-import io.reactivex.Observable
-import io.reactivex.schedulers.TestScheduler
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.extension.ExtendWith
+import com.idleoffice.marctrain.testsupport.TestCoroutineContextProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.TestRule
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-@ExtendWith(InstantTaskExecutorExtension::class)
-internal class AlertViewModelTest {
+class AlertViewModelTest {
 
-    private inner class InitializeHelper {
-        private val ts = TestScheduler()
-        private val scheduler = TestContextProvider(ts)
+    @get:Rule
+    val rule: TestRule = InstantTaskExecutorRule()
 
-        val dummyAlert1 = TrainAlert("testDescription1", "testPubDate1")
-        val dummyAlert2 = TrainAlert("testDescription2", "testPubDate2")
+    private val coroutineContextProvider = TestCoroutineContextProvider()
 
-        private val trainDataService = object: TrainDataService {
-            var counter = 0
-            var errorOccurred = false
+    val dummyAlert1 = TrainAlert("testDescription1", "testPubDate1")
+    val dummyAlert2 = TrainAlert("testDescription2", "testPubDate2")
 
-            val dummyError = Exception()
+    private val trainDataService = object: TrainDataService {
+        var counter = 0
+        var errorOccurred = false
 
-            override fun getTrainStatus(): Observable<List<TrainStatus>> {
-                throw IllegalArgumentException("This shouldn't be called here")
-            }
-            override fun getTrainAlerts(): Observable<List<TrainAlert>> {
-                counter++
-                return when {
-                    counter == 3 -> {
-                        errorOccurred = true
-                        throw dummyError
-                    }
-                    counter >= 4 -> Observable.fromArray(listOf(dummyAlert2))
-                    else -> Observable.fromArray(listOf(dummyAlert1))
+        val dummyError = IOException()
+
+        override fun getTrainStatus(): Deferred<List<TrainStatus>> {
+            throw IllegalArgumentException("This shouldn't be called here")
+        }
+        override fun getTrainAlerts(): Deferred<List<TrainAlert>> {
+            counter++
+            return when {
+                counter == 3 -> {
+                    errorOccurred = true
+                    CoroutineScope(coroutineContextProvider.io).async { throw dummyError }
                 }
+                counter >= 4 -> CoroutineScope(coroutineContextProvider.io).async { listOf(dummyAlert2) }
+                else ->  CoroutineScope(coroutineContextProvider.io).async { listOf(dummyAlert1) }
             }
         }
-
-        val app: MainApp = mock()
-
-        private val ut = AlertViewModel(app, scheduler, trainDataService)
-
-        init {
-            ut.viewInitialize()
-            ts.advanceTimeBy(1, TimeUnit.SECONDS)
+    }
+    
+    private var networkService = object : NetworkProvider {
+        override fun isNetworkConnected(): Boolean {
+            return true
         }
-
-        fun `test first and second return dummyTrainAlerts`() {
-            // Make sure we get our first event value: dummyTrainStatus
-            Assertions.assertEquals(dummyAlert1, ut.allAlerts.value!![0])
-
-            // Second event: dummyTrainStatus
-            ts.advanceTimeBy(BuildConfig.ALERT_POLL_INTERVAL, TimeUnit.SECONDS)
-            Assertions.assertEquals(dummyAlert1, ut.allAlerts.value!![0])
-        }
-
-        fun `test error from third event`() {
-            // Third event: error
-            ts.advanceTimeBy(BuildConfig.ALERT_POLL_INTERVAL, TimeUnit.SECONDS)
-            assertTrue(trainDataService.errorOccurred)
-        }
-
-        fun `test fourth event provides new alerts`() {
-            // Fifth event: dummyAlert2
-            // using retry interval to ensure error timing
-            ts.advanceTimeBy(BuildConfig.ALERT_POLL_RETRY_INTERVAL, TimeUnit.SECONDS)
-            Assertions.assertEquals(dummyAlert2, ut.allAlerts.value!![0])
-        }
-
-        fun `assert number of calls`(number: Int) {
-            Assertions.assertEquals(number, trainDataService.counter)
-        }
-
     }
 
+    private val ut = AlertViewModel(coroutineContextProvider, trainDataService, networkService, FalseIdle())
+    
+    @Before
+    fun setup() {
+        ut.viewInitialize()
+    }
 
     @Test
-    fun initialize() {
-        val helper = InitializeHelper()
-        helper.`test first and second return dummyTrainAlerts`()
-        helper.`test error from third event`()
-        helper.`test fourth event provides new alerts`()
-        helper.`assert number of calls`(4)
+    fun `test first and second return dummyTrainAlerts`() {
+        coroutineContextProvider.testContext.advanceTimeBy(BuildConfig.ALERT_POLL_INTERVAL, TimeUnit.MILLISECONDS)
+
+        // Make sure we get our first event value: dummyTrainStatus
+        assertEquals(dummyAlert1, ut.allAlerts.value!![0])
+
+        // Second event: dummyTrainStatus
+        coroutineContextProvider.testContext.advanceTimeBy(BuildConfig.ALERT_POLL_INTERVAL, TimeUnit.MILLISECONDS)
+        assertEquals(dummyAlert1, ut.allAlerts.value!![0])
+    }
+
+    @Test
+    fun `test error from third event`() {
+        // Third event: error
+        coroutineContextProvider.testContext.advanceTimeBy(BuildConfig.ALERT_POLL_INTERVAL * 2, TimeUnit.MILLISECONDS)
+        assertTrue(trainDataService.errorOccurred)
+    }
+
+    @Test
+    fun `test fourth event provides new alerts`() {
+        // Fifth event: dummyAlert2
+        // using retry interval to ensure error timing
+        coroutineContextProvider.testContext.advanceTimeBy(BuildConfig.ALERT_POLL_INTERVAL * 3, TimeUnit.MILLISECONDS)
+        assertEquals(dummyAlert2, ut.allAlerts.value!![0])
+        assertEquals(4, trainDataService.counter)
+    }
+
+    @Test
+    fun `assert number of calls`() {
+        val numCalls = 3
+
+        coroutineContextProvider.testContext.advanceTimeBy(BuildConfig.ALERT_POLL_INTERVAL * (numCalls - 1), TimeUnit.MILLISECONDS)
+        assertEquals(numCalls, trainDataService.counter)
     }
 }

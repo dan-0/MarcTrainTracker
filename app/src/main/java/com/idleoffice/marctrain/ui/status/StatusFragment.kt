@@ -20,7 +20,6 @@
 
 package com.idleoffice.marctrain.ui.status
 
-import android.app.Fragment
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -133,7 +132,7 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
      */
     private fun setDirSpinnerOptions(line: Line) {
         directionSpinner?.adapter = createDirAdapter(line)
-        directionSpinner?.setSelection(fragViewModel.selectedTrainDirection.value!!)
+        directionSpinner?.setSelection(fragViewModel.selectedTrainDirection.value ?: 0)
     }
 
     /**
@@ -196,10 +195,18 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
     }
 
     private fun updateTrains() {
+        val allTrains = fragViewModel.allTrainStatusData.value
+
+        if (allTrains.isNullOrEmpty()) {
+            trainStatusList?.adapter?.notifyDataSetChanged()
+            showLoading(getString(R.string.no_active_trains))
+            return
+        }
+
         val selectedLine =
-                resolveLineFromPosition(fragViewModel.selectedTrainLine.value!!)
+                resolveLineFromPosition(fragViewModel.selectedTrainLine.value ?: 0)
         val selectedDirection =
-                Direction.resolveDirectionFromPosition(fragViewModel.selectedTrainDirection.value!!)
+                Direction.resolveDirectionFromPosition(fragViewModel.selectedTrainDirection.value ?: 0)
 
         val lineString = when (selectedLine) {
             Line.PENN -> getString(R.string.penn)
@@ -219,7 +226,7 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
             compareArray = compareArray.asReversed()
         }
 
-        val currentTrains = fragViewModel.allTrainStatusData.value!!.filter {
+        val currentTrains = allTrains.filter {
             (it.direction == directionString && it.line == lineString)
         }.sortedWith(TrainStatusComparator(compareArray))
 

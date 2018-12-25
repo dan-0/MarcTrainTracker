@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 IdleOffice Inc.
  *
- * AppContextProvidert is part of MarcTrainTracker.
+ * ScheduleFragmentTest.kt is part of MarcTrainTracker.
  *
  * MarcTrainTracker is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@
  *
  */
 
-package com.idleoffice.marctrain.coroutines
+package com.idleoffice.marctrain.ui.schedule
 
-import kotlinx.coroutines.Dispatchers
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.junit.runner.RunWith
 
-
-class AppContextProvider: ContextProvider {
-    override val io = Dispatchers.IO
-    override val ui = Dispatchers.Main
+@RunWith(AndroidJUnit4::class)
+class ScheduleFragmentTest {
+    // Placeholder for schedule fragment test. Will be getting rid of the current functionality, so we don't want/need to test it.
 }

@@ -25,7 +25,6 @@ buildscript {
     ext.retrofitVersion = "2.3.0"
     ext.moshiVersion = "1.5.0"
     ext.koinVersion = "1.0.1"
-    ext.robolectricVersion = "4.0-beta-1"
     ext.leakCanaryVersion = "1.6.2"
     ext.androidXVersion = "1.0.2"
     ext.androidXTestVersion = "1.1.0"
@@ -33,7 +32,7 @@ buildscript {
     ext.archVersion = "2.0.0"
 
     repositories {
-        mavenLocal()
+//        mavenLocal()
         google()
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
@@ -50,13 +49,15 @@ buildscript {
 
 allprojects {
     repositories {
-        mavenLocal()
         google()
         jcenter()
-        repositories {
-            maven { url "https://jitpack.io" }
-            maven { url 'https://maven.google.com/' }
-        }
+//        mavenLocal()
+//        google()
+//        jcenter()
+//        repositories {
+//            maven { url "https://jitpack.io" }
+//            maven { url 'https://maven.google.com/' }
+//        }
     }
 }
 

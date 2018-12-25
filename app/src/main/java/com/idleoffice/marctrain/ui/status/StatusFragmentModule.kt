@@ -25,7 +25,7 @@ import org.koin.dsl.module.module
 import timber.log.Timber
 
 val statusFragmentModule = module {
-    viewModel { StatusViewModel(get(), get(), get()) }
+    viewModel { StatusViewModel(get(), get(), get(), get()) }
     single {
         Timber.d("New adapter created")
         StatusAdapter(mutableListOf())

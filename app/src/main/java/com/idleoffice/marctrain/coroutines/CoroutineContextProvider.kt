@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 IdleOffice Inc.
  *
- * ContextProvider.kts part of MarcTrainTracker.
+ * CoroutineContextProvider.kts part of MarcTrainTracker.
  *
  * MarcTrainTracker is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ package com.idleoffice.marctrain.coroutines
 import kotlin.coroutines.CoroutineContext
 
 
-interface ContextProvider {
+interface CoroutineContextProvider {
     val io: CoroutineContext
     val ui: CoroutineContext
 }

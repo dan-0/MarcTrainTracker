@@ -31,6 +31,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.idleoffice.marctrain.BR
+import com.idleoffice.marctrain.MainApp
 import kotlinx.android.synthetic.main.progress_bar_frame_layout.*
 import timber.log.Timber
 
@@ -93,6 +94,4 @@ abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel<*>> : Fra
         loadingTextView?.text = ""
         loadingView?.visibility = View.GONE
     }
-
-
 }

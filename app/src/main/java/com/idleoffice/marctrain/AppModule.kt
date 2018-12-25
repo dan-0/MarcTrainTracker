@@ -22,8 +22,8 @@ package com.idleoffice.marctrain
 
 import android.content.Context
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
-import com.idleoffice.marctrain.coroutines.AppContextProvider
-import com.idleoffice.marctrain.coroutines.ContextProvider
+import com.idleoffice.marctrain.coroutines.AppCoroutineContextProvider
+import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
 import com.idleoffice.marctrain.network.LiveNetworkProvider
 import com.idleoffice.marctrain.network.NetworkProvider
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -35,7 +35,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 val appModules = module {
-    single { AppContextProvider() as ContextProvider}
+    single { AppCoroutineContextProvider() as CoroutineContextProvider}
     single {
         val moshi = Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())

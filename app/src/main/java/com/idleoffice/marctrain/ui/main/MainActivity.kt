@@ -41,8 +41,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
     override val bindingVariable: Int = BR.viewModel
     override val layoutId: Int = R.layout.activity_main
 
-
-
     private fun loadMenuFragment(frag: BaseFragment<*,*>) {
         // Reuse same fragment if it happens to exist already
         val fragment = supportFragmentManager

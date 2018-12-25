@@ -24,7 +24,8 @@ import androidx.lifecycle.MutableLiveData
 import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
-import com.idleoffice.marctrain.coroutines.ContextProvider
+import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
+import com.idleoffice.marctrain.idling.IdlingResource
 import com.idleoffice.marctrain.network.NetworkProvider
 import com.idleoffice.marctrain.ui.base.BaseViewModel
 import kotlinx.coroutines.delay
@@ -33,12 +34,13 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.IOException
 
-class AlertViewModel(contextProvider: ContextProvider,
+class AlertViewModel(coroutineContextProvider: CoroutineContextProvider,
                      private val trainDataService: TrainDataService,
-                     private val networkProvider: NetworkProvider
-) : BaseViewModel<AlertNavigator>(contextProvider)
+                     private val networkProvider: NetworkProvider,
+                     private val idlingResource: IdlingResource
+) : BaseViewModel<AlertNavigator>(coroutineContextProvider)
 {
-    val allAlerts = MutableLiveData<List<TrainAlert>>().apply { value = emptyList() }
+    val allAlerts = MutableLiveData<List<TrainAlert>>()
 
     override fun initialize() {
         super.initialize()
@@ -56,7 +58,7 @@ class AlertViewModel(contextProvider: ContextProvider,
             return
         }
 
-        withContext(contextProvider.ui) {
+        withContext(coroutineContextProvider.ui) {
             allAlerts.value = alerts
         }
     }
@@ -65,12 +67,14 @@ class AlertViewModel(contextProvider: ContextProvider,
 
         ioScope.launch {
             while (true) {
+                idlingResource.startIdlingAction()
                 val delayInterval = if (networkProvider.isNetworkConnected()) {
                     loadAlertData()
-                    BuildConfig.STATUS_POLL_INTERVAL
+                    BuildConfig.ALERT_POLL_INTERVAL
                 } else {
-                    BuildConfig.STATUS_POLL_RETRY_INTERVAL
+                    BuildConfig.ALERT_POLL_RETRY_INTERVAL
                 }
+                idlingResource.stopIdlingAction()
                 delay(delayInterval)
             }
         }

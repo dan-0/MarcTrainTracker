@@ -21,7 +21,7 @@
 package com.idleoffice.marctrain.ui.schedule
 
 import android.content.res.AssetManager
-import com.idleoffice.marctrain.coroutines.ContextProvider
+import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
 import com.idleoffice.marctrain.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -29,8 +29,8 @@ import timber.log.Timber
 import java.io.File
 
 
-class ScheduleViewModel(contextProvider: ContextProvider) :
-        BaseViewModel<ScheduleNavigator>(contextProvider) {
+class ScheduleViewModel(coroutineContextProvider: CoroutineContextProvider) :
+        BaseViewModel<ScheduleNavigator>(coroutineContextProvider) {
 
     companion object {
         const val lineBaseDir = "tables"
@@ -75,7 +75,7 @@ class ScheduleViewModel(contextProvider: ContextProvider) :
 
         ioScope.launch {
             fis.copyTo(fos)
-            withContext(contextProvider.ui) {
+            withContext(coroutineContextProvider.ui) {
                 navigator?.startPdfActivity(destination)
             }
         }
