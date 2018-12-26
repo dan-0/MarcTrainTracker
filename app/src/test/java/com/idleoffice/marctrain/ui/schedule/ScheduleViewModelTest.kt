@@ -20,7 +20,20 @@
 
 package com.idleoffice.marctrain.ui.schedule
 
-internal class ScheduleViewModelTest {
+import com.idleoffice.marctrain.testsupport.TestCoroutineContextProvider
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import org.junit.Test
 
-    // Placeholder due to this method changing behavior in near future update
+class ScheduleViewModelTest {
+
+    private val ut = ScheduleViewModel(TestCoroutineContextProvider())
+
+    @Test
+    fun testGoHome() {
+        ut.navigator = mock()
+        ut.goHome()
+        verify(ut.navigator!!, times(1)).goHome()
+    }
 }

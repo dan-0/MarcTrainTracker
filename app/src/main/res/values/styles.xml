@@ -89,20 +89,6 @@
         <item name="android:textColor">@android:color/transparent</item>
     </style>
 
-    <style name="mt.btn" parent="Widget.MaterialComponents.Button">
-        <item name="android:layout_marginBottom">@dimen/button_margin</item>
-        <item name="android:foreground">?android:attr/selectableItemBackground</item>
-        <item name="android:backgroundTint">@color/colorPrimary</item>
-        <item name="android:clickable">true</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:paddingStart">@dimen/activity_horizontal_margin</item>
-        <item name="android:paddingEnd">@dimen/activity_vertical_margin</item>
-        <item name="android:paddingTop">@dimen/padding_card</item>
-        <item name="android:paddingBottom">@dimen/padding_card</item>
-        <item name="android:textSize">24sp</item>
-        <item name="android:elevation">@dimen/elevation_card</item>
-    </style>
-
     <style name="mt.card" parent="Widget.AppCompat.ListView">
         <item name="android:elevation">@dimen/elevation_card</item>
         <item name="android:background">@color/white</item>

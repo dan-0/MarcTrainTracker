@@ -20,8 +20,6 @@
 
 package com.idleoffice.marctrain.ui.base
 
-import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
@@ -75,9 +73,8 @@ abstract class BaseActivity <T : ViewDataBinding, out V : BaseViewModel<*>> : Ap
         return null
     }
 
-    fun isNetworkConnected() : Boolean {
-        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-        val network = cm?.activeNetworkInfo
-        return network != null && network.isConnectedOrConnecting
+    override fun onDestroy() {
+        actViewModel.navigator = null
+        super.onDestroy()
     }
 }

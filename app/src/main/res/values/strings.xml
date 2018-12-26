@@ -43,7 +43,7 @@
     <string translatable="false" name="camden">Camden</string>
     <string translatable="false" name="brunswick">Brunswick</string>
     <string name="alerts">Alerts</string>
-    <string name="pdf_reader_unavailable">PDF READER UNAVAILABLE</string>
+    <string name="schedule">MDOT Information</string>
 
     <string-array name="line_array" translatable="false">
         <item>@string/penn</item>
@@ -55,6 +55,8 @@
     <string name="south">South</string>
     <string name="west">West</string>
     <string name="east">East</string>
+    <string name="invalid_request">Invalid request</string>
+    <string name="back_to_exit">Press back button again to exit</string>
 
     <string-array name="ns_dir_array">
         <item>@string/north</item>

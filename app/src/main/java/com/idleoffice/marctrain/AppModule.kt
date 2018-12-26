@@ -21,11 +21,11 @@
 package com.idleoffice.marctrain
 
 import android.content.Context
-import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.idleoffice.marctrain.coroutines.AppCoroutineContextProvider
 import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
 import com.idleoffice.marctrain.network.LiveNetworkProvider
 import com.idleoffice.marctrain.network.NetworkProvider
+import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi

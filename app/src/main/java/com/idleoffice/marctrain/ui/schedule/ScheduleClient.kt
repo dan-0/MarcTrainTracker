@@ -1,4 +1,52 @@
 package com.idleoffice.marctrain.ui.schedule
 
-class ScheduleClient {
+import android.view.View
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.Toast
+import com.idleoffice.marctrain.R
+
+class ScheduleClient(
+        private val authorizedHost: String,
+        private val onPageFinishedListener: OnPageFinishedListener
+): WebViewClient() {
+
+    override fun onPageFinished(view: WebView?, url: String?) {
+        super.onPageFinished(view, url)
+        view?.visibility = View.VISIBLE
+
+        onPageFinishedListener.pageFinishedLoading(url)
+    }
+
+    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+
+        return if (isValidRequest(request)) {
+            super.shouldOverrideUrlLoading(view, request)
+        } else {
+            view?.context ?: return true
+            Toast.makeText(view.context, view.context.getString(R.string.invalid_request), Toast.LENGTH_SHORT).show()
+            true
+        }
+    }
+
+    private fun isValidRequest(request: WebResourceRequest?): Boolean {
+        request ?: return false
+
+        val host = request.url.host
+
+        if (host.isNullOrEmpty()) {
+            return false
+        }
+
+        if (host != authorizedHost) {
+            return false
+        }
+
+        return true
+    }
+
+    interface OnPageFinishedListener {
+        fun pageFinishedLoading(url: String?)
+    }
 }

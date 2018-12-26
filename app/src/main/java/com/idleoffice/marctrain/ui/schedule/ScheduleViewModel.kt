@@ -20,79 +20,14 @@
 
 package com.idleoffice.marctrain.ui.schedule
 
-import android.content.res.AssetManager
 import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
 import com.idleoffice.marctrain.ui.base.BaseViewModel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import timber.log.Timber
-import java.io.File
 
 
 class ScheduleViewModel(coroutineContextProvider: CoroutineContextProvider) :
         BaseViewModel<ScheduleNavigator>(coroutineContextProvider) {
-
-    companion object {
-        const val lineBaseDir = "tables"
-        const val pennFileName = "pennFull.pdf"
-        const val camdenFileName = "camdenFull.pdf"
-        const val brunswickFileName = "brunswickFull.pdf"
+    fun goHome() {
+        navigator?.goHome()
     }
-
-    init {
-        Timber.d("Initialized...")
-    }
-
-    fun generateTempFile(tempFileName: String) : File {
-        val appFileDir: File = navigator?.appFilesDir ?:
-                throw NullNavigatorValueException("App file directory was null")
-        val tablesDir = File(appFileDir, lineBaseDir)
-        tablesDir.mkdirs()
-        tablesDir.deleteOnExit()
-        return File(tablesDir, tempFileName)
-    }
-
-
-    @Synchronized
-    private fun launchTable(fileName: String) {
-
-        val filePath = "$lineBaseDir${File.separator}$fileName"
-
-        navigator?.vibrateTap()
-
-        // We can silently fail, if these are null its because this ViewModel is not attached to an activity
-        val appAssets: AssetManager = navigator?.appAssets ?: return
-
-        val fis = appAssets.open(filePath)
-        val destination = try {
-             generateTempFile(fileName)
-        } catch (e: NullNavigatorValueException) {
-            Timber.w(e, "Error generating temp file.")
-            return
-        }
-
-        val fos = destination.outputStream()
-
-        ioScope.launch {
-            fis.copyTo(fos)
-            withContext(coroutineContextProvider.ui) {
-                navigator?.startPdfActivity(destination)
-            }
-        }
-    }
-
-    fun launchPennTable() {
-        launchTable(pennFileName)
-    }
-
-    fun launchCamdenTable() {
-        launchTable(camdenFileName)
-    }
-
-    fun launchBrunswickTable() {
-        launchTable(brunswickFileName)
-    }
-
-    class NullNavigatorValueException(msg: String) : Exception(msg)
 }
 

@@ -22,11 +22,11 @@ package com.idleoffice.marctrain.ui.alert
 
 import androidx.lifecycle.MutableLiveData
 import com.idleoffice.marctrain.BuildConfig
-import com.idleoffice.marctrain.data.model.TrainAlert
-import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
+import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.idling.IdlingResource
 import com.idleoffice.marctrain.network.NetworkProvider
+import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.idleoffice.marctrain.ui.base.BaseViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

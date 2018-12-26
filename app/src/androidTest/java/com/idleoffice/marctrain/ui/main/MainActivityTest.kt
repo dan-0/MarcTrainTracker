@@ -36,7 +36,7 @@ import org.junit.runner.RunWith
 class MainActivityTest {
 
     @get:Rule
-    val alertActivity = KoinActivityTestRule(MainActivity::class.java)
+    val activityRule = KoinActivityTestRule(MainActivity::class.java)
 
     @Test
     fun testButtonsLoadFragments() {

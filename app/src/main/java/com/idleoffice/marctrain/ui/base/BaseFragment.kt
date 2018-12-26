@@ -30,8 +30,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.idleoffice.marctrain.BR
-import kotlinx.android.synthetic.main.progress_bar_frame_layout.loadingTextView
-import kotlinx.android.synthetic.main.progress_bar_frame_layout.loadingView
+import kotlinx.android.synthetic.main.progress_bar_frame_layout.*
 import timber.log.Timber
 
 abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel<*>> : Fragment() {
@@ -78,6 +77,7 @@ abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel<*>> : Fra
 
     override fun onDetach() {
         baseActivity = null
+        fragViewModel.navigator = null
         Timber.d("Detaching fragment")
         super.onDetach()
     }

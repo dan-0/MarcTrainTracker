@@ -57,8 +57,8 @@ class AlertFragment : BaseFragment<FragmentAlertBinding, AlertViewModel>(), Aler
 
     private fun setAlertObserver() {
         val alertObserver = Observer<List<TrainAlert>> @Synchronized {
+            showLoading(getString(R.string.no_alerts_reported_looking))
             if (it.isNullOrEmpty()) {
-                showLoading(getString(R.string.no_alerts_reported_looking))
                 trainAlertList.adapter?.notifyDataSetChanged()
             } else {
                 Timber.d("New alert received")
