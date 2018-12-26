@@ -47,6 +47,9 @@
     <init>(...);
     <fields>;
 }
+-keep class kotlin.reflect.jvm.internal.impl.builtins.BuiltInsLoaderImpl
+-dontwarn org.jetbrains.annotations.**
+-keep class kotlin.Metadata { *; }
 
 # App
 -keepclassmembers class com.idleoffice.marctrain.data.model.** {

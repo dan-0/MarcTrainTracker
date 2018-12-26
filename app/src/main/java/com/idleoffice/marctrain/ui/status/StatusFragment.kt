@@ -79,7 +79,7 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
     private fun setTrainStatusObserver() {
         val trainStatusObserver = Observer<List<TrainStatus>> @Synchronized {
             if (it != null) {
-                Timber.d("New train status received")
+                Timber.d("New train status received: $it")
                 updateTrains()
             }
         }
