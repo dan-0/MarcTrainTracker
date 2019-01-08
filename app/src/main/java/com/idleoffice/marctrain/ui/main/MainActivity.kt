@@ -63,8 +63,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
 
         Timber.d("Replacing fragment view.")
         supportFragmentManager.beginTransaction()
+                .disallowAddToBackStack()
                 .replace(R.id.view_content, fragment, fragment.fragTag)
-                .commit()
+                .commitAllowingStateLoss()
     }
 
     private fun loadFromId(@IdRes id: Int): Boolean {

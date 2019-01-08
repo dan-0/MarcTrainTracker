@@ -29,10 +29,12 @@ import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
+import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit
 
 val appModules = module {
     single { AppCoroutineContextProvider() as CoroutineContextProvider}
@@ -40,10 +42,17 @@ val appModules = module {
         val moshi = Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
                 .build()
+
+        val client = OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build()
+
         Retrofit.Builder()
                 .baseUrl(BuildConfig.POLL_URL)
                 .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
                 .addCallAdapterFactory(CoroutineCallAdapterFactory.invoke())
+                .client(client)
                 .build()
                 .create(TrainDataService::class.java)
     }
