@@ -198,7 +198,8 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
         val allTrains = fragViewModel.allTrainStatusData.value
 
         if (allTrains.isNullOrEmpty()) {
-            trainStatusList?.adapter?.notifyDataSetChanged()
+            statusAdapter.trainStatuses.clear()
+            statusAdapter.notifyDataSetChanged()
             showLoading(getString(R.string.no_active_trains))
             return
         }
