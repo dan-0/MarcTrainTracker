@@ -39,7 +39,7 @@ class ScheduleClient(
             return false
         }
 
-        if (host != authorizedHost) {
+        if (!host.endsWith(authorizedHost)) {
             return false
         }
 

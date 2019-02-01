@@ -41,8 +41,8 @@ class ScheduleFragment :
     override val layoutId: Int = R.layout.fragment_schedule
 
     companion object {
-        private const val MTA_HOST = "mta.maryland.gov"
-        const val MARC_SCHEDULE_URL = "https://$MTA_HOST/marc-train"
+        private const val MTA_HOST = "www.mta.maryland.gov"
+        const val MARC_SCHEDULE_URL = "https://$MTA_HOST/schedule?type=marc-train"
     }
 
     private val onPageFinishedListener = object: ScheduleClient.OnPageFinishedListener {
