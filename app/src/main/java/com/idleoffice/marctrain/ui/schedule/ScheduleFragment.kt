@@ -20,6 +20,7 @@
 
 package com.idleoffice.marctrain.ui.schedule
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -65,6 +66,10 @@ class ScheduleFragment :
         showLoading("Loading MARC schedules from MDOT")
 
         scheduleWebView.webViewClient = ScheduleClient(MTA_HOST, onPageFinishedListener)
+
+        @SuppressLint("SetJavaScriptEnabled")
+        scheduleWebView.settings.javaScriptEnabled = true
+
 
         if (savedInstanceState !== null) {
           scheduleWebView.restoreState(savedInstanceState)

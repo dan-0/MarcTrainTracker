@@ -39,11 +39,14 @@ class ScheduleClient(
             return false
         }
 
-        if (!host.endsWith(authorizedHost)) {
-            return false
+        val path = request.url?.path
+
+        if ((host.endsWith(authorizedHost) && path?.contains("schedule") == true)
+                || request.url.toString().endsWith(".pdf")) {
+            return true
         }
 
-        return true
+        return false
     }
 
     interface OnPageFinishedListener {
