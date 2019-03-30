@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 IdleOffice Inc.
+ * Copyright (c) 2019 IdleOffice Inc.
  *
  * AlertFragment.kt is part of MarcTrainTracker.
  *
@@ -14,23 +14,27 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.idleoffice.marctrain.ui.alert
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.databinding.FragmentAlertBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_alert.*
+import kotlinx.android.synthetic.main.progress_bar_frame_layout_partial.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -42,17 +46,24 @@ class AlertFragment : BaseFragment<FragmentAlertBinding, AlertViewModel>(), Aler
 
     override val layoutId: Int = R.layout.fragment_alert
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        fragViewModel.navigator = this
-        setAlertObserver()
-        retainInstance = true
-    }
+    private lateinit var binding : FragmentAlertBinding
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         initRecyclerView()
         showLoading(getString(R.string.looking_for_alerts))
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentAlertBinding.inflate(inflater, container, false)
+        rootView = binding.root
+        return rootView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.setVariable(BR.viewModel, fragViewModel)
+        setAlertObserver()
+        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun setAlertObserver() {
@@ -95,5 +106,17 @@ class AlertFragment : BaseFragment<FragmentAlertBinding, AlertViewModel>(), Aler
     override fun onDestroyView() {
         super.onDestroyView()
         trainAlertList?.adapter = null
+    }
+
+    override fun showLoading(msg: String) {
+        Timber.d("Showing loading view.")
+        loadingTextViewPartial?.text = msg
+        loadingViewPartial?.visibility = View.VISIBLE
+    }
+
+    override fun hideLoading() {
+        Timber.d("Hiding loading view.")
+        loadingTextViewPartial?.text = ""
+        loadingViewPartial?.visibility = View.GONE
     }
 }

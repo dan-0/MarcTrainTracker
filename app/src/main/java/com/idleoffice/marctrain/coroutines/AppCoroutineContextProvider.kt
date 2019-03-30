@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2018 IdleOffice Inc.
+ * Copyright (c) 2019 IdleOffice Inc.
  *
- * AppContextProvidert is part of MarcTrainTracker.
+ * AppCoroutineContextProvider.kt is part of MarcTrainTracker.
  *
  * MarcTrainTracker is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.idleoffice.marctrain.coroutines

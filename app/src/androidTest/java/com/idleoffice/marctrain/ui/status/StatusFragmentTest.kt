@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 IdleOffice Inc.
+ * Copyright (c) 2019 IdleOffice Inc.
  *
  * StatusFragmentTest.kt is part of MarcTrainTracker.
  *
@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -298,28 +297,6 @@ class StatusFragmentTest {
                 .check(matches(withSpinnerText(R.string.brunswick)))
         onView(withId(R.id.directionSpinner))
                 .check(matches(withSpinnerText(R.string.east)))
-    }
-
-    @Test
-    fun retainsLastLine() {
-        activityRule.launchActivity(null)
-
-        // Ensure default line
-        onView(withId(R.id.lineSpinner))
-                .check(matches(withSpinnerText(R.string.penn)))
-        onView(withId(R.id.directionSpinner))
-                .check(matches(withSpinnerText(R.string.north)))
-
-        clickSpinnerItem(R.id.lineSpinner, 2, R.string.brunswick)
-
-        activityRule.finishActivity()
-        activityRule.launchActivity(null)
-
-        onView(withId(R.id.lineSpinner))
-                .check(matches(withSpinnerText(R.string.brunswick)))
-        onView(withId(R.id.directionSpinner))
-                .check(matches(withSpinnerText(R.string.west)))
-
     }
 
     private val testTrainStatus = TrainStatus(

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2018 IdleOffice Inc.
+  ~ Copyright (c) 2019 IdleOffice Inc.
   ~
   ~ status_divider.xml is part of MarcTrainTracker.
   ~
@@ -15,8 +15,7 @@
   ~ GNU General Public License for more details.
   ~
   ~ You should have received a copy of the GNU General Public License
-  ~ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-  ~
+  ~ along with this software.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android"

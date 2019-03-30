@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 IdleOffice Inc.
+ * Copyright (c) 2019 IdleOffice Inc.
  *
  * BaseFragment.kt is part of MarcTrainTracker.
  *
@@ -14,34 +14,32 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.idleoffice.marctrain.ui.base
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.annotation.LayoutRes
-import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import com.idleoffice.marctrain.BR
-import kotlinx.android.synthetic.main.progress_bar_frame_layout.*
+import com.idleoffice.marctrain.analytics.FirebaseService
+import kotlinx.android.synthetic.main.progress_bar_frame_layout_partial.*
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel<*>> : Fragment() {
+abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel> : Fragment() {
 
     private var baseActivity: BaseActivity<T,V>? = null
     private var viewDataBinding: T? = null
-    private var rootView: View? = null
+    protected lateinit var rootView: View
+    protected val analyticService: FirebaseService by inject()
 
     abstract val fragViewModel : V
 
-    private val bindingVariable = BR.viewModel
     val fragTag: String = javaClass.name
 
     @get:LayoutRes
@@ -51,19 +49,6 @@ abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel<*>> : Fra
         lifecycle.addObserver(fragViewModel)
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(false)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?) : View? {
-        viewDataBinding = DataBindingUtil.inflate(inflater, layoutId, container, false)
-        rootView = viewDataBinding!!.root
-        return rootView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewDataBinding!!.setVariable(bindingVariable, fragViewModel)
-        viewDataBinding!!.executePendingBindings()
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -77,20 +62,7 @@ abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel<*>> : Fra
 
     override fun onDetach() {
         baseActivity = null
-        fragViewModel.navigator = null
         Timber.d("Detaching fragment")
         super.onDetach()
-    }
-
-    open fun showLoading(msg: String) {
-        Timber.d("Showing loading view.")
-        loadingTextView?.text = msg
-        loadingView?.visibility = View.VISIBLE
-    }
-
-    open fun hideLoading() {
-        Timber.d("Hiding loading view.")
-        loadingTextView?.text = ""
-        loadingView?.visibility = View.GONE
     }
 }

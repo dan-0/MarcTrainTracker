@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2018 IdleOffice Inc.
+ * Copyright (c) 2019 IdleOffice Inc.
  *
- * ScheduleNavigator.kt is part of MarcTrainTracker.
+ * AppEvent.kt is part of MarcTrainTracker.
  *
  * MarcTrainTracker is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,12 +14,20 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.idleoffice.marctrain.ui.schedule
+package com.idleoffice.marctrain.data
 
-interface ScheduleNavigator {
-    fun goHome()
-}
+import com.idleoffice.marctrain.BuildConfig
+
+/**
+ * Base Event emitted from a non-user Event
+ *
+ * @param event Event that occurred
+ * @param feature Feature the [AppEvent] is related to
+ */
+abstract class AppEvent(
+        val event: String,
+        val feature: String
+)

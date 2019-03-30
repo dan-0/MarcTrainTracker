@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2018 IdleOffice Inc.
+  ~ Copyright (c) 2019 IdleOffice Inc.
   ~
   ~ activity_main.xml is part of MarcTrainTracker.
   ~
@@ -15,8 +15,7 @@
   ~ GNU General Public License for more details.
   ~
   ~ You should have received a copy of the GNU General Public License
-  ~ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-  ~
+  ~ along with this software.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <layout
@@ -36,6 +35,10 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <include
+            layout="@layout/progress_bar_frame_layout_full"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/view_content"
             android:layout_width="0dp"

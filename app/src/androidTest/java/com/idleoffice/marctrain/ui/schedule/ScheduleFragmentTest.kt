@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 IdleOffice Inc.
+ * Copyright (c) 2019 IdleOffice Inc.
  *
  * ScheduleFragmentTest.kt is part of MarcTrainTracker.
  *
@@ -14,56 +14,115 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.idleoffice.marctrain.ui.schedule
 
+import android.content.Intent
+import androidx.core.content.FileProvider
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.idling.CountingIdlingResource
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.R
+import com.idleoffice.marctrain.retrofit.ts.TrainScheduleService
 import com.idleoffice.marctrain.testsupport.KoinActivityTestRule
+import com.idleoffice.marctrain.testsupport.TestIdlingResource
 import com.idleoffice.marctrain.ui.main.MainActivity
-import kotlinx.android.synthetic.main.fragment_schedule.*
-import org.junit.Assert.assertEquals
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import okhttp3.ResponseBody
+import org.hamcrest.Matchers.allOf
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.dsl.module.module
+import java.io.File
 
 @RunWith(AndroidJUnit4::class)
 class ScheduleFragmentTest {
 
+    private val idlingResource = TestIdlingResource()
+
+    private val mockResponseBody: ResponseBody = ResponseBody.create(null, "")
+
+    private val scheduleService = object : TrainScheduleService {
+        override fun getScheduleAsync(line: String): Deferred<ResponseBody> {
+            return CoroutineScope(Dispatchers.Main).async { mockResponseBody }
+        }
+    }
+
+    private val scheduleServiceModule = module {
+        single(override = true) { scheduleService as TrainScheduleService }
+    }
+
     @get:Rule
     val activityRule = KoinActivityTestRule(
-            MainActivity::class.java
+            MainActivity::class.java,
+            koinModules = listOf(idlingResource.idlingModule, scheduleServiceModule)
     )
 
     @Before
     fun setup() {
-    }
-
-    @Test
-    fun testWebViewOpens() {
+        idlingResource.idlingResource = CountingIdlingResource("status")
+        IdlingRegistry.getInstance().register(idlingResource.idlingResource)
         navigateToSchedule()
     }
 
+    @After
+    fun cleanup() {
+        IdlingRegistry.getInstance().unregister(idlingResource.idlingResource)
+    }
+
     @Test
-    fun checkInitialUrl() {
-        navigateToSchedule()
+    fun checkButtonsDisplayed() {
+        onView(withText(R.string.penn))
+                .check(matches(isDisplayed()))
+        onView(withText(R.string.camden))
+                .check(matches(isDisplayed()))
+        onView(withText(R.string.brunswick))
+                .check(matches(isDisplayed()))
+    }
 
-        var loadedUrl: String? = null
+    @Test
+    fun checkPennIntent() {
+        checkIntent("penn")
+        onView(withText(R.string.penn)).perform(click())
+    }
 
-        activityRule.runOnUiThread {
-            loadedUrl = activityRule.activity.scheduleWebView.url
+    @Test
+    fun checkCamdenIntent() {
+        checkIntent("camden")
+        onView(withText(R.string.camden)).perform(click())
+    }
 
-        }
-        assertEquals(ScheduleFragment.MARC_SCHEDULE_URL, loadedUrl)
+    @Test
+    fun checkBrunswickLine() {
+        checkIntent("brunswick")
+        onView(withText(R.string.brunswick)).perform(click())
+    }
+
+    private fun checkIntent(line: String) {
+        val destination = File(File(activityRule.activity.filesDir, "tables"), "${line}Schedule.pdf")
+        val fileUri = FileProvider.getUriForFile(activityRule.activity,
+                "${BuildConfig.APPLICATION_ID}.fileprovider", destination)
+        intending(allOf(
+                hasAction(Intent.ACTION_VIEW),
+                hasData(fileUri),
+                hasType(activityRule.activity.contentResolver.getType(fileUri)),
+                hasFlag(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        ))
     }
 
     private fun navigateToSchedule() {

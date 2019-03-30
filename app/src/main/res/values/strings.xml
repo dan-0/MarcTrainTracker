@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2018 IdleOffice Inc.
+  ~ Copyright (c) 2019 IdleOffice Inc.
   ~
   ~ strings.xml is part of MarcTrainTracker.
   ~
@@ -14,8 +14,7 @@
   ~ GNU General Public License for more details.
   ~
   ~ You should have received a copy of the GNU General Public License
-  ~ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-  ~
+  ~ along with this software.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <resources>
@@ -43,7 +42,7 @@
     <string translatable="false" name="camden">Camden</string>
     <string translatable="false" name="brunswick">Brunswick</string>
     <string name="alerts">Alerts</string>
-    <string name="schedule">MDOT Information</string>
+    <string name="pdf_reader_unavailable">PDF READER UNAVAILABLE</string>
 
     <string-array name="line_array" translatable="false">
         <item>@string/penn</item>
@@ -55,8 +54,8 @@
     <string name="south">South</string>
     <string name="west">West</string>
     <string name="east">East</string>
-    <string name="invalid_request">Invalid request</string>
     <string name="back_to_exit">Press back button again to exit</string>
+    <string name="loading_schedule">Loading schedule</string>
 
     <string-array name="ns_dir_array">
         <item>@string/north</item>

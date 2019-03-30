@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 IdleOffice Inc.
+ * Copyright (c) 2019 IdleOffice Inc.
  *
  * MainViewModel.kt is part of MarcTrainTracker.
  *
@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.idleoffice.marctrain.ui.main
@@ -25,5 +24,5 @@ import com.idleoffice.marctrain.ui.base.BaseViewModel
 
 
 class MainViewModel(
-        coroutineContextProvider: CoroutineContextProvider)
-    : BaseViewModel<MainNavigator>(coroutineContextProvider)
+        coroutineContextProvider: CoroutineContextProvider
+) : BaseViewModel(coroutineContextProvider)

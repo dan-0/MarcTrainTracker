@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 IdleOffice Inc.
+ * Copyright (c) 2019 IdleOffice Inc.
  *
  * BaseViewModel.kt is part of MarcTrainTracker.
  *
@@ -14,13 +14,11 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.idleoffice.marctrain.ui.base
 
-import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -31,12 +29,8 @@ import kotlinx.coroutines.Job
 import timber.log.Timber
 
 
-abstract class BaseViewModel<T>(val coroutineContextProvider: CoroutineContextProvider)
+abstract class BaseViewModel(val coroutineContextProvider: CoroutineContextProvider)
     : ViewModel(), LifecycleObserver {
-
-    var navigator : T? = null
-
-    val isLoading = ObservableBoolean(false)
 
     private var initialized = false
 

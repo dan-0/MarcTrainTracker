@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2018 IdleOffice Inc.
+  ~ Copyright (c) 2019 IdleOffice Inc.
   ~
   ~ dimens.xml is part of MarcTrainTracker.
   ~
@@ -14,16 +14,17 @@
   ~ GNU General Public License for more details.
   ~
   ~ You should have received a copy of the GNU General Public License
-  ~ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-  ~
+  ~ along with this software.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="vertical_list_horizontal_padding">24dp</dimen>
+    <dimen name="vertical_list_vertical_padding">16dp</dimen>
     <dimen name="collapsing_toolbar_height">200dp</dimen>
-    <dimen name="button_margin">16dp</dimen>
+    <dimen name="button_margin">8dp</dimen>
     <dimen name="elevation_card">2dp</dimen>
     <dimen name="elevation_app_bar">4dp</dimen>
     <dimen name="padding_card">8dp</dimen>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 IdleOffice Inc.
+ * Copyright (c) 2019 IdleOffice Inc.
  *
  * BaseActivity.kt is part of MarcTrainTracker.
  *
@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.idleoffice.marctrain.ui.base
@@ -29,7 +28,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import timber.log.Timber
 
-abstract class BaseActivity <T : ViewDataBinding, out V : BaseViewModel<*>> : AppCompatActivity() {
+abstract class BaseActivity <T : ViewDataBinding, out V : BaseViewModel> : AppCompatActivity() {
 
     private var progressBar: ProgressBar? = null
     private var viewDataBinding : T? = null
@@ -73,8 +72,4 @@ abstract class BaseActivity <T : ViewDataBinding, out V : BaseViewModel<*>> : Ap
         return null
     }
 
-    override fun onDestroy() {
-        actViewModel.navigator = null
-        super.onDestroy()
-    }
 }

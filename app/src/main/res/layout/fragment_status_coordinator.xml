@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2018 IdleOffice Inc.
+  ~ Copyright (c) 2019 IdleOffice Inc.
   ~
   ~ fragment_status_coordinator.xml is part of MarcTrainTracker.
   ~
@@ -15,8 +15,7 @@
   ~ GNU General Public License for more details.
   ~
   ~ You should have received a copy of the GNU General Public License
-  ~ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-  ~
+  ~ along with this software.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <layout
@@ -67,8 +66,7 @@
                     android:layout_gravity="fill_vertical"
                     app:layout_collapseMode="parallax"
                     app:layout_collapseParallaxMultiplier="-.5"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                    >
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                     <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/lineSpinner"
@@ -102,7 +100,7 @@
         </androidx.recyclerview.widget.RecyclerView>
 
         <include
-            layout="@layout/progress_bar_frame_layout"
+            layout="@layout/progress_bar_frame_layout_partial"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/collapsing_toolbar_height"
             android:layout_width="match_parent"/>

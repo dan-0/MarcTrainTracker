@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 IdleOffice Inc.
+ * Copyright (c) 2019 IdleOffice Inc.
  *
  * StatusFragment.kt is part of MarcTrainTracker.
  *
@@ -14,21 +14,22 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.idleoffice.marctrain.ui.status
 
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.idleoffice.marctrain.Const.Companion.PREF_LAST_LINE
+import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.data.tools.Direction
@@ -38,6 +39,7 @@ import com.idleoffice.marctrain.data.tools.TrainStatusComparator
 import com.idleoffice.marctrain.databinding.FragmentStatusCoordinatorBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_status_coordinator.*
+import kotlinx.android.synthetic.main.progress_bar_frame_layout_partial.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -47,18 +49,24 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
     override val fragViewModel: StatusViewModel by viewModel()
 
     private val statusAdapter: StatusAdapter by inject()
-    private val prefs: SharedPreferences by inject()
 
     override val layoutId: Int = R.layout.fragment_status_coordinator
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        fragViewModel.navigator = this
-        retainInstance = true
-        setObservers()
+    private lateinit var binding: FragmentStatusCoordinatorBinding
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentStatusCoordinatorBinding.inflate(inflater, container, false)
+        rootView = binding.root
+        return rootView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.setVariable(BR.viewModel, fragViewModel)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+        setObservers()
         initLineSpinner()
         initRecyclerView()
         showLoading(getString(R.string.looking_for_in_service_trains))
@@ -140,7 +148,6 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
      */
     private fun parseNewLine(line: Line) {
         directionSpinner ?: return
-        prefs.edit().putString(PREF_LAST_LINE, line.name).apply()
         setDirSpinnerOptions(line)
     }
 
@@ -151,8 +158,8 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
         lineSpinner.adapter = createLineAdapter()
 
         // TODO retained shared prefs will cause and exception!
-        val lineString = prefs.getString(PREF_LAST_LINE, Line.PENN.toString())
-        val lastLine = Line.valueOf(lineString!!)
+        val lineString = Line.PENN.toString()
+        val lastLine = Line.valueOf(lineString)
 
         Timber.d("Parsing new last line: $lastLine")
         val lineIndex = resources.getStringArray(R.array.line_array)
@@ -183,15 +190,18 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
     }
 
     override fun showLoading(msg: String) {
+        Timber.d("Showing loading view.")
         lineSpinner?.isClickable = false
         directionSpinner?.isClickable = false
-        super.showLoading(msg)
+        loadingTextViewPartial.text = msg
+        loadingViewPartial.visibility = View.VISIBLE
     }
 
     override fun hideLoading() {
         lineSpinner?.isClickable = true
         directionSpinner?.isClickable = true
-        super.hideLoading()
+        loadingTextViewPartial?.text = ""
+        loadingViewPartial?.visibility = View.GONE
     }
 
     private fun updateTrains() {

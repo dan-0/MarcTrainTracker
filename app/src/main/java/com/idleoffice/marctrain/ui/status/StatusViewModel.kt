@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 IdleOffice Inc.
+ * Copyright (c) 2019 IdleOffice Inc.
  *
  * StatusViewModel.kt is part of MarcTrainTracker.
  *
@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.idleoffice.marctrain.ui.status
@@ -39,9 +38,9 @@ class StatusViewModel(
         private val trainDataService: TrainDataService,
         private val networkProvider: NetworkProvider,
         private val idlingResource: IdlingResource
-) : BaseViewModel<StatusNavigator>(coroutineContextProvider) {
+) : BaseViewModel(coroutineContextProvider) {
 
-    val allTrainStatusData = MutableLiveData<List<TrainStatus>>()
+    val allTrainStatusData = MutableLiveData<List<TrainStatus>>().apply { listOf<TrainStatus>() }
     val selectedTrainLine = MutableLiveData<Int>().apply { value = 0 }
     val selectedTrainDirection = MutableLiveData<Int>().apply { value = 0 }
 
@@ -58,12 +57,11 @@ class StatusViewModel(
         val trains = try {
             call.await()
         } catch (e: IOException) {
-            Timber.w(e, "Error getting train information.")
+            Timber.e(e, "Error getting train information.")
             return
         }
-        withContext(coroutineContextProvider.ui) {
-            allTrainStatusData.value = trains
-        }
+
+        allTrainStatusData.postValue(trains)
     }
 
     private fun doGetTrainStatus() {

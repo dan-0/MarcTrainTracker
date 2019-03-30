@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 IdleOffice Inc.
+ * Copyright (c) 2019 IdleOffice Inc.
  *
  * AlertViewModel.kt is part of MarcTrainTracker.
  *
@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.idleoffice.marctrain.ui.alert
@@ -38,8 +37,7 @@ class AlertViewModel(coroutineContextProvider: CoroutineContextProvider,
                      private val trainDataService: TrainDataService,
                      private val networkProvider: NetworkProvider,
                      private val idlingResource: IdlingResource
-) : BaseViewModel<AlertNavigator>(coroutineContextProvider)
-{
+) : BaseViewModel(coroutineContextProvider) {
     val allAlerts = MutableLiveData<List<TrainAlert>>()
 
     override fun initialize() {
@@ -58,9 +56,7 @@ class AlertViewModel(coroutineContextProvider: CoroutineContextProvider,
             return
         }
 
-        withContext(coroutineContextProvider.ui) {
-            allAlerts.value = alerts
-        }
+        allAlerts.postValue(alerts)
     }
 
     private fun doGetTrainAlerts() {

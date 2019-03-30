@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2018 IdleOffice Inc.
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2019 IdleOffice Inc.
   ~
   ~ recycler_alert_train.xml is part of MarcTrainTracker.
   ~
@@ -15,53 +14,63 @@
   ~ GNU General Public License for more details.
   ~
   ~ You should have received a copy of the GNU General Public License
-  ~ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-  ~
+  ~ along with this software.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/alertRecyclerLayout"
-        style="@style/mt.card">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/alertRecyclerLayout"
+    style="@style/mt.card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
     <LinearLayout
+        android:id="@+id/alertRecyclerDataBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/alertRecyclerDataBox">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
         <LinearLayout
             android:id="@+id/alertLabelLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/alertLabelDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/date"/>
+                android:text="@string/date" />
+
             <TextView
                 android:id="@+id/alertLabelDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/description"/>
+                android:text="@string/description" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/alertDataLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/alertDataTextDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""/>
+                android:text="" />
+
             <TextView
                 android:id="@+id/alertDataTextDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""/>
+                android:text="" />
 
         </LinearLayout>
     </LinearLayout>
