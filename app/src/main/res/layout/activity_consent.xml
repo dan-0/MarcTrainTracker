@@ -2,7 +2,7 @@
 <!--
   ~ Copyright (c) 2019 IdleOffice Inc.
   ~
-  ~ colors.xml is part of MarcTrainTracker.
+  ~ activity_consent.xml is part of MarcTrainTracker.
   ~
   ~ MarcTrainTracker is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -18,10 +18,8 @@
   ~ along with this software.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
-    <color name="colorPrimary">#ebab00</color>
-    <color name="colorPrimaryDark">#b71c1c</color>
-    <color name="colorAccent">#b2dfdb</color>
-    <color name="colorConsentAccent">#006064</color>
-    <color name="white">@android:color/white</color>
-</resources>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+</LinearLayout>
