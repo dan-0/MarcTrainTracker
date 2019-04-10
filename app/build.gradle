@@ -137,7 +137,7 @@ dependencies {
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Consent library
-    implementation 'com.github.dan-0:idleconsent:0.2.4-alpha'
+    implementation 'com.idleoffice:idleconsent:0.2.4-alpha'
 }
 
 apply plugin: 'com.google.gms.google-services'

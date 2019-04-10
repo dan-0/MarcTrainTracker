@@ -34,6 +34,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
+import java.io.IOException
 
 
 class ScheduleViewModel(
@@ -73,7 +74,11 @@ class ScheduleViewModel(
         _event.postValue(ScheduleEvent.Loading)
 
         val event: Deferred<ScheduleEvent> = ioScope.async {
-            val scheduleResponse = trainScheduleService.getScheduleAsync(lineName).await()
+            val scheduleResponse = try {
+                trainScheduleService.getScheduleAsync(lineName).await()
+            } catch (e: IOException) {
+                return@async ScheduleEvent.Error(e)
+            }
 
             val destination = generateTempFile("${lineName}Schedule.pdf")
 

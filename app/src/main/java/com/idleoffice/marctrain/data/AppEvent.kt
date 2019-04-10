@@ -19,8 +19,6 @@
 
 package com.idleoffice.marctrain.data
 
-import com.idleoffice.marctrain.BuildConfig
-
 /**
  * Base Event emitted from a non-user Event
  *
