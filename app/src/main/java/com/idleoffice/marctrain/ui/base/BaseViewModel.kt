@@ -25,11 +25,11 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ViewModel
 import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import timber.log.Timber
 
 
-abstract class BaseViewModel(val coroutineContextProvider: CoroutineContextProvider)
+abstract class BaseViewModel(coroutineContextProvider: CoroutineContextProvider)
     : ViewModel(), LifecycleObserver {
 
     private var initialized = false
@@ -38,7 +38,7 @@ abstract class BaseViewModel(val coroutineContextProvider: CoroutineContextProvi
      * Job scoped to an active instance of this [ViewModel]. It is canceled in `onCleared` and
      * reinitialized if it is canceled when the [ViewModel] reinitializes
      */
-    private var job: Job = Job()
+    private var job = SupervisorJob()
 
     protected var ioScope = CoroutineScope(coroutineContextProvider.io + job)
     protected var mainScope = CoroutineScope(coroutineContextProvider.ui + job)
@@ -51,7 +51,7 @@ abstract class BaseViewModel(val coroutineContextProvider: CoroutineContextProvi
     fun viewInitialize() {
         // job value is retained after onDestroy(), but in a canceled state so it needs to be reset
         if (job.isCancelled) {
-            job = Job()
+            job = SupervisorJob()
         }
 
         if (!initialized) {

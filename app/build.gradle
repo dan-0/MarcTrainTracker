@@ -29,8 +29,8 @@ android {
         applicationId "com.idleoffice.marctrain"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 16
-        versionName "1.16"
+        versionCode 17add
+        versionName "1.17"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [enableCrashlytics: "false"]

@@ -76,6 +76,10 @@ class StatusViewModel(
                 idlingResource.stopIdlingAction()
                 delay(delayInterval)
             }
+        }.invokeOnCompletion {
+            it?.run {
+                Timber.e(it, "Exception on Status completion")
+            }
         }
     }
 }

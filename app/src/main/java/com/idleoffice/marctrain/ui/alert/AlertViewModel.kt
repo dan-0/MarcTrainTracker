@@ -71,6 +71,10 @@ class AlertViewModel(coroutineContextProvider: CoroutineContextProvider,
                 idlingResource.stopIdlingAction()
                 delay(delayInterval)
             }
+        }.invokeOnCompletion {
+            it?.run {
+                Timber.e(it, "Exception on Alert completion")
+            }
         }
     }
 }

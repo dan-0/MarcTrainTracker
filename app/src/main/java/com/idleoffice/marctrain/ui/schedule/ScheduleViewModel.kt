@@ -108,6 +108,11 @@ class ScheduleViewModel(
         }.exhaustive
 
         ioScope.launch { launchTable(line) }
+                .invokeOnCompletion {
+                    it?.run {
+                        Timber.e(it, "Exception on Schedule completion")
+                    }
+                }
     }
 }
 
