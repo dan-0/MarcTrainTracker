@@ -61,8 +61,12 @@ val appModules = module {
                         }
 
                         override fun callFailed(call: Call, ioe: IOException) {
-                            super.callFailed(call, ioe)
-                            Timber.d("Request: ${call.request().url()}")
+                            runCatching {
+                                super.callFailed(call, ioe)
+                                Timber.d("Request: ${call.request().url()}")
+                            }.onFailure { t ->
+                                Timber.e(t, "Call failed")
+                            }
                         }
 
                         override fun requestBodyEnd(call: Call, byteCount: Long) {

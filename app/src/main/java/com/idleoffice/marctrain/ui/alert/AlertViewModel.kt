@@ -47,12 +47,10 @@ class AlertViewModel(coroutineContextProvider: CoroutineContextProvider,
     }
 
     private suspend fun loadAlertData() {
-        val call = trainDataService.getTrainAlerts()
-
-        val alerts = try {
-            call.await()
-        } catch (e: IOException) {
-            Timber.w(e, "Error retrieving alerts")
+        val alerts = runCatching {
+            trainDataService.getTrainAlerts().await()
+        }.getOrElse {
+            Timber.e(it, "Error getting train alert data")
             return
         }
 

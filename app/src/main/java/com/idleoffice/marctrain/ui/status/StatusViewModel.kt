@@ -52,12 +52,10 @@ class StatusViewModel(
 
     private suspend fun loadTrainData() {
         Timber.d("Loading train data")
-        val call = trainDataService.getTrainStatus()
-
-        val trains = try {
-            call.await()
-        } catch (e: IOException) {
-            Timber.e(e, "Error getting train information.")
+        val trains = runCatching {
+            trainDataService.getTrainStatus().await()
+        }.getOrElse {
+            Timber.e(it, "Error getting train status")
             return
         }
 

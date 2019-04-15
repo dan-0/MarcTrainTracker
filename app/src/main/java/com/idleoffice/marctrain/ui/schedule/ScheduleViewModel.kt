@@ -74,10 +74,10 @@ class ScheduleViewModel(
         _event.postValue(ScheduleEvent.Loading)
 
         val event: Deferred<ScheduleEvent> = ioScope.async {
-            val scheduleResponse = try {
+            val scheduleResponse = runCatching {
                 trainScheduleService.getScheduleAsync(lineName).await()
-            } catch (e: IOException) {
-                return@async ScheduleEvent.Error(e)
+            }.getOrElse {
+                return@async ScheduleEvent.Error(it)
             }
 
             val destination = generateTempFile("${lineName}Schedule.pdf")
