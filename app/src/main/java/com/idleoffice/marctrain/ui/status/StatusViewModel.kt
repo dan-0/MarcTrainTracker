@@ -63,20 +63,18 @@ class StatusViewModel(
     }
 
     private fun doGetTrainStatus() {
-
         ioScope.launch {
-            while (true) {
-                idlingResource.startIdlingAction()
-                val delayInterval = if (networkProvider.isNetworkConnected()) {
-                    loadTrainData()
-                    BuildConfig.STATUS_POLL_INTERVAL
-                } else {
-                    BuildConfig.STATUS_POLL_RETRY_INTERVAL
-                }
-                idlingResource.stopIdlingAction()
-                delay(delayInterval)
+            idlingResource.startIdlingAction()
+            val delayInterval = if (networkProvider.isNetworkConnected()) {
+                BuildConfig.STATUS_POLL_INTERVAL
+            } else {
+                BuildConfig.STATUS_POLL_RETRY_INTERVAL
             }
+            loadTrainData()
+            delay(delayInterval)
+            doGetTrainStatus()
         }.invokeOnCompletion {
+            idlingResource.stopIdlingAction()
             it?.run {
                 Timber.e(it, "Exception on Status completion")
             }
