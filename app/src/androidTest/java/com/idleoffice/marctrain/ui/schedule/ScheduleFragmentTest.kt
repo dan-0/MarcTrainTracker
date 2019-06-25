@@ -113,6 +113,15 @@ class ScheduleFragmentTest {
         onView(withText(R.string.brunswick)).perform(click())
     }
 
+    @Test
+    fun checkMdotSchedule() {
+        onView(withId(R.id.btnMdotSchedule))
+                .perform(click())
+
+        onView(withText(R.string.schedule))
+                .check(matches(isDisplayed()))
+    }
+
     private fun checkIntent(line: String) {
         val destination = File(File(activityRule.activity.filesDir, "tables"), "${line}Schedule.pdf")
         val fileUri = FileProvider.getUriForFile(activityRule.activity,

@@ -21,6 +21,7 @@ package com.idleoffice.marctrain.ui.schedule
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.hadilq.liveevent.LiveEvent
 import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
 import com.idleoffice.marctrain.extensions.exhaustive
 import com.idleoffice.marctrain.idling.IdlingResource
@@ -50,7 +51,7 @@ class ScheduleViewModel(
         private const val STATION_BRUNSWICK = "brunswick"
     }
 
-    private val _event = MutableLiveData<ScheduleEvent>()
+    private val _event = LiveEvent<ScheduleEvent>()
     val event: LiveData<ScheduleEvent> = _event
 
     private val _hapticEvent = MutableLiveData<HapticEvent>()
@@ -100,12 +101,15 @@ class ScheduleViewModel(
     fun takeAction(action: ScheduleAction) {
         idlingResource.startIdlingAction()
         _hapticEvent.value = HapticEvent.Tap()
-        val line = when (action) {
-            is ScheduleAction.LaunchBrunswick -> STATION_BRUNSWICK
-            is ScheduleAction.LaunchCamden -> STATION_CAMDEN
-            is ScheduleAction.LaunchPenn -> STATION_PENN
+        when (action) {
+            ScheduleAction.LaunchBrunswick -> doLoadLineTable(STATION_BRUNSWICK)
+            ScheduleAction.LaunchCamden -> doLoadLineTable(STATION_CAMDEN)
+            ScheduleAction.LaunchPenn -> doLoadLineTable(STATION_PENN)
+            ScheduleAction.LaunchLiveView -> _event.postValue(ScheduleEvent.LoadLive)
         }.exhaustive
+    }
 
+    fun doLoadLineTable(line: String) {
         ioScope.launch { launchTable(line) }
                 .invokeOnCompletion {
                     it?.run {

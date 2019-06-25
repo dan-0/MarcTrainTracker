@@ -54,8 +54,14 @@
     <string name="south">South</string>
     <string name="west">West</string>
     <string name="east">East</string>
+
+    <string name="invalid_request">Invalid request</string>
     <string name="back_to_exit">Press back button again to exit</string>
     <string name="loading_schedule">Loading schedule</string>
+    <string name="download_schedule">Download a schedule:</string>
+    <string name="or_try_live_mode">Or check MDOT info:</string>
+    <string name="schedule">MDOT Information</string>
+    <string name="live_mode">MDOT Info</string>
 
     <string-array name="ns_dir_array">
         <item>@string/north</item>
@@ -66,6 +72,4 @@
         <item>@string/west</item>
         <item>@string/east</item>
     </string-array>
-
-
 </resources>

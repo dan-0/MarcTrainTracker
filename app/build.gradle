@@ -147,6 +147,9 @@ dependencies {
     developerImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
+    // Live event library
+    implementation "com.github.hadilq.liveevent:liveevent:1.0.1"
+
     // Consent library
     implementation 'com.idleoffice:idleconsent:0.2.4-alpha'
 }

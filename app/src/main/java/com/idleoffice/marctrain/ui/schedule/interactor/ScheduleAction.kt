@@ -25,7 +25,8 @@ sealed class ScheduleAction(
         action: String,
         feature: String = "schedule"
 ) : AppAction(action, feature) {
-    class LaunchCamden : ScheduleAction("launch_camden")
-    class LaunchPenn : ScheduleAction("launch_penn")
-    class LaunchBrunswick : ScheduleAction("launch_brunswick")
+    object LaunchCamden : ScheduleAction("launch_camden")
+    object LaunchPenn : ScheduleAction("launch_penn")
+    object LaunchBrunswick : ScheduleAction("launch_brunswick")
+    object LaunchLiveView : ScheduleAction("launch_live_view")
 }

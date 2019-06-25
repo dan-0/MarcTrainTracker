@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 IdleOffice Inc.
+  ~
+  ~ fragment_live_schedule.xml is part of MarcTrainTracker.
+  ~
+  ~ MarcTrainTracker is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MarcTrainTracker is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this software.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/scheduleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scheduleAppBarLayout"
+            style="@style/mt.traininfo.appbar">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/scheduleToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:background="@color/white"
+                android:elevation="4dp"
+                app:title="@string/schedule"
+                app:titleTextColor="@color/colorPrimaryDark"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <WebView
+            android:id="@+id/scheduleWebView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            />
+        <include
+            layout="@layout/progress_bar_frame_layout_full"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/scheduleFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/button_margin"
+            android:src="@drawable/ic_home_black_24dp"
+            android:tint="@color/white"
+            android:backgroundTint="@color/colorPrimary"
+            />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
