@@ -27,11 +27,10 @@ import com.idleoffice.marctrain.idling.IdlingResource
 import com.idleoffice.marctrain.network.NetworkProvider
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.idleoffice.marctrain.ui.base.BaseViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.io.IOException
 
 class StatusViewModel(
         coroutineContextProvider: CoroutineContextProvider,
@@ -64,20 +63,24 @@ class StatusViewModel(
 
     private fun doGetTrainStatus() {
         ioScope.launch {
-            idlingResource.startIdlingAction()
-            val delayInterval = if (networkProvider.isNetworkConnected()) {
-                BuildConfig.STATUS_POLL_INTERVAL
-            } else {
-                BuildConfig.STATUS_POLL_RETRY_INTERVAL
+            while (true) {
+                idlingResource.startIdlingAction()
+                val delayInterval = if (networkProvider.isNetworkConnected()) {
+                    BuildConfig.STATUS_POLL_INTERVAL
+                } else {
+                    BuildConfig.STATUS_POLL_RETRY_INTERVAL
+                }
+                loadTrainData()
+                idlingResource.stopIdlingAction()
+                delay(delayInterval)
             }
-            loadTrainData()
-            delay(delayInterval)
-            doGetTrainStatus()
         }.invokeOnCompletion {
-            idlingResource.stopIdlingAction()
             it?.run {
-                Timber.e(it, "Exception on Status completion")
+                if (this !is CancellationException) {
+                    Timber.e(it, "Exception on Status completion")
+                }
             }
+            idlingResource.stopIdlingAction()
         }
     }
 }

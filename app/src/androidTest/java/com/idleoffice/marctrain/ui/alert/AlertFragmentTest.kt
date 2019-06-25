@@ -26,7 +26,6 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.R.id
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.data.model.TrainStatus
@@ -79,7 +78,7 @@ class AlertFragmentTest {
 
     @Test
     fun ensureAlertsDisplayed() {
-        onView(withId(R.id.navigation_alert))
+        onView(withId(id.navigation_alert))
                 .perform(click())
 
         onView(withId(id.loadingViewPartial))
@@ -102,7 +101,7 @@ class AlertFragmentTest {
 
         activityRule.runOnUiThread { loadKoinModules(noAlertsModule) }
 
-        onView(withId(R.id.navigation_alert))
+        onView(withId(id.navigation_alert))
                 .perform(click())
 
         onView(withId(id.loadingViewPartial))

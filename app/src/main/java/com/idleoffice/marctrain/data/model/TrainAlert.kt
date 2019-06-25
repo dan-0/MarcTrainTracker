@@ -20,7 +20,9 @@
 package com.idleoffice.marctrain.data.model
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class TrainAlert(
         @Json(name = "Desc") val description: String,
         @Json(name = "PubDate") val pubDate: String

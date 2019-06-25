@@ -34,7 +34,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
-import java.io.IOException
 
 
 class ScheduleViewModel(

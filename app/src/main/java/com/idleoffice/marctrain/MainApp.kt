@@ -23,13 +23,17 @@ import android.app.Application
 import android.util.Log
 import com.crashlytics.android.Crashlytics
 import com.idleoffice.marctrain.analytics.firebaseModule
+import com.idleoffice.marctrain.coroutines.coroutinesModule
 import com.idleoffice.marctrain.idling.idlingResourceModule
+import com.idleoffice.marctrain.retrofit.ts.retrofitModule
 import com.idleoffice.marctrain.ui.alert.alertFragmentModule
 import com.idleoffice.marctrain.ui.main.mainActivityModule
 import com.idleoffice.marctrain.ui.schedule.scheduleFragmentModule
 import com.idleoffice.marctrain.ui.status.statusFragmentModule
 import com.squareup.leakcanary.LeakCanary
 import org.koin.android.ext.android.startKoin
+import org.koin.android.logger.AndroidLogger
+import org.koin.log.Logger
 import timber.log.Timber
 
 
@@ -42,7 +46,9 @@ class MainApp : Application() {
             statusFragmentModule,
             alertFragmentModule,
             idlingResourceModule,
-            firebaseModule
+            firebaseModule,
+            coroutinesModule,
+            retrofitModule
     )
 
     override fun onCreate() {
@@ -52,14 +58,23 @@ class MainApp : Application() {
         }
         LeakCanary.install(this)
 
+        val koinLogger: Logger
         if(BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+            koinLogger = AndroidLogger()
         } else {
             Timber.plant(CrashlyticsTree())
+            // release logger
+            koinLogger = object : Logger {
+                override fun debug(msg: String) { }
+
+                override fun err(msg: String) { }
+
+                override fun info(msg: String) { }
+            }
         }
 
-
-        startKoin(this, koinModules)
+        startKoin(this, koinModules, logger = koinLogger)
     }
 
     class CrashlyticsTree : Timber.Tree() {

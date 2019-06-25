@@ -17,7 +17,6 @@
 -dontwarn retrofit2.-KotlinExtensions
 -dontwarn okhttp3.**
 -dontwarn okio.**
--dontwarn javax.annotation.**
 -dontwarn org.conscrypt.**
 -keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
 
@@ -26,30 +25,6 @@
     public protected *;
 }
 -keepattributes InnerClasses,EnclosingMethod
-
-# Moshi
--dontwarn javax.annotation.**
--keepclasseswithmembers class * {
-    @com.squareup.moshi.* <methods>;
-}
--keep @com.squareup.moshi.JsonQualifier interface *
--keepclassmembers @com.squareup.moshi.JsonClass class * extends java.lang.Enum {
-    <fields>;
-}
--keepnames @com.squareup.moshi.JsonClass class *
--if @com.squareup.moshi.JsonClass class *
--keep class <1>JsonAdapter {
-    <init>(...);
-    <fields>;
-}
--if @com.squareup.moshi.JsonClass class **$*
--keep class <1>_<2>JsonAdapter {
-    <init>(...);
-    <fields>;
-}
--keep class kotlin.reflect.jvm.internal.impl.builtins.BuiltInsLoaderImpl
--dontwarn org.jetbrains.annotations.**
--keep class kotlin.Metadata { *; }
 
 # App
 -keepclassmembers class com.idleoffice.marctrain.data.model.** {

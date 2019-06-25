@@ -36,6 +36,8 @@ class TestIdlingResource: IdlingResource {
     }
 
     override fun stopIdlingAction() {
-        idlingResource.decrement()
+        if (!idlingResource.isIdleNow) {
+            idlingResource.decrement()
+        }
     }
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019 IdleOffice Inc.
  *
- * TrainStatus.kt is part of MarcTrainTracker.
+ * coroutinesModule.kt is part of MarcTrainTracker.
  *
  * MarcTrainTracker is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,20 +17,10 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.idleoffice.marctrain.data.model
+package com.idleoffice.marctrain.coroutines
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import org.koin.dsl.module.module
 
-@JsonClass(generateAdapter = true)
-data class TrainStatus(
-        @Json(name = "Number") val number: String,
-        @Json(name = "Line") val line: String,
-        @Json(name = "Direction") val direction: String,
-        @Json(name = "NextStation") val nextStation: String,
-        @Json(name = "Departure") val departure: String,
-        @Json(name = "Status") val status: String,
-        @Json(name = "Delay") val delay: String,
-        @Json(name = "LastUpdate") val lastUpdate: String,
-        @Json(name = "Message") val message: String
-)
+val coroutinesModule = module {
+    single { AppCoroutineContextProvider() as CoroutineContextProvider }
+}

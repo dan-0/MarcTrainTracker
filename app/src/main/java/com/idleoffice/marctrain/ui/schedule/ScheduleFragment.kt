@@ -53,7 +53,7 @@ class ScheduleFragment :
 
     override val fragViewModel: ScheduleViewModel by viewModel()
 
-    val idlingResource: IdlingResource by inject()
+    private val idlingResource: IdlingResource by inject()
 
     override val layoutId: Int = R.layout.fragment_schedule
 
