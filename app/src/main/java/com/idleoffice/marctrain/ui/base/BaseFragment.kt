@@ -22,19 +22,16 @@ package com.idleoffice.marctrain.ui.base
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.idleoffice.marctrain.analytics.FirebaseService
-import kotlinx.android.synthetic.main.progress_bar_frame_layout_partial.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel> : Fragment() {
 
     private var baseActivity: BaseActivity<T,V>? = null
-    private var viewDataBinding: T? = null
     protected lateinit var rootView: View
     protected val analyticService: FirebaseService by inject()
 

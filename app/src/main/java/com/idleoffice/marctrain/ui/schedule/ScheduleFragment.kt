@@ -40,6 +40,7 @@ import com.idleoffice.marctrain.ui.base.BaseFragment
 import com.idleoffice.marctrain.ui.schedule.interactor.HapticEvent
 import com.idleoffice.marctrain.ui.schedule.interactor.ScheduleActor
 import com.idleoffice.marctrain.ui.schedule.interactor.ScheduleEvent
+import com.idleoffice.marctrain.ui.schedule.live.LiveScheduleFragment
 import com.idleoffice.marctrain.vibrateTap
 import kotlinx.android.synthetic.main.fragment_schedule.*
 import kotlinx.android.synthetic.main.progress_bar_frame_layout_full.*
@@ -53,7 +54,7 @@ class ScheduleFragment :
 
     override val fragViewModel: ScheduleViewModel by viewModel()
 
-    val idlingResource: IdlingResource by inject()
+    private val idlingResource: IdlingResource by inject()
 
     override val layoutId: Int = R.layout.fragment_schedule
 
@@ -87,11 +88,20 @@ class ScheduleFragment :
                     startPdfActivity(it.file)
                     hideLoading()
                 }
+                ScheduleEvent.LoadLive -> {
+                    idlingResource.stopIdlingAction()
+                    fragmentManager?.let { fm ->
+                        fm.beginTransaction()
+                            .addToBackStack(null)
+                            .replace(R.id.view_content, LiveScheduleFragment())
+                            .commit()
+                    }
+                }
                 else -> {
                     idlingResource.stopIdlingAction()
                     Timber.d("Null ScheduleEvent")
                 }
-            }.exhaustive
+            }
         }
 
         val hapticObserver = Observer<HapticEvent?> {

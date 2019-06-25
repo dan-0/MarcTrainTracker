@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019 IdleOffice Inc.
  *
- * TrainStatus.kt is part of MarcTrainTracker.
+ * _Okhttp.kt is part of MarcTrainTracker.
  *
  * MarcTrainTracker is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,20 +17,15 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.idleoffice.marctrain.data.model
+package com.idleoffice.marctrain.okhttp
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import okhttp3.Interceptor
+import okhttp3.ResponseBody
 
-@JsonClass(generateAdapter = true)
-data class TrainStatus(
-        @Json(name = "Number") val number: String,
-        @Json(name = "Line") val line: String,
-        @Json(name = "Direction") val direction: String,
-        @Json(name = "NextStation") val nextStation: String,
-        @Json(name = "Departure") val departure: String,
-        @Json(name = "Status") val status: String,
-        @Json(name = "Delay") val delay: String,
-        @Json(name = "LastUpdate") val lastUpdate: String,
-        @Json(name = "Message") val message: String
-)
+fun Interceptor.Chain.getContent(body: ResponseBody?): ByteArray {
+    return if (request().url().encodedPath().contains("trainData")) {
+        "[{\"Number\":\"694\",\"Line\":\"Penn\",\"Direction\":\"North\",\"NextStation\":\"Martin State Airport\",\"Departure\":\"09:23 PM\",\"Status\":\"Delayed\",\"Delay\":\"20 Min\",\"LastUpdate\":\"8:26 PM 6/23/19\",\"Message\":\"\"}]".toByteArray()
+    } else {
+        body?.bytes() ?: ByteArray(0)
+    }
+}

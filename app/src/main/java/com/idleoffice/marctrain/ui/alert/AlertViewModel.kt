@@ -27,11 +27,10 @@ import com.idleoffice.marctrain.idling.IdlingResource
 import com.idleoffice.marctrain.network.NetworkProvider
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.idleoffice.marctrain.ui.base.BaseViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.io.IOException
 
 class AlertViewModel(coroutineContextProvider: CoroutineContextProvider,
                      private val trainDataService: TrainDataService,
@@ -68,12 +67,14 @@ class AlertViewModel(coroutineContextProvider: CoroutineContextProvider,
                 } else {
                     BuildConfig.ALERT_POLL_RETRY_INTERVAL
                 }
-                idlingResource.stopIdlingAction()
                 delay(delayInterval)
+                idlingResource.stopIdlingAction()
             }
         }.invokeOnCompletion {
             it?.run {
-                Timber.e(it, "Exception on Alert completion")
+                if (this !is CancellationException) {
+                    Timber.e(it, "Exception on Alert completion")
+                }
             }
         }
     }

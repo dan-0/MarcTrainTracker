@@ -30,4 +30,5 @@ sealed class ScheduleEvent(
     object Loading : ScheduleEvent("loading")
     class Error(val e: Throwable) : ScheduleEvent("error")
     class Data(val file: File, schedule: String) : ScheduleEvent("download_$schedule")
+    object LoadLive : ScheduleEvent("load_live")
 }

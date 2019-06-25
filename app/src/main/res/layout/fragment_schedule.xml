@@ -43,6 +43,12 @@
             android:paddingBottom="@dimen/vertical_list_vertical_padding"
             tools:ignore="UselessParent">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/schedulePrompt"
+                android:text="@string/download_schedule"/>
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTablesPenn"
                 android:layout_width="match_parent"
@@ -67,6 +73,20 @@
                 android:onClick="@{() -> actor.launchBrunswickTable() }"
                 style="@style/mt.btn"
                 android:text="@string/brunswick"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/schedulePrompt"
+                android:text="@string/or_try_live_mode"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMdotSchedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> actor.launchLiveMode() }"
+                style="@style/mt.btn"
+                android:text="@string/live_mode"/>
         </LinearLayout>
     </FrameLayout>
 </layout>
