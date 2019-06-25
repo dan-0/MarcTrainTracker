@@ -34,13 +34,13 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import okhttp3.ResponseBody
-import org.junit.Assert.*
+import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import org.junit.rules.TestRule
-import java.lang.NullPointerException
 
 class ScheduleViewModelTest {
 
@@ -102,7 +102,7 @@ class ScheduleViewModelTest {
 
     @Test
     fun `test action error occurs`() {
-        ut.takeAction(ScheduleAction.LaunchPenn())
+        ut.takeAction(ScheduleAction.LaunchPenn)
 
         coroutineContext.testContext.triggerActions()
 
@@ -120,9 +120,9 @@ class ScheduleViewModelTest {
         )
 
         val action = when (line) {
-            "penn" -> ScheduleAction.LaunchPenn()
-            "camden" -> ScheduleAction.LaunchCamden()
-            "brunswick" -> ScheduleAction.LaunchBrunswick()
+            "penn" -> ScheduleAction.LaunchPenn
+            "camden" -> ScheduleAction.LaunchCamden
+            "brunswick" -> ScheduleAction.LaunchBrunswick
             else -> {
                 fail("Invalid line: $line")
                 null // Compiler forces this because it doesn't see the exception from `fail`

@@ -22,10 +22,10 @@ package com.idleoffice.marctrain.okhttp
 import okhttp3.Interceptor
 import okhttp3.ResponseBody
 
-fun Interceptor.Chain.getContent(body: ResponseBody?): ByteArray? {
+fun Interceptor.Chain.getContent(body: ResponseBody?): ByteArray {
     return if (request().url().encodedPath().contains("trainData")) {
         "[{\"Number\":\"694\",\"Line\":\"Penn\",\"Direction\":\"North\",\"NextStation\":\"Martin State Airport\",\"Departure\":\"09:23 PM\",\"Status\":\"Delayed\",\"Delay\":\"20 Min\",\"LastUpdate\":\"8:26 PM 6/23/19\",\"Message\":\"\"}]".toByteArray()
     } else {
-        body?.bytes()
+        body?.bytes() ?: ByteArray(0)
     }
 }

@@ -22,6 +22,6 @@ package com.idleoffice.marctrain.okhttp
 import okhttp3.Interceptor
 import okhttp3.ResponseBody
 
-fun Interceptor.Chain.getContent(body: ResponseBody?): ByteArray? {
-    return body?.bytes()
+fun Interceptor.Chain.getContent(body: ResponseBody?): ByteArray {
+    return body?.bytes() ?: ByteArray(0)
 }
