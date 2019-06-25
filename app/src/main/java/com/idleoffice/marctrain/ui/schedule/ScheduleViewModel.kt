@@ -109,7 +109,7 @@ class ScheduleViewModel(
         }.exhaustive
     }
 
-    fun doLoadLineTable(line: String) {
+    private fun doLoadLineTable(line: String) {
         ioScope.launch { launchTable(line) }
                 .invokeOnCompletion {
                     it?.run {

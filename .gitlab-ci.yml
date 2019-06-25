@@ -1,7 +1,7 @@
 image: jangrewe/gitlab-ci-android
 
-stages:
-- build
+include:
+  template: Dependency-Scanning.gitlab-ci.yml
 
 before_script:
 - export GRADLE_USER_HOME=$(pwd)/.gradle
