@@ -26,6 +26,7 @@ import com.idleoffice.marctrain.okhttp.getContent
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import okhttp3.ResponseBody
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module.module
@@ -43,17 +44,22 @@ val appModules = module {
     single {
         OkHttpClient.Builder()
                 .addInterceptor {
-                    try {
-                        val response = it.proceed(it.request())
-                        val body = response.body()
-                        val content = it.getContent(body)
-                        val contentType = response.body()?.contentType()
-                        response.body()?.close()
-                        response.newBuilder().body(ResponseBody.create(contentType, content)).build()
-                    } catch (exception: Exception) {
-                        Timber.e(exception, "Error parsing call chain")
-                        it.proceed(it.request())
+                    // Loop the try block, erring out due to an io issue is not a real option
+                    while (true) {
+                        try {
+                            val response = it.proceed(it.request())
+                            val body = response.body()
+                            val content = it.getContent(body)
+                            val contentType = response.body()?.contentType()
+                            response.body()?.close()
+                            return@addInterceptor response.newBuilder().body(ResponseBody.create(contentType, content)).build()
+                        } catch (exception: Exception) {
+                            Timber.e(exception, "Error parsing call chain")
+                        }
                     }
+                    // Suppress, this case will never happen, but if it isn't here the compiler vomits
+                    @Suppress("UNREACHABLE_CODE")
+                    Response.Builder().build()
                 }
                 .retryOnConnectionFailure(true)
                 .connectTimeout(30, TimeUnit.SECONDS)
