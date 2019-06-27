@@ -55,8 +55,7 @@ class LiveScheduleFragment : Fragment(), OnBackPressedListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentLiveScheduleBinding.inflate(inflater, container, false)
-        val rootview = binding.root
-        return rootview
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -100,7 +99,7 @@ class LiveScheduleFragment : Fragment(), OnBackPressedListener {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        scheduleWebView.saveState(outState)
+        scheduleWebView?.saveState(outState)
         super.onSaveInstanceState(outState)
     }
 
@@ -111,7 +110,7 @@ class LiveScheduleFragment : Fragment(), OnBackPressedListener {
     }
 
     private fun goHome() {
-        scheduleWebView.loadUrl(MARC_SCHEDULE_URL)
+        scheduleWebView?.loadUrl(MARC_SCHEDULE_URL)
     }
 
     private fun showLoading(msg: String) {
