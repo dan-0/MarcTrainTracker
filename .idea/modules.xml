@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/MarcTrainTracker.iml" filepath="$PROJECT_DIR$/.idea/MarcTrainTracker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MarcTrainTracker-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MarcTrainTracker-app.iml" group="MarcTrainTracker/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/android-MarcTrainTracker.iml" filepath="$PROJECT_DIR$/.idea/modules/android-MarcTrainTracker.iml" group="MarcTrainTracker" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
