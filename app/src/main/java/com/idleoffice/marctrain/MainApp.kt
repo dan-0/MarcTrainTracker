@@ -21,7 +21,7 @@ package com.idleoffice.marctrain
 
 import android.app.Application
 import android.util.Log
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.idleoffice.marctrain.analytics.firebaseModule
 import com.idleoffice.marctrain.coroutines.coroutinesModule
 import com.idleoffice.marctrain.idling.idlingResourceModule
@@ -79,12 +79,13 @@ class MainApp : Application() {
 
     class CrashlyticsTree : Timber.Tree() {
         override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+            val crashlytics = FirebaseCrashlytics.getInstance()
             when(priority) {
                 Log.ERROR -> {
                     if(t != null) {
-                        Crashlytics.logException(t)
+                        crashlytics.recordException(t)
                     }
-                    Crashlytics.log(priority, tag, message)
+                    crashlytics.log("E/$tag: $message")
                 }
             }
         }
