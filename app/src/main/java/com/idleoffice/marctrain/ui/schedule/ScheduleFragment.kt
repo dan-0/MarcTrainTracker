@@ -118,7 +118,7 @@ class ScheduleFragment : BaseFragment<ScheduleViewModel>() {
             pdfIntent.setDataAndType(fileUri, mimeType)
 
             try {
-                super.startActivity(pdfIntent)
+                startActivity(pdfIntent)
             } catch (e: ActivityNotFoundException) {
                 Timber.e(e)
                 displayActivityNotFound()

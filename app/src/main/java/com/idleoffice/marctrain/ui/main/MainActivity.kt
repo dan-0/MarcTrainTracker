@@ -59,7 +59,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-
         val currentDestination = findNavController().currentDestination?.id
 
         when {
@@ -69,7 +68,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun delayBackPress() {
-
         backButtonCount++
 
         vibrateTap()
