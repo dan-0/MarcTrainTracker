@@ -79,7 +79,7 @@ class AlertFragmentTest {
     @Test
     fun ensureAlertsDisplayed() {
         onView(withId(id.navigation_alert))
-                .perform(click())
+            .perform(click())
 
         onView(withId(id.loadingViewPartial))
                 .check(matches(not(isDisplayed())))
