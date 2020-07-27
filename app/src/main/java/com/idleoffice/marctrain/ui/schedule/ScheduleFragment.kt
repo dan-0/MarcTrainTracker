@@ -90,12 +90,6 @@ class ScheduleFragment : BaseFragment<ScheduleViewModel>() {
                     idlingResource.stopIdlingAction()
                     val direction = ScheduleFragmentDirections.toLiveScheduleFragment()
                     findNavController().navigate(direction)
-//                    fragmentManager?.let { fm ->
-//                        fm.beginTransaction()
-//                            .addToBackStack(null)
-//                            .replace(R.id.nav_controller, LiveScheduleFragment())
-//                            .commit()
-//                    }
                 }
                 else -> {
                     idlingResource.stopIdlingAction()
