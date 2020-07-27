@@ -28,7 +28,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.databinding.FragmentAlertBinding
@@ -39,7 +38,8 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class AlertFragment : BaseFragment<FragmentAlertBinding, AlertViewModel>(), AlertNavigator {
+class AlertFragment : BaseFragment<AlertViewModel>(), AlertNavigator {
+
     override val fragViewModel: AlertViewModel by viewModel()
 
     private val alertAdapter: AlertAdapter by inject()
@@ -61,9 +61,8 @@ class AlertFragment : BaseFragment<FragmentAlertBinding, AlertViewModel>(), Aler
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.setVariable(BR.viewModel, fragViewModel)
-        setAlertObserver()
         super.onViewCreated(view, savedInstanceState)
+        setAlertObserver()
     }
 
     private fun setAlertObserver() {
@@ -81,7 +80,7 @@ class AlertFragment : BaseFragment<FragmentAlertBinding, AlertViewModel>(), Aler
                 }
             }
         }
-        fragViewModel.allAlerts.observe(this, alertObserver)
+        fragViewModel.allAlerts.observe(viewLifecycleOwner, alertObserver)
     }
 
     private fun initRecyclerView() {

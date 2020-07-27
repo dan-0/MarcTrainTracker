@@ -29,18 +29,17 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.FragmentScheduleBinding
-import com.idleoffice.marctrain.extensions.exhaustive
 import com.idleoffice.marctrain.idling.IdlingResource
 import com.idleoffice.marctrain.ui.base.BaseFragment
 import com.idleoffice.marctrain.ui.schedule.interactor.HapticEvent
 import com.idleoffice.marctrain.ui.schedule.interactor.ScheduleActor
 import com.idleoffice.marctrain.ui.schedule.interactor.ScheduleEvent
-import com.idleoffice.marctrain.ui.schedule.live.LiveScheduleFragment
 import com.idleoffice.marctrain.vibrateTap
 import kotlinx.android.synthetic.main.fragment_schedule.*
 import kotlinx.android.synthetic.main.progress_bar_frame_layout_full.*
@@ -49,8 +48,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.io.File
 
-class ScheduleFragment :
-        BaseFragment<FragmentScheduleBinding, ScheduleViewModel>() {
+class ScheduleFragment : BaseFragment<ScheduleViewModel>() {
 
     override val fragViewModel: ScheduleViewModel by viewModel()
 
@@ -90,12 +88,14 @@ class ScheduleFragment :
                 }
                 ScheduleEvent.LoadLive -> {
                     idlingResource.stopIdlingAction()
-                    fragmentManager?.let { fm ->
-                        fm.beginTransaction()
-                            .addToBackStack(null)
-                            .replace(R.id.view_content, LiveScheduleFragment())
-                            .commit()
-                    }
+                    val direction = ScheduleFragmentDirections.toLiveScheduleFragment()
+                    findNavController().navigate(direction)
+//                    fragmentManager?.let { fm ->
+//                        fm.beginTransaction()
+//                            .addToBackStack(null)
+//                            .replace(R.id.nav_controller, LiveScheduleFragment())
+//                            .commit()
+//                    }
                 }
                 else -> {
                     idlingResource.stopIdlingAction()

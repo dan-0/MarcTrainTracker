@@ -21,127 +21,64 @@ package com.idleoffice.marctrain.ui.main
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.annotation.IdRes
-import com.idleoffice.marctrain.BR
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.idleoffice.marctrain.R
-import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
 import com.idleoffice.marctrain.databinding.ActivityMainBinding
-import com.idleoffice.marctrain.ui.alert.AlertFragment
-import com.idleoffice.marctrain.ui.base.BaseActivity
-import com.idleoffice.marctrain.ui.base.BaseFragment
-import com.idleoffice.marctrain.ui.schedule.ScheduleFragment
-import com.idleoffice.marctrain.ui.status.StatusFragment
+import com.idleoffice.marctrain.extensions.findNavController
 import com.idleoffice.marctrain.vibrateTap
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
+import kotlinx.coroutines.withContext
 
-class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNavigator, OnBackPressedHandler {
-
-    override val actViewModel by viewModel<MainViewModel>()
-    override val bindingVariable: Int = BR.viewModel
-    override val layoutId: Int = R.layout.activity_main
+class MainActivity : AppCompatActivity() {
 
     private var backButtonCount = 0
-    private val coroutineContextProvider by inject<CoroutineContextProvider>()
-    private var job = Job()
-    private val mainScope = CoroutineScope(coroutineContextProvider.ui + job)
 
-    private fun loadMenuFragment(frag: BaseFragment<*,*>) {
-        // Reuse same fragment if it happens to exist already
-        val fragment = supportFragmentManager
-                .findFragmentByTag(frag.fragTag) as? BaseFragment<*, *> ?: frag
-
-        Timber.d("Replacing fragment view.")
-        supportFragmentManager.beginTransaction()
-                .disallowAddToBackStack()
-                .replace(R.id.view_content, fragment, fragment.fragTag)
-                .commitAllowingStateLoss()
-    }
-
-    private fun loadFromId(@IdRes id: Int): Boolean {
-        backButtonCount = 0
-        return when (id) {
-            R.id.navigation_status -> {
-                vibrateTap()
-                loadMenuFragment(StatusFragment())
-                true
-            }
-            R.id.navigation_alert -> {
-                vibrateTap()
-                loadMenuFragment(AlertFragment())
-                true
-            }
-            R.id.navigation_schedule -> {
-                vibrateTap()
-                loadMenuFragment(ScheduleFragment())
-                true
-            }
-
-            else -> false
-        }
-    }
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Timber.d("Main activity onCreate called")
-        backButtonCount = 0
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-    }
 
-    override fun onResume() {
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         backButtonCount = 0
-        navigation.setOnNavigationItemSelectedListener {
-            loadFromId(it.itemId)
-        }
-        if (!loadFromId(navigation.selectedItemId)) {
-            loadMenuFragment(StatusFragment())
-        }
-        super.onResume()
+
+        setupNavigation()
     }
 
-    override fun onPause() {
-        navigation.setOnNavigationItemSelectedListener(null)
-        super.onPause()
-    }
+    private fun setupNavigation() {
+        val navView: BottomNavigationView = binding.navigation
 
-    override fun displayError(errorMsg: String) {
-        Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show()
-    }
+        val navController = findNavController()
 
-    override var backButtonReceiver: OnBackPressedListener? = null
+        navView.setupWithNavController(navController)
+    }
 
     override fun onBackPressed() {
-        backButtonReceiver?.let {
-            if(it.backButtonPressed()) {
-                return
-            }
-        }
 
-        when (backButtonCount) {
-            0 -> {
-                backButtonCount++
-                vibrateTap()
-                Toast.makeText(this, getString(R.string.back_to_exit), Toast.LENGTH_SHORT).show()
+        val currentDestination = findNavController().currentDestination?.id
 
-                mainScope.launch {
-                    delay(3000)
-                    backButtonCount = 0
-                }
-            }
+        when {
+            backButtonCount == 0 && currentDestination == R.id.navigation_status -> delayBackPress()
             else -> super.onBackPressed()
         }
     }
 
-    override fun onDestroy() {
-        if (!job.isCancelled) {
-            job.cancel()
+    private fun delayBackPress() {
+
+        backButtonCount++
+
+        vibrateTap()
+        Toast.makeText(this, getString(R.string.back_to_exit), Toast.LENGTH_SHORT).show()
+        lifecycleScope.launchWhenCreated {
+            withContext(Dispatchers.IO) {
+                delay(3000)
+            }
+            backButtonCount = 0
         }
-        super.onDestroy()
     }
 }

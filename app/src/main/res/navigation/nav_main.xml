@@ -1,5 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_main">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/navigation_status">
 
+    <fragment
+        android:id="@+id/navigation_status"
+        android:name="com.idleoffice.marctrain.ui.status.StatusFragment"
+        android:label="StatusFragment" />
+    <fragment
+        android:id="@+id/navigation_alert"
+        android:name="com.idleoffice.marctrain.ui.alert.AlertFragment"
+        android:label="AlertFragment" />
+    <fragment
+        android:id="@+id/navigation_schedule"
+        android:name="com.idleoffice.marctrain.ui.schedule.ScheduleFragment"
+        android:label="ScheduleFragment">
+        <action
+            android:id="@+id/toLiveScheduleFragment"
+            app:destination="@id/liveScheduleFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/liveScheduleFragment"
+        android:name="com.idleoffice.marctrain.ui.schedule.live.LiveScheduleFragment"
+        android:label="LiveScheduleFragment" />
+
+    <action
+        android:id="@+id/toStatusFragment"
+        app:destination="@id/navigation_status" />
+    <action
+        android:id="@+id/toAlertFragment"
+        app:destination="@id/navigation_alert" />
+    <action
+        android:id="@+id/toScheduleFragment"
+        app:destination="@id/navigation_schedule" />
 </navigation>

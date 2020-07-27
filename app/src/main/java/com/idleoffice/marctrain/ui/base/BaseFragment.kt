@@ -19,19 +19,15 @@
 
 package com.idleoffice.marctrain.ui.base
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
-import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.idleoffice.marctrain.analytics.FirebaseService
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
-abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel> : Fragment() {
+abstract class BaseFragment<out V : BaseViewModel> : Fragment() {
 
-    private var baseActivity: BaseActivity<T,V>? = null
     protected lateinit var rootView: View
     protected val analyticService: FirebaseService by inject()
 
@@ -43,23 +39,8 @@ abstract class BaseFragment<T : ViewDataBinding, out V : BaseViewModel> : Fragme
     abstract val layoutId: Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        lifecycle.addObserver(fragViewModel)
         super.onCreate(savedInstanceState)
+        lifecycle.addObserver(fragViewModel)
         setHasOptionsMenu(false)
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        if (context is BaseActivity<*, *>) {
-            val activity = context as? BaseActivity<T, V>
-            this.baseActivity = activity
-        }
-    }
-
-    override fun onDetach() {
-        baseActivity = null
-        Timber.d("Detaching fragment")
-        super.onDetach()
     }
 }
