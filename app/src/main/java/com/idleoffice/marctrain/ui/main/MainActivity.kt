@@ -41,10 +41,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-
-
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNavigator, OnBackPressedHandler {
-
 
     override val actViewModel by viewModel<MainViewModel>()
     override val bindingVariable: Int = BR.viewModel
