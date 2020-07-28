@@ -22,6 +22,7 @@ package com.idleoffice.marctrain.ui.schedule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hadilq.liveevent.LiveEvent
+import com.idleoffice.marctrain.analytics.FirebaseService
 import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
 import com.idleoffice.marctrain.extensions.exhaustive
 import com.idleoffice.marctrain.idling.IdlingResource
@@ -41,7 +42,8 @@ class ScheduleViewModel(
         coroutineContextProvider: CoroutineContextProvider,
         private val idlingResource: IdlingResource,
         private val trainScheduleService: TrainScheduleService,
-        private val appFileDir: File
+        private val appFileDir: File,
+        private val analyticService: FirebaseService
 ) : BaseViewModel(coroutineContextProvider) {
 
     companion object {
@@ -57,10 +59,6 @@ class ScheduleViewModel(
     private val _hapticEvent = MutableLiveData<HapticEvent>()
     val hapticEvent: LiveData<HapticEvent> = _hapticEvent
 
-    init {
-        Timber.d("Initialized...")
-    }
-
     private fun generateTempFile(tempFileName: String): File {
         val tablesDir = File(appFileDir, lineBaseDir)
         tablesDir.mkdirs()
@@ -71,7 +69,7 @@ class ScheduleViewModel(
     @Synchronized
     private suspend fun launchTable(lineName: String) {
 
-        _event.postValue(ScheduleEvent.Loading)
+        updateEvent(ScheduleEvent.Loading)
 
         val event: Deferred<ScheduleEvent> = ioScope.async {
             val scheduleResponse = runCatching {
@@ -89,13 +87,13 @@ class ScheduleViewModel(
             ScheduleEvent.Data(destination, lineName)
         }
 
-        _event.postValue(
-                runCatching {
-                    event.await()
-                }.getOrElse {
-                    ScheduleEvent.Error(it)
-                }
-        )
+        val newEvent = runCatching {
+            event.await()
+        }.getOrElse {
+            ScheduleEvent.Error(it)
+        }
+
+        updateEvent(newEvent)
     }
 
     fun takeAction(action: ScheduleAction) {
@@ -105,8 +103,13 @@ class ScheduleViewModel(
             ScheduleAction.LaunchBrunswick -> doLoadLineTable(STATION_BRUNSWICK)
             ScheduleAction.LaunchCamden -> doLoadLineTable(STATION_CAMDEN)
             ScheduleAction.LaunchPenn -> doLoadLineTable(STATION_PENN)
-            ScheduleAction.LaunchLiveView -> _event.postValue(ScheduleEvent.LoadLive)
+            ScheduleAction.LaunchLiveView -> updateEvent(ScheduleEvent.LoadLive)
         }.exhaustive
+    }
+
+    private fun updateEvent(newEvent: ScheduleEvent) {
+        analyticService.newEvent(newEvent)
+        _event.postValue(newEvent)
     }
 
     private fun doLoadLineTable(line: String) {
