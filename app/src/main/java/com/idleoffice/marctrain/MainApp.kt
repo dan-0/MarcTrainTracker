@@ -27,7 +27,6 @@ import com.idleoffice.marctrain.coroutines.coroutinesModule
 import com.idleoffice.marctrain.idling.idlingResourceModule
 import com.idleoffice.marctrain.retrofit.ts.retrofitModule
 import com.idleoffice.marctrain.ui.alert.alertFragmentModule
-import com.idleoffice.marctrain.ui.main.mainActivityModule
 import com.idleoffice.marctrain.ui.schedule.scheduleFragmentModule
 import com.idleoffice.marctrain.ui.status.statusFragmentModule
 import com.squareup.leakcanary.LeakCanary
@@ -42,7 +41,6 @@ class MainApp : Application() {
     private val koinModules = listOf(
             appModules,
             scheduleFragmentModule,
-            mainActivityModule,
             statusFragmentModule,
             alertFragmentModule,
             idlingResourceModule,

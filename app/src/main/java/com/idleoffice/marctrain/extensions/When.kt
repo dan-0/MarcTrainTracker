@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019 IdleOffice Inc.
  *
- * MainNavigator.kt is part of MarcTrainTracker.
+ * When.kt is part of MarcTrainTracker.
  *
  * MarcTrainTracker is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +17,7 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.idleoffice.marctrain.ui.main
+package com.idleoffice.marctrain.extensions
 
-
-interface MainNavigator {
-    fun displayError(errorMsg : String)
-}
+val <T> T.exhaustive: T
+    get() = this

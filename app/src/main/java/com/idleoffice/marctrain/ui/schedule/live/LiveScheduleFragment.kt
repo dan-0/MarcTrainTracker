@@ -28,7 +28,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.idleoffice.marctrain.databinding.FragmentLiveScheduleBinding
-import com.idleoffice.marctrain.ui.main.OnBackPressedHandler
 import com.idleoffice.marctrain.ui.main.OnBackPressedListener
 import com.idleoffice.marctrain.ui.schedule.ScheduleClient
 import kotlinx.android.synthetic.main.fragment_live_schedule.*
@@ -61,7 +60,6 @@ class LiveScheduleFragment : Fragment(), OnBackPressedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as OnBackPressedHandler).backButtonReceiver = this
         showLoading("Loading MARC schedules from MDOT")
 
         scheduleWebView.webViewClient = ScheduleClient(MTA_HOST, onPageFinishedListener)
@@ -104,9 +102,9 @@ class LiveScheduleFragment : Fragment(), OnBackPressedListener {
     }
 
     override fun onDestroyView() {
-        scheduleWebView?.webViewClient = null
-        (activity as OnBackPressedHandler).backButtonReceiver = null
         super.onDestroyView()
+        scheduleWebView?.webViewClient = null
+        scheduleWebView.destroy()
     }
 
     private fun goHome() {

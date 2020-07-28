@@ -25,13 +25,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.R
-import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.data.tools.Direction
 import com.idleoffice.marctrain.data.tools.Line
 import com.idleoffice.marctrain.data.tools.TrainLineTools
@@ -44,7 +43,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusViewModel>(), StatusNavigator {
+class StatusFragment : BaseFragment<StatusViewModel>(), StatusNavigator {
 
     override val fragViewModel: StatusViewModel by viewModel()
 
@@ -85,17 +84,16 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
     }
 
     private fun setTrainStatusObserver() {
-        val trainStatusObserver = Observer<List<TrainStatus>> @Synchronized {
+        fragViewModel.allTrainStatusData.observe(viewLifecycleOwner) {
             if (it != null) {
                 Timber.d("New train status received: $it")
                 updateTrains()
             }
         }
-        fragViewModel.allTrainStatusData.observe(this, trainStatusObserver)
     }
 
     private fun setLineChangeObserver() {
-        val lineChangeObserver = Observer<Int> @Synchronized {
+        fragViewModel.selectedTrainLine.observe(viewLifecycleOwner) {
             if (it != null) {
                 Timber.d("New line selected: $it")
                 val lineString = resources.getStringArray(R.array.line_array)[it]
@@ -104,17 +102,14 @@ class StatusFragment : BaseFragment<FragmentStatusCoordinatorBinding, StatusView
                 parseNewLine(line)
             }
         }
-        fragViewModel.selectedTrainLine.observe(this, lineChangeObserver)
     }
 
     private fun setDirectionChangeObserver() {
-        val directionChangeObserver = Observer<Int> @Synchronized {
+        fragViewModel.selectedTrainDirection.observe(viewLifecycleOwner) {
             if (it != null) {
                 updateTrains()
             }
         }
-
-        fragViewModel.selectedTrainDirection.observe(this, directionChangeObserver)
     }
 
     private fun createLineAdapter(): ArrayAdapter<CharSequence> {

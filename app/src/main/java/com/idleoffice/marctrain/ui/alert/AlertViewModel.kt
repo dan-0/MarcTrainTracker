@@ -46,6 +46,8 @@ class AlertViewModel(coroutineContextProvider: CoroutineContextProvider,
     }
 
     private suspend fun loadAlertData() {
+        idlingResource.startIdlingAction()
+
         val alerts = runCatching {
             trainDataService.getTrainAlerts().await()
         }.getOrElse {
@@ -54,13 +56,13 @@ class AlertViewModel(coroutineContextProvider: CoroutineContextProvider,
         }
 
         allAlerts.postValue(alerts)
+        idlingResource.stopIdlingAction()
     }
 
     private fun doGetTrainAlerts() {
 
         ioScope.launch {
             while (true) {
-                idlingResource.startIdlingAction()
                 val delayInterval = if (networkProvider.isNetworkConnected()) {
                     loadAlertData()
                     BuildConfig.ALERT_POLL_INTERVAL
@@ -68,7 +70,6 @@ class AlertViewModel(coroutineContextProvider: CoroutineContextProvider,
                     BuildConfig.ALERT_POLL_RETRY_INTERVAL
                 }
                 delay(delayInterval)
-                idlingResource.stopIdlingAction()
             }
         }.invokeOnCompletion {
             it?.run {
