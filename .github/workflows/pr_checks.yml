@@ -4,7 +4,9 @@ on:
   pull_request:
 
 jobs:
+
   check:
+    name: Basic Checks
 
     runs-on: ubuntu-latest
 
