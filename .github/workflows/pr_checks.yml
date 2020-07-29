@@ -22,6 +22,9 @@ jobs:
       - name: Uninstall NDK
         run: sudo ${ANDROID_HOME}/tools/bin/sdkmanager --uninstall `ndk-bundle`
 
+      - name: Copy Google Services JSON
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }} >> app/google-services.json
+
       - name: Assemble Internal Debug
         run: ./gradlew :app:assembleFullDebug
 

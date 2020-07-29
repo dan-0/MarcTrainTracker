@@ -46,7 +46,7 @@ class LiveScheduleFragment : Fragment(), OnBackPressedListener {
     }
     
     private var _binding: FragmentLiveScheduleBinding? = null
-    private val binding = _binding!!
+    private val binding: FragmentLiveScheduleBinding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentLiveScheduleBinding.inflate(inflater, container, false)
