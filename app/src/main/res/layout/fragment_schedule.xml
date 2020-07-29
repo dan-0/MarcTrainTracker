@@ -17,76 +17,70 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this software.  If not, see <http://www.gnu.org/licenses/>.
   -->
+<FrameLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <data>
-        <variable
-            name="actor"
-            type="com.idleoffice.marctrain.ui.schedule.interactor.ScheduleActor"/>
-    </data>
-
-    <FrameLayout
+    <include
+        android:id="@+id/loading_layout"
+        layout="@layout/progress_bar_frame_layout_full"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:id="@+id/scheduleLayout"
-            android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/scheduleLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:elevation="@dimen/elevation_card"
+        android:layout_gravity="center"
+        android:background="@color/white"
+        android:paddingStart="@dimen/vertical_list_horizontal_padding"
+        android:paddingEnd="@dimen/vertical_list_horizontal_padding"
+        android:paddingTop="@dimen/vertical_list_vertical_padding"
+        android:paddingBottom="@dimen/vertical_list_vertical_padding"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:elevation="@dimen/elevation_card"
-            android:layout_gravity="center"
-            android:background="@color/white"
-            android:paddingStart="@dimen/vertical_list_horizontal_padding"
-            android:paddingEnd="@dimen/vertical_list_horizontal_padding"
-            android:paddingTop="@dimen/vertical_list_vertical_padding"
-            android:paddingBottom="@dimen/vertical_list_vertical_padding"
-            tools:ignore="UselessParent">
+            style="@style/schedulePrompt"
+            android:text="@string/download_schedule"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/schedulePrompt"
-                android:text="@string/download_schedule"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTablesPenn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/mt.btn"
+            android:layout_marginTop="@dimen/button_margin"
+            android:text="@string/penn"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnTablesPenn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> actor.launchPennTable() }"
-                style="@style/mt.btn"
-                android:layout_marginTop="@dimen/button_margin"
-                android:text="@string/penn"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTablesCamden"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/mt.btn"
+            android:text="@string/camden"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnTablesCamden"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> actor.launchCamdenTable() }"
-                style="@style/mt.btn"
-                android:text="@string/camden"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTablesBrunswick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/mt.btn"
+            android:text="@string/brunswick"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnTablesBrunswick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> actor.launchBrunswickTable() }"
-                style="@style/mt.btn"
-                android:text="@string/brunswick"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/schedulePrompt"
+            android:text="@string/or_try_live_mode"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/schedulePrompt"
-                android:text="@string/or_try_live_mode"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnMdotSchedule"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> actor.launchLiveMode() }"
-                style="@style/mt.btn"
-                android:text="@string/live_mode"/>
-        </LinearLayout>
-    </FrameLayout>
-</layout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMdotSchedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/mt.btn"
+            android:text="@string/live_mode"/>
+    </LinearLayout>
+</FrameLayout>

@@ -81,7 +81,7 @@ class AlertFragmentTest {
         onView(withId(id.navigation_alert))
             .perform(click())
 
-        onView(withId(id.loadingViewPartial))
+        onView(withId(id.loading_layout))
                 .check(matches(not(isDisplayed())))
 
         onView(withRecyclerView(id.trainAlertList).atPosition(0))
@@ -104,7 +104,7 @@ class AlertFragmentTest {
         onView(withId(id.navigation_alert))
                 .perform(click())
 
-        onView(withId(id.loadingViewPartial))
+        onView(withId(id.loading_layout))
                 .check(matches(isDisplayed()))
     }
 

@@ -30,8 +30,6 @@ import androidx.fragment.app.Fragment
 import com.idleoffice.marctrain.databinding.FragmentLiveScheduleBinding
 import com.idleoffice.marctrain.ui.main.OnBackPressedListener
 import com.idleoffice.marctrain.ui.schedule.ScheduleClient
-import kotlinx.android.synthetic.main.fragment_live_schedule.*
-import kotlinx.android.synthetic.main.progress_bar_frame_layout_full.*
 import timber.log.Timber
 
 class LiveScheduleFragment : Fragment(), OnBackPressedListener {
@@ -46,37 +44,35 @@ class LiveScheduleFragment : Fragment(), OnBackPressedListener {
             hideLoading()
         }
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
+    
+    private var _binding: FragmentLiveScheduleBinding? = null
+    private val binding = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentLiveScheduleBinding.inflate(inflater, container, false)
+        _binding = FragmentLiveScheduleBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        setHasOptionsMenu(true)
         showLoading("Loading MARC schedules from MDOT")
 
-        scheduleWebView.webViewClient = ScheduleClient(MTA_HOST, onPageFinishedListener)
+        binding.scheduleWebView.webViewClient = ScheduleClient(MTA_HOST, onPageFinishedListener)
 
         @SuppressLint("SetJavaScriptEnabled")
-        scheduleWebView.settings.javaScriptEnabled = true
+        binding.scheduleWebView.settings.javaScriptEnabled = true
 
 
         if (savedInstanceState !== null) {
-            scheduleWebView.restoreState(savedInstanceState)
+            binding.scheduleWebView.restoreState(savedInstanceState)
         } else {
-            scheduleWebView.loadUrl(MARC_SCHEDULE_URL)
+            binding.scheduleWebView.loadUrl(MARC_SCHEDULE_URL)
         }
 
-        scheduleWebView.visibility = View.INVISIBLE
+        binding.scheduleWebView.visibility = View.INVISIBLE
 
-        scheduleWebView.setDownloadListener { url, _, _, _, _ ->
+        binding.scheduleWebView.setDownloadListener { url, _, _, _, _ ->
             val actionIntent = Intent(Intent.ACTION_VIEW)
             actionIntent.data = (Uri.parse(url))
             startActivity(actionIntent)
@@ -84,42 +80,42 @@ class LiveScheduleFragment : Fragment(), OnBackPressedListener {
 
         goHome()
 
-        scheduleFab.setOnClickListener { goHome() }
+        binding.scheduleFab.setOnClickListener { goHome() }
     }
 
     override fun backButtonPressed(): Boolean {
-        scheduleWebView ?: return false
-        if (scheduleWebView.canGoBack()) {
-            scheduleWebView.goBack()
+
+        if (binding.scheduleWebView.canGoBack()) {
+            binding.scheduleWebView.goBack()
             return true
         }
         return false
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        scheduleWebView?.saveState(outState)
+        binding.scheduleWebView.saveState(outState)
         super.onSaveInstanceState(outState)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        scheduleWebView?.webViewClient = null
-        scheduleWebView.destroy()
+        binding.scheduleWebView.webViewClient = null
+        binding.scheduleWebView.destroy()
     }
 
     private fun goHome() {
-        scheduleWebView?.loadUrl(MARC_SCHEDULE_URL)
+        binding.scheduleWebView.loadUrl(MARC_SCHEDULE_URL)
     }
 
     private fun showLoading(msg: String) {
         Timber.d("Showing loading view.")
-        loadingTextViewFull?.text = msg
-        loadingViewFull?.visibility = View.VISIBLE
+        binding.loadingLayout.loadingTextViewFull.text = msg
+        binding.loadingLayout.loadingViewFull.visibility = View.VISIBLE
     }
 
     private fun hideLoading() {
         Timber.d("Hiding loading view.")
-        loadingTextViewFull?.text = ""
-        loadingViewFull?.visibility = View.GONE
+        binding.loadingLayout.loadingTextViewFull.text = ""
+        binding.loadingLayout.loadingViewFull.visibility = View.GONE
     }
 }
