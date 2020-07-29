@@ -27,7 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.FileProvider
-import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.idleoffice.marctrain.BuildConfig
@@ -35,7 +35,6 @@ import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.FragmentScheduleBinding
 import com.idleoffice.marctrain.idling.IdlingResource
 import com.idleoffice.marctrain.ui.base.BaseFragment
-import com.idleoffice.marctrain.ui.schedule.interactor.HapticEvent
 import com.idleoffice.marctrain.ui.schedule.interactor.ScheduleActor
 import com.idleoffice.marctrain.ui.schedule.interactor.ScheduleEvent
 import com.idleoffice.marctrain.vibrateTap
@@ -65,8 +64,8 @@ class ScheduleFragment : BaseFragment<ScheduleViewModel>() {
     }
 
     private fun observeData() {
-        val eventObserver = Observer<ScheduleEvent?> @Synchronized {
-            it?.run { analyticService.newEvent(it) }
+
+        fragViewModel.event.observe(viewLifecycleOwner) {
             when (it) {
                 is ScheduleEvent.Loading -> showLoading(getString(R.string.loading_schedule))
                 is ScheduleEvent.Error -> {
@@ -85,19 +84,13 @@ class ScheduleFragment : BaseFragment<ScheduleViewModel>() {
                     val direction = ScheduleFragmentDirections.toLiveScheduleFragment()
                     findNavController().navigate(direction)
                 }
-                else -> {
-                    idlingResource.stopIdlingAction()
-                    Timber.d("Null ScheduleEvent")
-                }
             }
         }
 
-        val hapticObserver = Observer<HapticEvent?> {
-            it?.let { context?.vibrateTap() }
-        }
 
-        fragViewModel.event.observe(viewLifecycleOwner, eventObserver)
-        fragViewModel.hapticEvent.observe(viewLifecycleOwner, hapticObserver)
+        fragViewModel.hapticEvent.observe(viewLifecycleOwner) {
+            it.let { context?.vibrateTap() }
+        }
     }
 
     private fun startPdfActivity(destination: File) {

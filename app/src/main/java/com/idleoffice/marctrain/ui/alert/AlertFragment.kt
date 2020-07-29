@@ -24,12 +24,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idleoffice.marctrain.R
-import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.databinding.FragmentAlertBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
 import org.koin.android.ext.android.inject
@@ -62,7 +61,7 @@ class AlertFragment : BaseFragment<AlertViewModel>(), AlertNavigator {
     }
 
     private fun setAlertObserver() {
-        val alertObserver = Observer<List<TrainAlert>> @Synchronized {
+        fragViewModel.allAlerts.observe(viewLifecycleOwner) {
             showLoading(getString(R.string.no_alerts_reported_looking))
             if (it.isNullOrEmpty()) {
                 binding.trainAlertList.adapter?.notifyDataSetChanged()
@@ -76,7 +75,6 @@ class AlertFragment : BaseFragment<AlertViewModel>(), AlertNavigator {
                 }
             }
         }
-        fragViewModel.allAlerts.observe(viewLifecycleOwner, alertObserver)
     }
 
     private fun initRecyclerView() {

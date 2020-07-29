@@ -90,30 +90,24 @@ class StatusFragment : BaseFragment<StatusViewModel>(), StatusNavigator {
 
     private fun setTrainStatusObserver() {
         fragViewModel.allTrainStatusData.observe(viewLifecycleOwner) {
-            if (it != null) {
-                Timber.d("New train status received: $it")
-                updateTrains()
-            }
+            Timber.d("New train status received: $it")
+            updateTrains()
         }
     }
 
     private fun setLineChangeObserver() {
         fragViewModel.selectedTrainLine.observe(viewLifecycleOwner) {
-            if (it != null) {
-                Timber.d("New line selected: $it")
-                val lineString = resources.getStringArray(R.array.line_array)[it]
-                val line = Line.resolveLine(lineString)
+            Timber.d("New line selected: $it")
+            val lineString = resources.getStringArray(R.array.line_array)[it]
+            val line = Line.resolveLine(lineString)
 
-                parseNewLine(line)
-            }
+            parseNewLine(line)
         }
     }
 
     private fun setDirectionChangeObserver() {
         fragViewModel.selectedTrainDirection.observe(viewLifecycleOwner) {
-            if (it != null) {
-                updateTrains()
-            }
+            updateTrains()
         }
     }
 
