@@ -78,7 +78,16 @@ class ScheduleViewModelTest {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
 
         mockTrainScheduleService = mock()
-        ut = ScheduleViewModel(coroutineContext, FalseIdle(), mockTrainScheduleService, mockFile)
+
+        val fakeAnalyticsService = FakeAnalyticsService()
+
+        ut = ScheduleViewModel(
+            coroutineContextProvider = coroutineContext,
+            idlingResource = FalseIdle(),
+            trainScheduleService = mockTrainScheduleService,
+            appFileDir = mockFile,
+            analyticService = fakeAnalyticsService
+        )
 
         lifecycleOwner.lifecycle.addObserver(ut)
 
@@ -136,3 +145,4 @@ class ScheduleViewModelTest {
         assertTrue((state as ScheduleEvent.Data).file.name.endsWith("${line}Schedule.pdf"))
     }
 }
+
