@@ -23,13 +23,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.tools.Direction
 import com.idleoffice.marctrain.data.tools.Line
@@ -37,8 +37,6 @@ import com.idleoffice.marctrain.data.tools.TrainLineTools
 import com.idleoffice.marctrain.data.tools.TrainStatusComparator
 import com.idleoffice.marctrain.databinding.FragmentStatusCoordinatorBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
-import kotlinx.android.synthetic.main.fragment_status_coordinator.*
-import kotlinx.android.synthetic.main.progress_bar_frame_layout_partial.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -49,32 +47,39 @@ class StatusFragment : BaseFragment<StatusViewModel>(), StatusNavigator {
 
     private val statusAdapter: StatusAdapter by inject()
 
-    override val layoutId: Int = R.layout.fragment_status_coordinator
-
-    private lateinit var binding: FragmentStatusCoordinatorBinding
+    private var _binding: FragmentStatusCoordinatorBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentStatusCoordinatorBinding.inflate(inflater, container, false)
-        rootView = binding.root
-        return rootView
+        _binding = FragmentStatusCoordinatorBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.setVariable(BR.viewModel, fragViewModel)
-    }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
         setObservers()
         initLineSpinner()
+
+        // TODO abstract this out
+        binding.directionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                fragViewModel.selectedTrainDirection.postValue(position)
+            }
+
+        }
+
         initRecyclerView()
         showLoading(getString(R.string.looking_for_in_service_trains))
-        super.onActivityCreated(savedInstanceState)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        trainStatusList?.adapter = null
+        binding.trainStatusList.adapter = null
     }
 
     private fun setObservers() {
@@ -128,15 +133,14 @@ class StatusFragment : BaseFragment<StatusViewModel>(), StatusNavigator {
      * some go East-West
      */
     private fun setDirSpinnerOptions(line: Line) {
-        directionSpinner?.adapter = createDirAdapter(line)
-        directionSpinner?.setSelection(fragViewModel.selectedTrainDirection.value ?: 0)
+        binding.directionSpinner.adapter = createDirAdapter(line)
+        binding.directionSpinner.setSelection(fragViewModel.selectedTrainDirection.value ?: 0)
     }
 
     /**
      * Parse a new line selection
      */
     private fun parseNewLine(line: Line) {
-        directionSpinner ?: return
         setDirSpinnerOptions(line)
     }
 
@@ -144,7 +148,16 @@ class StatusFragment : BaseFragment<StatusViewModel>(), StatusNavigator {
      * Initialize the line spinner
      */
     private fun initLineSpinner() {
-        lineSpinner.adapter = createLineAdapter()
+        binding.lineSpinner.adapter = createLineAdapter()
+
+        // TODO abstract this out
+        binding.lineSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                fragViewModel.selectedTrainLine.postValue(position)
+            }
+        }
 
         // TODO retained shared prefs will cause and exception!
         val lineString = Line.PENN.toString()
@@ -154,14 +167,14 @@ class StatusFragment : BaseFragment<StatusViewModel>(), StatusNavigator {
         val lineIndex = resources.getStringArray(R.array.line_array)
                 .indexOfFirst { it.equals(lineString, true) }
 
-        lineSpinner?.setSelection(lineIndex)
+        binding.lineSpinner.setSelection(lineIndex)
         parseNewLine(lastLine)
     }
 
     private fun initRecyclerView() {
-        trainStatusList ?: return
         val viewManager = LinearLayoutManager(context)
-        trainStatusList.apply {
+
+        binding.trainStatusList.apply {
             setHasFixedSize(true)
             itemAnimator = DefaultItemAnimator()
             adapter = statusAdapter
@@ -169,8 +182,8 @@ class StatusFragment : BaseFragment<StatusViewModel>(), StatusNavigator {
             layoutManager = viewManager
             val divider = DividerItemDecoration(context, viewManager.orientation)
 
-            val drawable = ContextCompat.getDrawable(context, R.drawable.status_divider)
-            if (drawable != null) {
+            val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.status_divider)
+            if(drawable != null) {
                 divider.setDrawable(drawable)
             }
 
@@ -180,17 +193,17 @@ class StatusFragment : BaseFragment<StatusViewModel>(), StatusNavigator {
 
     override fun showLoading(msg: String) {
         Timber.d("Showing loading view.")
-        lineSpinner?.isClickable = false
-        directionSpinner?.isClickable = false
-        loadingTextViewPartial.text = msg
-        loadingViewPartial.visibility = View.VISIBLE
+        binding.lineSpinner.isClickable = false
+        binding.directionSpinner.isClickable = false
+        binding.loadingLayout.loadingTextViewPartial.text = msg
+        binding.loadingLayout.root.visibility = View.VISIBLE
     }
 
     override fun hideLoading() {
-        lineSpinner?.isClickable = true
-        directionSpinner?.isClickable = true
-        loadingTextViewPartial?.text = ""
-        loadingViewPartial?.visibility = View.GONE
+        binding.lineSpinner.isClickable = true
+        binding.directionSpinner.isClickable = true
+        binding.loadingLayout.loadingTextViewPartial.text = ""
+        binding.loadingLayout.root.visibility = View.GONE
     }
 
     private fun updateTrains() {
@@ -233,16 +246,16 @@ class StatusFragment : BaseFragment<StatusViewModel>(), StatusNavigator {
         with(statusAdapter.trainStatuses) {
             clear()
             if(currentTrains.isEmpty()) {
-                trainStatusList?.adapter?.notifyDataSetChanged()
+                binding.trainStatusList.adapter?.notifyDataSetChanged()
                 showLoading(getString(R.string.no_active_trains))
                 return@with
             }
             addAll(currentTrains)
             hideLoading()
-            trainStatusList?.adapter?.notifyDataSetChanged()
+            binding.trainStatusList.adapter?.notifyDataSetChanged()
         }
 
-        statusCollapsing?.title = "$lineString $directionString"
+        binding.statusCollapsing.title = "$lineString $directionString"
     }
 
     private fun resolveLineFromPosition(position: Int): Line {

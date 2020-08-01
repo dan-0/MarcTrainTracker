@@ -20,23 +20,17 @@
 package com.idleoffice.marctrain.ui.base
 
 import android.os.Bundle
-import android.view.View
-import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import com.idleoffice.marctrain.analytics.FirebaseService
 import org.koin.android.ext.android.inject
 
 abstract class BaseFragment<out V : BaseViewModel> : Fragment() {
 
-    protected lateinit var rootView: View
     protected val analyticService: FirebaseService by inject()
 
     abstract val fragViewModel : V
 
     val fragTag: String = javaClass.name
-
-    @get:LayoutRes
-    abstract val layoutId: Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

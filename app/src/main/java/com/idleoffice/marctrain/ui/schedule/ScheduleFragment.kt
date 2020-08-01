@@ -25,13 +25,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.idleoffice.marctrain.BR
 import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.FragmentScheduleBinding
@@ -40,8 +38,6 @@ import com.idleoffice.marctrain.ui.base.BaseFragment
 import com.idleoffice.marctrain.ui.schedule.interactor.ScheduleActor
 import com.idleoffice.marctrain.ui.schedule.interactor.ScheduleEvent
 import com.idleoffice.marctrain.vibrateTap
-import kotlinx.android.synthetic.main.fragment_schedule.*
-import kotlinx.android.synthetic.main.progress_bar_frame_layout_full.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -53,19 +49,17 @@ class ScheduleFragment : BaseFragment<ScheduleViewModel>() {
 
     private val idlingResource: IdlingResource by inject()
 
-    override val layoutId: Int = R.layout.fragment_schedule
-
-    private lateinit var binding: FragmentScheduleBinding
+    private var _binding: FragmentScheduleBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentScheduleBinding.inflate(inflater, container, false)
-        rootView = binding.root
-        return rootView
+        _binding = FragmentScheduleBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.setVariable(BR.actor, ScheduleActor(fragViewModel))
+        bindActor()
         observeData()
     }
 
@@ -135,26 +129,48 @@ class ScheduleFragment : BaseFragment<ScheduleViewModel>() {
     private fun showLoading(msg: String) {
         Timber.d("Showing loading view.")
         setButtonsClickable(false)
-        activity?.run {
-            window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-            loadingTextViewFull?.text = msg
-            loadingViewFull?.visibility = View.VISIBLE
-        }
+
+        binding.loadingLayout.loadingTextViewFull.text = msg
+        binding.loadingLayout.loadingViewFull.visibility = View.VISIBLE
     }
 
     private fun hideLoading() {
         setButtonsClickable(true)
-        activity?.run {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-            loadingTextViewFull?.text = ""
-            loadingViewFull?.visibility = View.GONE
-        }
+        binding.loadingLayout.loadingTextViewFull?.text = ""
+        binding.loadingLayout.loadingViewFull?.visibility = View.GONE
 
     }
 
     private fun setButtonsClickable(isClickable: Boolean) {
-        btnTablesPenn.isClickable = isClickable
-        btnTablesCamden.isClickable = isClickable
-        btnTablesBrunswick.isClickable = isClickable
+        binding.btnTablesPenn.isClickable = isClickable
+        binding.btnTablesCamden.isClickable = isClickable
+        binding.btnTablesBrunswick.isClickable = isClickable
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun bindActor() {
+        val actor = ScheduleActor(fragViewModel)
+
+        with(binding) {
+            btnTablesPenn.setOnClickListener {
+                actor.launchPennTable()
+            }
+
+            btnTablesCamden.setOnClickListener {
+                actor.launchCamdenTable()
+            }
+
+            btnTablesBrunswick.setOnClickListener {
+                actor.launchBrunswickTable()
+            }
+
+            btnMdotSchedule.setOnClickListener {
+                actor.launchLiveMode()
+            }
+        }
     }
 }

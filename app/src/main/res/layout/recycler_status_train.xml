@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019 IdleOffice Inc.
   ~
   ~ recycler_status_train.xml is part of MarcTrainTracker.
@@ -17,14 +16,12 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this software.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/trainStatusCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/mt.card">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/trainStatusCard"
+    style="@style/mt.card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/trainNumberBadge"
@@ -72,10 +69,10 @@
         app:layout_constraintTop_toBottomOf="@+id/trainNumberBadge">
 
         <LinearLayout
+            android:id="@+id/trainInfoTextLayout"
             style="@style/mt.traininfo.label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/trainInfoTextLayout"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -83,30 +80,30 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
+                android:id="@+id/textLabelLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textLabelLayout"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/textLabelNextStation"
                     style="@style/mt.traininfo.label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textLabelNextStation"
                     android:text="@string/next_station" />
 
                 <TextView
+                    android:id="@+id/textLabelDeparture"
                     style="@style/mt.traininfo.label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textLabelDeparture"
                     android:text="@string/est_departure" />
 
                 <TextView
+                    android:id="@+id/textLabelStatus"
                     style="@style/mt.traininfo.label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textLabelStatus"
                     android:text="@string/status" />
 
                 <TextView
@@ -118,9 +115,9 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/textDataLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textDataLayout"
                 android:layout_marginStart="8dp"
                 android:orientation="vertical">
 
@@ -154,6 +151,5 @@
             </LinearLayout>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

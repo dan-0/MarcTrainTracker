@@ -31,8 +31,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.FragmentAlertBinding
 import com.idleoffice.marctrain.ui.base.BaseFragment
-import kotlinx.android.synthetic.main.fragment_alert.*
-import kotlinx.android.synthetic.main.progress_bar_frame_layout_partial.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -43,9 +41,8 @@ class AlertFragment : BaseFragment<AlertViewModel>(), AlertNavigator {
 
     private val alertAdapter: AlertAdapter by inject()
 
-    override val layoutId: Int = R.layout.fragment_alert
-
-    private lateinit var binding : FragmentAlertBinding
+    private var _binding: FragmentAlertBinding? = null
+    private val binding get() = _binding!!
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -54,9 +51,8 @@ class AlertFragment : BaseFragment<AlertViewModel>(), AlertNavigator {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentAlertBinding.inflate(inflater, container, false)
-        rootView = binding.root
-        return rootView
+        _binding = FragmentAlertBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,23 +64,23 @@ class AlertFragment : BaseFragment<AlertViewModel>(), AlertNavigator {
         fragViewModel.allAlerts.observe(viewLifecycleOwner) {
             showLoading(getString(R.string.no_alerts_reported_looking))
             if (it.isNullOrEmpty()) {
-                trainAlertList.adapter?.notifyDataSetChanged()
+                binding.trainAlertList.adapter?.notifyDataSetChanged()
             } else {
                 Timber.d("New alert received")
                 with(alertAdapter.alerts) {
                     clear()
                     addAll(it)
                     hideLoading()
-                    trainAlertList.adapter?.notifyDataSetChanged()
+                    binding.trainAlertList.adapter?.notifyDataSetChanged()
                 }
             }
         }
     }
 
     private fun initRecyclerView() {
-        trainAlertList ?: return
+        binding.trainAlertList ?: return
         val viewManager = LinearLayoutManager(context)
-        trainAlertList.apply {
+        binding.trainAlertList.apply {
             setHasFixedSize(true)
             layoutManager = viewManager
             itemAnimator = DefaultItemAnimator()
@@ -102,18 +98,19 @@ class AlertFragment : BaseFragment<AlertViewModel>(), AlertNavigator {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        trainAlertList?.adapter = null
+        binding.trainAlertList?.adapter = null
+        _binding = null
     }
 
     override fun showLoading(msg: String) {
         Timber.d("Showing loading view.")
-        loadingTextViewPartial?.text = msg
-        loadingViewPartial?.visibility = View.VISIBLE
+        binding.loadingLayout.loadingTextViewPartial.text = msg
+        binding.loadingLayout.root.visibility = View.VISIBLE
     }
 
     override fun hideLoading() {
         Timber.d("Hiding loading view.")
-        loadingTextViewPartial?.text = ""
-        loadingViewPartial?.visibility = View.GONE
+        binding.loadingLayout.loadingTextViewPartial.text = ""
+        binding.loadingLayout.root.visibility = View.GONE
     }
 }

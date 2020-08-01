@@ -4,7 +4,18 @@ on:
   pull_request:
 
 jobs:
+
+  cancel_previous:
+    name: Cancel Previous Runs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.4.1
+        with:
+          access_token: ${{ github.token }}
+
   check:
+    name: Basic Checks
 
     runs-on: ubuntu-latest
 
@@ -20,8 +31,8 @@ jobs:
       - name: Uninstall NDK
         run: sudo ${ANDROID_HOME}/tools/bin/sdkmanager --uninstall `ndk-bundle`
 
-      - name: Assemble Internal Debug
-        run: ./gradlew :app:assembleFullDebug
+      - name: Copy Google Services JSON
+        run: echo ${{ secrets.GOOGLE_SERVICES_JSON }} | base64 -d >> app/google-services.json
 
-      - name: Unit Test Internal Debug Variant
-        run: ./gradlew :app:testFullDebugTest
+      - name: Build Full Release
+        run: ./gradlew buildFullRelease
