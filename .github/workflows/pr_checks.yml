@@ -5,6 +5,15 @@ on:
 
 jobs:
 
+  cancel_previous:
+    name: Cancel Previous Runs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.4.1
+        with:
+          access_token: ${{ github.token }}
+
   check:
     name: Basic Checks
 
@@ -26,4 +35,4 @@ jobs:
         run: echo ${{ secrets.GOOGLE_SERVICES_JSON }} | base64 -d >> app/google-services.json
 
       - name: Full build
-        run: ./gradlew build
+        run: ./gradlew buildFullRelease
