@@ -25,8 +25,5 @@ jobs:
       - name: Copy Google Services JSON
         run: echo ${{ secrets.GOOGLE_SERVICES_JSON }} | base64 -d >> app/google-services.json
 
-      - name: Assemble Full Debug
-        run: ./gradlew :app:assembleFullDebug
-
-      - name: Unit Test Full Debug Variant
-        run: ./gradlew :app:testFullDebugTest
+      - name: Full build
+        run: ./gradlew build
