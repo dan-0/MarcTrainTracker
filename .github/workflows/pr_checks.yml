@@ -23,7 +23,7 @@ jobs:
         run: sudo ${ANDROID_HOME}/tools/bin/sdkmanager --uninstall `ndk-bundle`
 
       - name: Copy Google Services JSON
-        run: echo "${{ fromJson(secrets.GOOGLE_SERVICES_JSON) }}" >> app/google-services.json
+        run: echo ${{ fromJson(secrets.GOOGLE_SERVICES_JSON) }} >> app/google-services.json
 
       - name: Assemble Full Debug
         run: ./gradlew :app:assembleFullDebug
