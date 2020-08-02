@@ -42,28 +42,19 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
                     'proguard-rules.pro'
-        }
-
-        proguardDebug {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
-                    'proguard-rules.pro'
-            debuggable = true
-            signingConfig signingConfigs.debug
+            manifestPlaceholders = [enableCrashlytics: "true"]
         }
 
         all {
             buildConfigField "String", "POLL_URL", "\"https://d2jr231zyecel4.cloudfront.net/\""
-            buildConfigField "long", "STATUS_POLL_INTERVAL", "60000"
-            buildConfigField "long", "STATUS_POLL_RETRY_INTERVAL", "10000"
         }
     }
     flavorDimensions "dev"
     productFlavors {
-        developer {
+        mock {
 
         }
-        full {
+        live {
             manifestPlaceholders = [enableCrashlytics: "true"]
         }
     }
@@ -154,7 +145,7 @@ dependencies {
     implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
 
     // Leak Canary
-    developerImplementation "com.squareup.leakcanary:leakcanary-android:2.4"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:2.4"
 
     // Live event library
     implementation "com.github.hadilq.liveevent:liveevent:1.2.0"

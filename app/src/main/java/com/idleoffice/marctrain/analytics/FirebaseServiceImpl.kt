@@ -30,7 +30,7 @@ class FirebaseServiceImpl(context: Context) : FirebaseService {
 
     private val firebaseAnalytics = FirebaseAnalytics.getInstance(context)
 
-    private val environment = if (BuildConfig.DEBUG) "develop" else "release"
+    private val environment = "${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}"
 
     override fun newEvent(event: AppEvent) {
         Bundle().run {

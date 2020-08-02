@@ -20,7 +20,6 @@
 package com.idleoffice.marctrain.ui.status
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.idleoffice.marctrain.BuildConfig.STATUS_POLL_INTERVAL
 import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.data.tools.FakeNetworkProvider
 import com.idleoffice.marctrain.data.tools.extensions.toLiveList
@@ -33,6 +32,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
+import org.threeten.bp.Duration
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -46,7 +46,7 @@ class StatusViewModelTest {
     private val basicTrainStatus = TrainStatus(
             "0",
             "Penn",
-            "South",
+            "North",
             "Edgewood",
             "13:05",
             "On Time",
@@ -97,7 +97,7 @@ class StatusViewModelTest {
 
         ut.loadTrainStatus()
 
-        contextProvider.testContext.advanceTimeBy(STATUS_POLL_INTERVAL * 5, TimeUnit.MILLISECONDS)
+        contextProvider.testContext.advanceTimeBy(STATUS_POLL_INTERVAL.toMillis() * 5, TimeUnit.MILLISECONDS)
 
         val trainLineState = TrainLineState()
         assertEquals(StatusViewState.Init(trainLineState), states[0])
@@ -111,5 +111,10 @@ class StatusViewModelTest {
         assertEquals(StatusViewState.Content(fakeTrains2, fakeTrains2, trainLineState), states[4])
 
         assertEquals(StatusViewState.Content(fakeTrains1, fakeTrains1, trainLineState), states[5])
+    }
+
+    companion object {
+        private val STATUS_POLL_INTERVAL = Duration.ofMinutes(1)
+        private val STATUS_POLL_RETRY_INTERVAL = Duration.ofSeconds(10)
     }
 }
