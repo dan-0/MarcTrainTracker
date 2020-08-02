@@ -38,7 +38,6 @@ import com.idleoffice.marctrain.data.tools.TrainLine
 import com.idleoffice.marctrain.databinding.FragmentStatusCoordinatorBinding
 import com.idleoffice.marctrain.ui.status.data.StatusViewState
 import com.idleoffice.marctrain.ui.status.data.TrainLineState
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -46,10 +45,12 @@ class StatusFragment : Fragment() {
 
     private val viewModel: StatusViewModel by viewModel()
 
-    private val statusAdapter: StatusAdapter by inject()
+    private val statusAdapter: StatusAdapter = StatusAdapter()
 
     private var _binding: FragmentStatusCoordinatorBinding? = null
     private val binding get() = _binding!!
+
+    private val lineAdapter: ArrayAdapter<String> by lazy { createLineAdapter() }
 
     private val lineListener = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -75,6 +76,7 @@ class StatusFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initSpinnerStates()
         setObservers()
 
         initRecyclerView()
@@ -89,17 +91,16 @@ class StatusFragment : Fragment() {
     private fun setObservers() {
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
-                is StatusViewState.Init -> handleInit(it.trainLineState)
+                is StatusViewState.Init -> handleInit()
                 is StatusViewState.Content -> handleContent(it.filteredTrains, it.trainLineState)
             }
         }
     }
-    
-    private fun handleInit(trainLineState: TrainLineState) {
-        initSpinnerStates(trainLineState)
+
+    private fun handleInit() {
         viewModel.loadTrainStatus()
     }
-    
+
     private fun handleContent(trains: List<TrainStatus>, state: TrainLineState) {
         updateTrains(trains, state)
 
@@ -112,10 +113,25 @@ class StatusFragment : Fragment() {
                 binding.directionSpinner.setSelection(directionPosition)
             }
         }
+
+        with(binding.lineSpinner) {
+            val linePosition = state.line.position
+            if (selectedItemPosition != linePosition) {
+                setSelection(linePosition)
+            }
+        }
     }
-    
-    private fun initSpinnerStates(trainLineState: TrainLineState) {
-        initLineSpinner(trainLineState)
+
+    private fun initSpinnerStates(currentLine: TrainLine = TrainLine.PENN) {
+        with (binding.lineSpinner) {
+            adapter = lineAdapter
+            onItemSelectedListener = lineListener
+        }
+
+        with(binding.directionSpinner) {
+            adapter = createDirAdapter(currentLine)
+            onItemSelectedListener = directionListener
+        }
     }
 
     private fun createLineAdapter(): ArrayAdapter<String> {
@@ -125,33 +141,6 @@ class StatusFragment : Fragment() {
             ArrayAdapter(requireContext(), R.layout.spinner_item, it)
         }.apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
-    }
-
-    /**
-     * Initialize the line spinner
-     */
-    private fun initLineSpinner(trainLineState: TrainLineState) {
-
-        with (binding.lineSpinner) {
-            adapter = createLineAdapter()
-            onItemSelectedListener = lineListener
-            setSelection(trainLineState.line.position)
-        }
-
-        setDirSpinnerOptions(trainLineState.line)
-    }
-
-    /**
-     * Set the direction spinner based on the line number, necessary because some go North-South,
-     * some go East-West
-     */
-    private fun setDirSpinnerOptions(line: TrainLine) {
-        with(binding.directionSpinner) {
-            adapter = createDirAdapter(line)
-
-            onItemSelectedListener = directionListener
-            setSelection(line.position)
         }
     }
 
@@ -202,25 +191,8 @@ class StatusFragment : Fragment() {
     }
 
     private fun updateTrains(trains: List<TrainStatus>, lineState: TrainLineState) {
-        
-        if (trains.isEmpty()) {
-            statusAdapter.trainStatuses.clear()
-            statusAdapter.notifyDataSetChanged()
-            showLoading(getString(R.string.no_active_trains))
-            return
-        }
 
-        with(statusAdapter.trainStatuses) {
-            clear()
-            if(trains.isEmpty()) {
-                binding.trainStatusList.adapter?.notifyDataSetChanged()
-                showLoading(getString(R.string.no_active_trains))
-                return@with
-            }
-            addAll(trains)
-            hideLoading()
-            binding.trainStatusList.adapter?.notifyDataSetChanged()
-        }
+        statusAdapter.submitList(trains)
 
         val lineString = lineState.line.lineName
         val directionString = when (lineState.direction) {
@@ -231,5 +203,11 @@ class StatusFragment : Fragment() {
         }
 
         binding.statusCollapsing.title = "$lineString $directionString"
+
+        if (trains.isEmpty()) {
+            showLoading(getString(R.string.no_active_trains))
+        } else {
+            hideLoading()
+        }
     }
 }
