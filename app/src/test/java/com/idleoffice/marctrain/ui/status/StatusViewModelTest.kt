@@ -63,49 +63,6 @@ class StatusViewModelTest {
 
     private val trainDataService = FakeStatusTrainDataService()
 
-    val l = mutableListOf(
-        { listOf(fakeTrainStatus1) },
-        { listOf(fakeTrainStatus1) },
-        { listOf(fakeTrainStatus1) },
-        { throw IOException("Test Exception") },
-        { listOf(fakeTrainStatus2) },
-        { listOf(fakeTrainStatus1) }
-    )
-
-//        object: TrainDataService {
-//        var counter = 0
-//        var errorOccurred = false
-//
-//        val dummyTrainStatus = basicTrainStatus.copy(number = dummyTrainStatusNumber)
-//
-//        val dummyTrainStatus2 = basicTrainStatus.copy(number = dummyTrainStatusNumber2)
-//
-//        val dummyError = IOException("Dummy")
-//
-//        override fun getTrainStatus(): Deferred<List<TrainStatus>> {
-//            counter++
-//
-//            errorOccurred = false
-//            return when {
-//                counter == 3 -> {
-//                    errorOccurred = true
-//                    CoroutineScope(contextProvider.io).async { throw dummyError }
-//                }
-//                counter == 4 -> {
-//                    CoroutineScope(contextProvider.io).async { listOf(dummyTrainStatus) }
-//                }
-//                counter > 4 -> {
-//                    CoroutineScope(contextProvider.io).async { listOf(dummyTrainStatus2) }
-//                }
-//                else -> CoroutineScope(contextProvider.io).async { listOf(dummyTrainStatus) }
-//            }
-//        }
-//
-//        override fun getTrainAlerts(): Deferred<List<TrainAlert>> {
-//            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//        }
-//    }
-
     private val networkProvider = FakeNetworkProvider()
 
     private lateinit var ut: StatusViewModel
