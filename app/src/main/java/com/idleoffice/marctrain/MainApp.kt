@@ -29,6 +29,7 @@ import com.idleoffice.marctrain.retrofit.ts.retrofitModule
 import com.idleoffice.marctrain.ui.alert.alertFragmentModule
 import com.idleoffice.marctrain.ui.schedule.scheduleFragmentModule
 import com.idleoffice.marctrain.ui.status.statusFragmentModule
+import com.jakewharton.threetenabp.AndroidThreeTen
 import org.koin.android.ext.android.startKoin
 import org.koin.android.logger.AndroidLogger
 import org.koin.log.Logger
@@ -50,6 +51,8 @@ class MainApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        AndroidThreeTen.init(this)
 
         val koinLogger: Logger = if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())

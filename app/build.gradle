@@ -54,8 +54,6 @@ android {
 
         all {
             buildConfigField "String", "POLL_URL", "\"https://d2jr231zyecel4.cloudfront.net/\""
-            buildConfigField "long", "ALERT_POLL_INTERVAL", "60000"
-            buildConfigField "long", "ALERT_POLL_RETRY_INTERVAL", "10000"
             buildConfigField "long", "STATUS_POLL_INTERVAL", "60000"
             buildConfigField "long", "STATUS_POLL_RETRY_INTERVAL", "10000"
         }
@@ -94,16 +92,6 @@ android {
 
         androidTest {
             java.srcDirs += "$projectDir/src/testShared/java"
-        }
-    }
-}
-
-configurations.all { config ->
-    if (config.name.contains('UnitTest')) {
-        config.resolutionStrategy.eachDependency { details ->
-            if (details.requested.group == 'com.squareup.leakcanary' && details.requested.name == 'leakcanary-android') {
-                details.useTarget(group: details.requested.group, name: 'leakcanary-android-no-op', version: details.requested.version)
-            }
         }
     }
 }
@@ -160,7 +148,7 @@ dependencies {
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
 
     // Retrofit
-    def retrofitVersion = "2.6.0"
+    def retrofitVersion = "2.8.1"
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
     implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
@@ -177,6 +165,12 @@ dependencies {
     // KTX
     implementation "androidx.activity:activity-ktx:1.1.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+
+    // Time
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
+
+    // Coroutines
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.4"
 
     // Kotlin
     def nav_version = "2.3.0"

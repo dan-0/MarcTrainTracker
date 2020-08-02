@@ -19,64 +19,79 @@
 
 package com.idleoffice.marctrain.ui.alert
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.idleoffice.marctrain.BuildConfig
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
-import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.idling.IdlingResource
 import com.idleoffice.marctrain.network.NetworkProvider
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
-import com.idleoffice.marctrain.ui.base.BaseViewModel
-import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
+import org.threeten.bp.Duration
 import timber.log.Timber
 
-class AlertViewModel(coroutineContextProvider: CoroutineContextProvider,
-                     private val trainDataService: TrainDataService,
-                     private val networkProvider: NetworkProvider,
-                     private val idlingResource: IdlingResource
-) : BaseViewModel(coroutineContextProvider) {
-    val allAlerts = MutableLiveData<List<TrainAlert>>()
+class AlertViewModel(
+    private val coroutineContextProvider: CoroutineContextProvider,
+    private val trainDataService: TrainDataService,
+    private val networkProvider: NetworkProvider,
+    private val idlingResource: IdlingResource
+) : ViewModel() {
 
-    override fun initialize() {
-        super.initialize()
-        Timber.d("Init")
-        doGetTrainAlerts()
-    }
+    private val _state = MutableLiveData<AlertViewState>(AlertViewState.Init)
+    val state: LiveData<AlertViewState> = _state
 
-    private suspend fun loadAlertData() {
-        idlingResource.startIdlingAction()
+    fun loadAlerts() = doGetTrainAlerts()
 
-        val alerts = runCatching {
-            trainDataService.getTrainAlerts().await()
-        }.getOrElse {
-            Timber.e(it, "Error getting train alert data")
-            return
-        }
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        Timber.e(throwable, "Exception on Alert completion")
 
-        allAlerts.postValue(alerts)
+        _state.postValue(AlertViewState.Error)
+
         idlingResource.stopIdlingAction()
     }
 
     private fun doGetTrainAlerts() {
 
-        ioScope.launch {
+        viewModelScope.launch(coroutineContextProvider.io) {
             while (true) {
                 val delayInterval = if (networkProvider.isNetworkConnected()) {
                     loadAlertData()
-                    BuildConfig.ALERT_POLL_INTERVAL
+                    ALERT_POLL_INTERVAL
                 } else {
-                    BuildConfig.ALERT_POLL_RETRY_INTERVAL
+                    ALERT_POLL_RETRY_INTERVAL
                 }
-                delay(delayInterval)
-            }
-        }.invokeOnCompletion {
-            it?.run {
-                if (this !is CancellationException) {
-                    Timber.e(it, "Exception on Alert completion")
-                }
+
+                delay(delayInterval.toMillis())
             }
         }
     }
+
+    private suspend fun loadAlertData() = supervisorScope {
+        launch(exceptionHandler) {
+            idlingResource.startIdlingAction()
+
+            val result = trainDataService.getTrainAlerts()
+
+            val newState = if (result.isNotEmpty()) {
+                AlertViewState.Content(result)
+            } else {
+                AlertViewState.NoTrainsFound
+            }
+
+            _state.postValue(newState)
+
+            idlingResource.stopIdlingAction()
+        }
+
+    }
+
+    companion object {
+        private val ALERT_POLL_INTERVAL = Duration.ofMinutes(1)
+        private val ALERT_POLL_RETRY_INTERVAL = Duration.ofSeconds(10)
+    }
 }
+

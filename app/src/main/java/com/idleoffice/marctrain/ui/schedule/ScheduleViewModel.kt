@@ -21,30 +21,29 @@ package com.idleoffice.marctrain.ui.schedule
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.hadilq.liveevent.LiveEvent
 import com.idleoffice.marctrain.analytics.FirebaseService
 import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
-import com.idleoffice.marctrain.extensions.exhaustive
 import com.idleoffice.marctrain.idling.IdlingResource
 import com.idleoffice.marctrain.retrofit.ts.TrainScheduleService
-import com.idleoffice.marctrain.ui.base.BaseViewModel
 import com.idleoffice.marctrain.ui.schedule.interactor.HapticEvent
 import com.idleoffice.marctrain.ui.schedule.interactor.ScheduleAction
 import com.idleoffice.marctrain.ui.schedule.interactor.ScheduleEvent
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
 
 
 class ScheduleViewModel(
-        coroutineContextProvider: CoroutineContextProvider,
-        private val idlingResource: IdlingResource,
-        private val trainScheduleService: TrainScheduleService,
-        private val appFileDir: File,
-        private val analyticService: FirebaseService
-) : BaseViewModel(coroutineContextProvider) {
+    private val dispatchers: CoroutineContextProvider,
+    private val idlingResource: IdlingResource,
+    private val trainScheduleService: TrainScheduleService,
+    private val appFileDir: File,
+    private val analyticService: FirebaseService
+) : ViewModel() {
 
     companion object {
         const val lineBaseDir = "tables"
@@ -59,6 +58,11 @@ class ScheduleViewModel(
     private val _hapticEvent = MutableLiveData<HapticEvent>()
     val hapticEvent: LiveData<HapticEvent> = _hapticEvent
 
+    private val lineTableExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        Timber.e(throwable)
+        _event.postValue(ScheduleEvent.Error(throwable))
+    }
+
     private fun generateTempFile(tempFileName: String): File {
         val tablesDir = File(appFileDir, lineBaseDir)
         tablesDir.mkdirs()
@@ -71,12 +75,8 @@ class ScheduleViewModel(
 
         updateEvent(ScheduleEvent.Loading)
 
-        val event: Deferred<ScheduleEvent> = ioScope.async {
-            val scheduleResponse = runCatching {
-                trainScheduleService.getScheduleAsync(lineName).await()
-            }.getOrElse {
-                return@async ScheduleEvent.Error(it)
-            }
+        viewModelScope.launch (dispatchers.io + lineTableExceptionHandler) {
+            val scheduleResponse = trainScheduleService.getScheduleAsync(lineName).await()
 
             val destination = generateTempFile("${lineName}Schedule.pdf")
 
@@ -84,16 +84,9 @@ class ScheduleViewModel(
                 destination.outputStream().use { fos -> fis.copyTo(fos) }
             }
 
-            ScheduleEvent.Data(destination, lineName)
+            val newEvent = ScheduleEvent.Data(destination, lineName)
+            updateEvent(newEvent)
         }
-
-        val newEvent = runCatching {
-            event.await()
-        }.getOrElse {
-            ScheduleEvent.Error(it)
-        }
-
-        updateEvent(newEvent)
     }
 
     fun takeAction(action: ScheduleAction) {
@@ -104,7 +97,7 @@ class ScheduleViewModel(
             ScheduleAction.LaunchCamden -> doLoadLineTable(STATION_CAMDEN)
             ScheduleAction.LaunchPenn -> doLoadLineTable(STATION_PENN)
             ScheduleAction.LaunchLiveView -> updateEvent(ScheduleEvent.LoadLive)
-        }.exhaustive
+        }
     }
 
     private fun updateEvent(newEvent: ScheduleEvent) {
@@ -112,13 +105,8 @@ class ScheduleViewModel(
         _event.postValue(newEvent)
     }
 
-    private fun doLoadLineTable(line: String) {
-        ioScope.launch { launchTable(line) }
-                .invokeOnCompletion {
-                    it?.run {
-                        Timber.e(it, "Exception on Schedule completion")
-                    }
-                }
+    private fun doLoadLineTable(line: String) = viewModelScope.launch(dispatchers.io) {
+        launchTable(line)
     }
 }
 

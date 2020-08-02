@@ -34,10 +34,6 @@ import com.idleoffice.marctrain.testsupport.KoinActivityTestRule
 import com.idleoffice.marctrain.testsupport.RecyclerViewMatcher.Companion.withRecyclerView
 import com.idleoffice.marctrain.testsupport.TestIdlingResource
 import com.idleoffice.marctrain.ui.main.MainActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
@@ -121,12 +117,8 @@ class AlertFragmentTest {
     private class TestAlertTrainDataService(
             private val dummyAlerts: List<TrainAlert> = listOf()
     ): TrainDataService {
-        override fun getTrainStatus(): Deferred<List<TrainStatus>> {
-            return CoroutineScope(Dispatchers.Main).async { listOf<TrainStatus>() }
-        }
+        override suspend fun getTrainStatus(): List<TrainStatus> = listOf()
 
-        override fun getTrainAlerts(): Deferred<List<TrainAlert>> {
-            return CoroutineScope(Dispatchers.Main).async { dummyAlerts }
-        }
+        override suspend fun getTrainAlerts(): List<TrainAlert> = dummyAlerts
     }
 }

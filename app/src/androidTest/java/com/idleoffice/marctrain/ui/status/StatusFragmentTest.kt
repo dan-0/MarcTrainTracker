@@ -35,17 +35,13 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.data.model.TrainStatus
-import com.idleoffice.marctrain.data.tools.TrainLineTools
+import com.idleoffice.marctrain.data.tools.StationList
 import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.idleoffice.marctrain.testsupport.KoinActivityTestRule
 import com.idleoffice.marctrain.testsupport.RecyclerViewAssertions.isEmpty
 import com.idleoffice.marctrain.testsupport.RecyclerViewMatcher
 import com.idleoffice.marctrain.testsupport.TestIdlingResource
 import com.idleoffice.marctrain.ui.main.MainActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import org.hamcrest.Matchers.anything
 import org.junit.After
 import org.junit.Before
@@ -113,17 +109,17 @@ class StatusFragmentTest {
     fun multipleTrainsOrderedFromDc() {
         val train0 = testTrainStatus.copy(
                 number = "111",
-                nextStation =  TrainLineTools.PENN_STATIONS[4],
+                nextStation =  StationList.PENN_STATIONS[4],
                 direction = "North"
         )
         val train1 = testTrainStatus.copy(
                 number = "222",
-                nextStation =  TrainLineTools.PENN_STATIONS[2],
+                nextStation =  StationList.PENN_STATIONS[2],
                 direction = "North"
         )
         val train2 = testTrainStatus.copy(
                 number = "333",
-                nextStation =  TrainLineTools.PENN_STATIONS[6],
+                nextStation =  StationList.PENN_STATIONS[6],
                 direction = "North"
         )
 
@@ -144,17 +140,17 @@ class StatusFragmentTest {
     fun multipleTrainsOrderedToDc() {
         val train0 = testTrainStatus.copy(
                 number = "111",
-                nextStation =  TrainLineTools.PENN_STATIONS[4],
+                nextStation =  StationList.PENN_STATIONS[4],
                 direction = "South"
         )
         val train1 = testTrainStatus.copy(
                 number = "222",
-                nextStation =  TrainLineTools.PENN_STATIONS[2],
+                nextStation =  StationList.PENN_STATIONS[2],
                 direction = "South"
         )
         val train2 = testTrainStatus.copy(
                 number = "333",
-                nextStation =  TrainLineTools.PENN_STATIONS[6],
+                nextStation =  StationList.PENN_STATIONS[6],
                 direction = "South"
         )
 
@@ -181,19 +177,19 @@ class StatusFragmentTest {
         val train0 = testTrainStatus.copy(
                 number = "111",
                 line = "Brunswick",
-                nextStation =  TrainLineTools.BRUNSWICK_STATIONS[4],
+                nextStation =  StationList.BRUNSWICK_STATIONS[4],
                 direction = "West"
         )
         val train1 = testTrainStatus.copy(
                 number = "222",
                 line = "Brunswick",
-                nextStation =  TrainLineTools.BRUNSWICK_STATIONS[2],
+                nextStation =  StationList.BRUNSWICK_STATIONS[2],
                 direction = "West"
         )
         val train2 = testTrainStatus.copy(
                 number = "333",
                 line = "Brunswick",
-                nextStation =  TrainLineTools.BRUNSWICK_STATIONS[6],
+                nextStation =  StationList.BRUNSWICK_STATIONS[6],
                 direction = "West"
         )
 
@@ -217,19 +213,19 @@ class StatusFragmentTest {
         val train0 = testTrainStatus.copy(
                 number = "111",
                 line = "Brunswick",
-                nextStation =  TrainLineTools.BRUNSWICK_STATIONS[4],
+                nextStation =  StationList.BRUNSWICK_STATIONS[4],
                 direction = "East"
         )
         val train1 = testTrainStatus.copy(
                 number = "222",
                 line = "Brunswick",
-                nextStation =  TrainLineTools.BRUNSWICK_STATIONS[2],
+                nextStation =  StationList.BRUNSWICK_STATIONS[2],
                 direction = "East"
         )
         val train2 = testTrainStatus.copy(
                 number = "333",
                 line = "Brunswick",
-                nextStation =  TrainLineTools.BRUNSWICK_STATIONS[6],
+                nextStation =  StationList.BRUNSWICK_STATIONS[6],
                 direction = "East"
         )
 
@@ -337,12 +333,8 @@ class StatusFragmentTest {
 
         val trainStatus: MutableList<TrainStatus> = mutableListOf()
 
-        override fun getTrainStatus(): Deferred<List<TrainStatus>> {
-            return CoroutineScope(Dispatchers.Main).async { trainStatus }
-        }
+        override suspend fun getTrainStatus(): List<TrainStatus> = trainStatus
 
-        override fun getTrainAlerts(): Deferred<List<TrainAlert>> {
-            return CoroutineScope(Dispatchers.Main).async { listOf<TrainAlert>() }
-        }
+        override suspend fun getTrainAlerts(): List<TrainAlert> = listOf()
     }
 }
