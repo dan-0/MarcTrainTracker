@@ -64,7 +64,7 @@ class AlertFragment : Fragment() {
                     initRecyclerView()
                     viewModel.loadAlerts()
                 }
-                AlertViewState.Error, // TODO Handler alerts
+                AlertViewState.Error, // TODO Handler alerts, issue #26
                 AlertViewState.NoTrainsFound -> {
                     showLoading(getString(R.string.no_alerts_reported_looking))
                     binding.trainAlertList.adapter?.notifyDataSetChanged()
