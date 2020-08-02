@@ -23,7 +23,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
 import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.data.tools.Direction
@@ -37,6 +36,7 @@ import com.idleoffice.marctrain.ui.status.data.TrainLineState
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.threeten.bp.Duration
 import timber.log.Timber
 
 class StatusViewModel(
@@ -78,9 +78,9 @@ class StatusViewModel(
             while (true) {
                 idlingResource.startIdlingAction()
                 val delayInterval = if (networkProvider.isNetworkConnected()) {
-                    BuildConfig.STATUS_POLL_INTERVAL
+                    STATUS_POLL_INTERVAL.toMillis()
                 } else {
-                    BuildConfig.STATUS_POLL_RETRY_INTERVAL
+                    STATUS_POLL_RETRY_INTERVAL.toMillis()
                 }
                 loadTrainData()
                 idlingResource.stopIdlingAction()
@@ -176,6 +176,11 @@ class StatusViewModel(
     private fun updateState(newState: StatusViewState) {
         Timber.d("new state: $newState")
         _state.postValue(newState)
+    }
+
+    companion object {
+        private val STATUS_POLL_INTERVAL = Duration.ofMinutes(1)
+        private val STATUS_POLL_RETRY_INTERVAL = Duration.ofSeconds(10)
     }
 }
 

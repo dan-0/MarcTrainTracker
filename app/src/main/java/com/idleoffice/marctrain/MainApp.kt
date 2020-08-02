@@ -25,14 +25,14 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.idleoffice.marctrain.analytics.firebaseModule
 import com.idleoffice.marctrain.coroutines.coroutinesModule
 import com.idleoffice.marctrain.idling.idlingResourceModule
+import com.idleoffice.marctrain.logging.KoinLogger
+import com.idleoffice.marctrain.logging.Logging
 import com.idleoffice.marctrain.retrofit.ts.retrofitModule
 import com.idleoffice.marctrain.ui.alert.alertFragmentModule
 import com.idleoffice.marctrain.ui.schedule.scheduleFragmentModule
 import com.idleoffice.marctrain.ui.status.statusFragmentModule
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.koin.android.ext.android.startKoin
-import org.koin.android.logger.AndroidLogger
-import org.koin.log.Logger
 import timber.log.Timber
 
 
@@ -54,20 +54,9 @@ class MainApp : Application() {
 
         AndroidThreeTen.init(this)
 
-        val koinLogger: Logger = if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-            AndroidLogger()
-        } else {
-            Timber.plant(CrashlyticsTree())
-            // release logger
-            object : Logger {
-                override fun debug(msg: String) {}
+        Logging.init()
 
-                override fun err(msg: String) {}
-
-                override fun info(msg: String) {}
-            }
-        }
+        val koinLogger = KoinLogger()
 
         startKoin(this, koinModules, logger = koinLogger)
     }
