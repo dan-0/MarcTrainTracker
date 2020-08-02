@@ -21,57 +21,23 @@ package com.idleoffice.marctrain.ui.status
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.ViewManager
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.RecyclerView
-import com.idleoffice.marctrain.R
+import androidx.recyclerview.widget.ListAdapter
 import com.idleoffice.marctrain.data.model.TrainStatus
-import com.idleoffice.marctrain.ui.base.BaseViewHolder
-import kotlinx.android.synthetic.main.recycler_status_train.view.*
-import timber.log.Timber
+import com.idleoffice.marctrain.databinding.CardStatusTrainBinding
 
-class StatusAdapter(val trainStatuses: MutableList<TrainStatus>) : RecyclerView.Adapter<BaseViewHolder>() {
+class StatusAdapter : ListAdapter<TrainStatus, TrainStatusViewHolder>(TrainStatusEquality) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : BaseViewHolder {
-        val statusLayout = LayoutInflater.from(parent.context)
-                .inflate(R.layout.recycler_status_train, parent, false) as ConstraintLayout
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : TrainStatusViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = CardStatusTrainBinding.inflate(inflater, parent, false)
 
-        return ViewHolder(statusLayout)
+        return TrainStatusViewHolder(binding)
     }
 
-    override fun getItemCount() : Int {
-        return trainStatuses.size
+    override fun onBindViewHolder(holder: TrainStatusViewHolder, position: Int) {
+        val item = getItem(position)
+        holder.onBind(item as TrainStatus)
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        holder.onBind(position)
-    }
-
-    inner class ViewHolder(statusTrain: ConstraintLayout) : BaseViewHolder(statusTrain) {
-
-        private val trainNumber : TextView = statusTrain.trainNumber
-        private val trainNextStation : TextView = statusTrain.textDataStationName
-        private val trainDepart : TextView = statusTrain.textDataDepart
-        private val trainStatus : TextView = statusTrain.textDataStatus
-        private val trainDelay : TextView? = statusTrain.textDataDelay
-        private val trainDelayLabel : TextView? = statusTrain.textLabelDelay
-
-        override fun onBind(position: Int) {
-            val st = trainStatuses[position]
-            Timber.d("binding $st")
-            trainNumber.text = st.number
-            trainNextStation.text = st.nextStation
-            trainDepart.text = st.departure
-            trainStatus.text = st.status
-            if (st.delay.isEmpty()) {
-                Timber.d("Removing delay")
-                val tdp = trainDelay?.parent as? ViewManager
-                tdp?.removeView(trainDelay)
-                val tdlp = trainDelayLabel?.parent as? ViewManager
-                tdlp?.removeView(trainDelayLabel)
-            }
-            trainDelay?.text = st.delay
-        }
-    }
 }
+
