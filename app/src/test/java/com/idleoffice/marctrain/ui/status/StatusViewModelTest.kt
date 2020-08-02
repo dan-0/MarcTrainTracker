@@ -21,15 +21,13 @@ package com.idleoffice.marctrain.ui.status
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.idleoffice.marctrain.BuildConfig.STATUS_POLL_INTERVAL
-import com.idleoffice.marctrain.data.model.TrainAlert
 import com.idleoffice.marctrain.data.model.TrainStatus
+import com.idleoffice.marctrain.data.tools.FakeNetworkProvider
+import com.idleoffice.marctrain.data.tools.extensions.toLiveList
 import com.idleoffice.marctrain.idling.FalseIdle
-import com.idleoffice.marctrain.network.NetworkProvider
-import com.idleoffice.marctrain.retrofit.ts.TrainDataService
 import com.idleoffice.marctrain.testsupport.TestCoroutineContextProvider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
+import com.idleoffice.marctrain.ui.status.data.StatusViewState
+import com.idleoffice.marctrain.ui.status.data.TrainLineState
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -45,7 +43,7 @@ class StatusViewModelTest {
 
     private val contextProvider = TestCoroutineContextProvider()
 
-    val basicTrainStatus = TrainStatus(
+    private val basicTrainStatus = TrainStatus(
             "0",
             "Penn",
             "South",
@@ -57,76 +55,104 @@ class StatusViewModelTest {
             "Test message"
     )
 
-    val dummyTrainStatusNumber = "0"
-    val dummyTrainStatusNumber2 = "-1"
-    private val trainDataService = object: TrainDataService {
-        var counter = 0
-        var errorOccurred = false
+    private val dummyTrainStatusNumber1 = "0"
+    private val dummyTrainStatusNumber2 = "-1"
 
-        val dummyTrainStatus = basicTrainStatus.copy(number = dummyTrainStatusNumber)
+    private val fakeTrainStatus1 = basicTrainStatus.copy(number = dummyTrainStatusNumber1)
+    private val fakeTrainStatus2 = basicTrainStatus.copy(number = dummyTrainStatusNumber2)
 
-        val dummyTrainStatus2 = basicTrainStatus.copy(number = dummyTrainStatusNumber2)
+    private val trainDataService = FakeStatusTrainDataService()
 
-        val dummyError = IOException("Dummy")
+    val l = mutableListOf(
+        { listOf(fakeTrainStatus1) },
+        { listOf(fakeTrainStatus1) },
+        { listOf(fakeTrainStatus1) },
+        { throw IOException("Test Exception") },
+        { listOf(fakeTrainStatus2) },
+        { listOf(fakeTrainStatus1) }
+    )
 
-        override fun getTrainStatus(): Deferred<List<TrainStatus>> {
-            counter++
+//        object: TrainDataService {
+//        var counter = 0
+//        var errorOccurred = false
+//
+//        val dummyTrainStatus = basicTrainStatus.copy(number = dummyTrainStatusNumber)
+//
+//        val dummyTrainStatus2 = basicTrainStatus.copy(number = dummyTrainStatusNumber2)
+//
+//        val dummyError = IOException("Dummy")
+//
+//        override fun getTrainStatus(): Deferred<List<TrainStatus>> {
+//            counter++
+//
+//            errorOccurred = false
+//            return when {
+//                counter == 3 -> {
+//                    errorOccurred = true
+//                    CoroutineScope(contextProvider.io).async { throw dummyError }
+//                }
+//                counter == 4 -> {
+//                    CoroutineScope(contextProvider.io).async { listOf(dummyTrainStatus) }
+//                }
+//                counter > 4 -> {
+//                    CoroutineScope(contextProvider.io).async { listOf(dummyTrainStatus2) }
+//                }
+//                else -> CoroutineScope(contextProvider.io).async { listOf(dummyTrainStatus) }
+//            }
+//        }
+//
+//        override fun getTrainAlerts(): Deferred<List<TrainAlert>> {
+//            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//        }
+//    }
 
-            errorOccurred = false
-            return when {
-                counter == 3 -> {
-                    errorOccurred = true
-                    CoroutineScope(contextProvider.io).async { throw dummyError }
-                }
-                counter == 4 -> {
-                    CoroutineScope(contextProvider.io).async { listOf(dummyTrainStatus) }
-                }
-                counter > 4 -> {
-                    CoroutineScope(contextProvider.io).async { listOf(dummyTrainStatus2) }
-                }
-                else -> CoroutineScope(contextProvider.io).async { listOf(dummyTrainStatus) }
-            }
-        }
-
-        override fun getTrainAlerts(): Deferred<List<TrainAlert>> {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-    }
-
-    private val networkProvider = object: NetworkProvider {
-        override fun isNetworkConnected(): Boolean {
-            return true
-        }
-    }
+    private val networkProvider = FakeNetworkProvider()
 
     private lateinit var ut: StatusViewModel
+
+    private lateinit var states: List<StatusViewState>
 
     @Before
     fun setup() {
         ut = StatusViewModel(contextProvider, trainDataService, networkProvider, FalseIdle())
+
+        states = ut.state.toLiveList()
     }
 
-    private fun advanceTimeAssertValues(interval: Long, expectedCounter: Int, expectedStatus: TrainStatus) {
-        contextProvider.testContext.advanceTimeBy(interval, TimeUnit.MILLISECONDS)
-        assertEquals("Called unexpected number of times", expectedCounter, trainDataService.counter)
-        assertEquals("Expected train status $expectedStatus", ut.allTrainStatusData.value!![0], expectedStatus)
+    @Test
+    fun `init state`() {
+        assertEquals(StatusViewState.Init(), states[0])
     }
 
     @Test
     fun `test ordered set of events from doGetTrainStatus`() {
-        ut.viewInitialize()
+        val fakeTrains1 = listOf(fakeTrainStatus1)
+        val fakeTrains2 = listOf(fakeTrainStatus2)
 
-        advanceTimeAssertValues(100, 1, trainDataService.dummyTrainStatus)
+        trainDataService.expectedStatusActions = mutableListOf(
+            { fakeTrains1 },
+            { fakeTrains1 },
+            { fakeTrains1 },
+            { throw IOException("Test Exception") },
+            { fakeTrains2 },
+            { fakeTrains1 }
+        )
 
-        advanceTimeAssertValues(STATUS_POLL_INTERVAL, 2, trainDataService.dummyTrainStatus)
+        ut.loadTrainStatus()
 
-        assertEquals("Error should have occurred in processing", false, trainDataService.errorOccurred)
-        advanceTimeAssertValues(STATUS_POLL_INTERVAL, 3, trainDataService.dummyTrainStatus)
-        assertEquals("Error should have occurred in processing", true, trainDataService.errorOccurred)
+        contextProvider.testContext.advanceTimeBy(STATUS_POLL_INTERVAL * 5, TimeUnit.MILLISECONDS)
 
-        advanceTimeAssertValues(STATUS_POLL_INTERVAL, 4, trainDataService.dummyTrainStatus)
-        assertEquals("Error should have occurred in processing", false, trainDataService.errorOccurred)
+        val trainLineState = TrainLineState()
+        assertEquals(StatusViewState.Init(trainLineState), states[0])
 
-        advanceTimeAssertValues(STATUS_POLL_INTERVAL, 5, trainDataService.dummyTrainStatus2)
+        assertEquals(StatusViewState.Content(fakeTrains1, fakeTrains1, trainLineState), states[1])
+
+        assertEquals(StatusViewState.Content(fakeTrains1, fakeTrains1, trainLineState), states[2])
+
+        assertEquals(StatusViewState.Content(fakeTrains1, fakeTrains1, trainLineState), states[3])
+
+        assertEquals(StatusViewState.Content(fakeTrains2, fakeTrains2, trainLineState), states[4])
+
+        assertEquals(StatusViewState.Content(fakeTrains1, fakeTrains1, trainLineState), states[5])
     }
 }

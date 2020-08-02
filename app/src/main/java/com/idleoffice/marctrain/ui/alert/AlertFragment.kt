@@ -24,31 +24,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.FragmentAlertBinding
-import com.idleoffice.marctrain.ui.base.BaseFragment
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class AlertFragment : BaseFragment<AlertViewModel>(), AlertNavigator {
+class AlertFragment : Fragment() {
 
-    override val fragViewModel: AlertViewModel by viewModel()
+    private val viewModel: AlertViewModel by viewModel()
 
     private val alertAdapter: AlertAdapter by inject()
 
     private var _binding: FragmentAlertBinding? = null
     private val binding get() = _binding!!
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        initRecyclerView()
-        showLoading(getString(R.string.looking_for_alerts))
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentAlertBinding.inflate(inflater, container, false)
@@ -57,21 +51,33 @@ class AlertFragment : BaseFragment<AlertViewModel>(), AlertNavigator {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setAlertObserver()
+        observeAlerts()
     }
 
-    private fun setAlertObserver() {
-        fragViewModel.allAlerts.observe(viewLifecycleOwner) {
-            showLoading(getString(R.string.no_alerts_reported_looking))
-            if (it.isNullOrEmpty()) {
-                binding.trainAlertList.adapter?.notifyDataSetChanged()
-            } else {
-                Timber.d("New alert received")
-                with(alertAdapter.alerts) {
-                    clear()
-                    addAll(it)
-                    hideLoading()
+    private fun observeAlerts() {
+
+        viewModel.state.observe(viewLifecycleOwner) {
+
+            when (it) {
+                AlertViewState.Init -> {
+                    showLoading(getString(R.string.looking_for_alerts))
+                    initRecyclerView()
+                    viewModel.loadAlerts()
+                }
+                AlertViewState.Error, // TODO Handler alerts
+                AlertViewState.NoTrainsFound -> {
+                    showLoading(getString(R.string.no_alerts_reported_looking))
                     binding.trainAlertList.adapter?.notifyDataSetChanged()
+                }
+                is AlertViewState.Content -> {
+                    Timber.d("New alert received")
+
+                    with(alertAdapter.alerts) {
+                        clear()
+                        addAll(it.alerts)
+                        hideLoading()
+                        binding.trainAlertList.adapter?.notifyDataSetChanged()
+                    }
                 }
             }
         }
@@ -98,17 +104,17 @@ class AlertFragment : BaseFragment<AlertViewModel>(), AlertNavigator {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.trainAlertList?.adapter = null
+        binding.trainAlertList.adapter = null
         _binding = null
     }
 
-    override fun showLoading(msg: String) {
+    private fun showLoading(msg: String) {
         Timber.d("Showing loading view.")
         binding.loadingLayout.loadingTextViewPartial.text = msg
         binding.loadingLayout.root.visibility = View.VISIBLE
     }
 
-    override fun hideLoading() {
+    private fun hideLoading() {
         Timber.d("Hiding loading view.")
         binding.loadingLayout.loadingTextViewPartial.text = ""
         binding.loadingLayout.root.visibility = View.GONE

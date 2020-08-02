@@ -44,12 +44,6 @@
     <string name="alerts">Alerts</string>
     <string name="pdf_reader_unavailable">PDF READER UNAVAILABLE</string>
 
-    <string-array name="line_array" translatable="false">
-        <item>@string/penn</item>
-        <item>@string/camden</item>
-        <item>@string/brunswick</item>
-    </string-array>
-
     <string name="north">North</string>
     <string name="south">South</string>
     <string name="west">West</string>
@@ -62,14 +56,4 @@
     <string name="or_try_live_mode">Or check MDOT info:</string>
     <string name="schedule">MDOT Information</string>
     <string name="live_mode">MDOT Info</string>
-
-    <string-array name="ns_dir_array">
-        <item>@string/north</item>
-        <item>@string/south</item>
-    </string-array>
-
-    <string-array name="we_dir_array">
-        <item>@string/west</item>
-        <item>@string/east</item>
-    </string-array>
 </resources>

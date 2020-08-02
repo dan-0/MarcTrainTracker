@@ -19,23 +19,23 @@
 
 package com.idleoffice.marctrain.ui.schedule.interactor
 
-import com.idleoffice.marctrain.ui.schedule.ScheduleViewModel
-
-class ScheduleActor(val viewModel: ScheduleViewModel) {
+class ScheduleActor(
+    private val handleAction: (ScheduleAction) -> Unit
+) {
 
     fun launchPennTable() {
-        viewModel.takeAction(ScheduleAction.LaunchPenn)
+        handleAction(ScheduleAction.LaunchPenn)
     }
 
     fun launchCamdenTable() {
-        viewModel.takeAction(ScheduleAction.LaunchCamden)
+        handleAction(ScheduleAction.LaunchCamden)
     }
 
     fun launchBrunswickTable() {
-        viewModel.takeAction(ScheduleAction.LaunchBrunswick)
+        handleAction(ScheduleAction.LaunchBrunswick)
     }
 
     fun launchLiveMode() {
-        viewModel.takeAction(ScheduleAction.LaunchLiveView)
+        handleAction(ScheduleAction.LaunchLiveView)
     }
 }

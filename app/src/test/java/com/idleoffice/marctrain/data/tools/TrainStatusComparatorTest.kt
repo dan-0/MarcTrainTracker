@@ -20,7 +20,7 @@
 package com.idleoffice.marctrain.data.tools
 
 import com.idleoffice.marctrain.data.model.TrainStatus
-import com.idleoffice.marctrain.data.tools.TrainLineTools.Companion.PENN_STATIONS
+import com.idleoffice.marctrain.data.tools.StationList.PENN_STATIONS
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

@@ -20,10 +20,7 @@
 package com.idleoffice.marctrain.ui.schedule
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.Observer
+import com.idleoffice.marctrain.data.tools.extensions.toLiveList
 import com.idleoffice.marctrain.idling.FalseIdle
 import com.idleoffice.marctrain.retrofit.ts.TrainScheduleService
 import com.idleoffice.marctrain.testsupport.TestCoroutineContextProvider
@@ -59,39 +56,26 @@ class ScheduleViewModelTest {
 
     private lateinit var ut: ScheduleViewModel
 
-    private lateinit var lifecycleRegistry: LifecycleRegistry
-
-    private lateinit var lifecycleOwner: LifecycleOwner
-
     private val coroutineContext = TestCoroutineContextProvider()
 
-    private var state: ScheduleEvent? = null
-    private val observer = Observer<ScheduleEvent> {
-        state = it
-    }
-
+    private lateinit var events: List<ScheduleEvent>
 
     @Before
     fun setup() {
-        lifecycleOwner = LifecycleOwner { lifecycleRegistry }
-        lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
 
         mockTrainScheduleService = mock()
 
         val fakeAnalyticsService = FakeAnalyticsService()
 
         ut = ScheduleViewModel(
-            coroutineContextProvider = coroutineContext,
+            dispatchers = coroutineContext,
             idlingResource = FalseIdle(),
             trainScheduleService = mockTrainScheduleService,
             appFileDir = mockFile,
             analyticService = fakeAnalyticsService
         )
 
-        lifecycleOwner.lifecycle.addObserver(ut)
-
-        ut.event.observe(lifecycleOwner, observer)
+        events = ut.event.toLiveList()
     }
 
     @Test
@@ -116,7 +100,7 @@ class ScheduleViewModelTest {
         coroutineContext.testContext.triggerActions()
 
         // Should be NPE because we never supplied a ResponseBody
-        assertTrue((state as ScheduleEvent.Error).e is NullPointerException)
+        assertTrue((events.last() as ScheduleEvent.Error).e is NullPointerException)
     }
 
     private fun testfileDownload(line: String) {
@@ -142,7 +126,7 @@ class ScheduleViewModelTest {
 
         coroutineContext.testContext.triggerActions()
 
-        assertTrue((state as ScheduleEvent.Data).file.name.endsWith("${line}Schedule.pdf"))
+        assertTrue((events.last() as ScheduleEvent.Data).file.name.endsWith("${line}Schedule.pdf"))
     }
 }
 

@@ -27,6 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -34,7 +35,6 @@ import com.idleoffice.marctrain.BuildConfig
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.FragmentScheduleBinding
 import com.idleoffice.marctrain.idling.IdlingResource
-import com.idleoffice.marctrain.ui.base.BaseFragment
 import com.idleoffice.marctrain.ui.schedule.interactor.ScheduleActor
 import com.idleoffice.marctrain.ui.schedule.interactor.ScheduleEvent
 import com.idleoffice.marctrain.vibrateTap
@@ -43,9 +43,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.io.File
 
-class ScheduleFragment : BaseFragment<ScheduleViewModel>() {
+class ScheduleFragment : Fragment() {
 
-    override val fragViewModel: ScheduleViewModel by viewModel()
+    private val viewModel: ScheduleViewModel by viewModel()
 
     private val idlingResource: IdlingResource by inject()
 
@@ -65,7 +65,7 @@ class ScheduleFragment : BaseFragment<ScheduleViewModel>() {
 
     private fun observeData() {
 
-        fragViewModel.event.observe(viewLifecycleOwner) {
+        viewModel.event.observe(viewLifecycleOwner) {
             when (it) {
                 is ScheduleEvent.Loading -> showLoading(getString(R.string.loading_schedule))
                 is ScheduleEvent.Error -> {
@@ -88,13 +88,13 @@ class ScheduleFragment : BaseFragment<ScheduleViewModel>() {
         }
 
 
-        fragViewModel.hapticEvent.observe(viewLifecycleOwner) {
-            it.let { context?.vibrateTap() }
+        viewModel.hapticEvent.observe(viewLifecycleOwner) {
+            it.let { requireContext().vibrateTap() }
         }
     }
 
     private fun startPdfActivity(destination: File) {
-        context?.let {
+        requireContext().let {
             val fileUri = FileProvider.getUriForFile(it,
                     "${BuildConfig.APPLICATION_ID}.fileprovider", destination)
             val pdfIntent = Intent(Intent.ACTION_VIEW)
@@ -153,7 +153,7 @@ class ScheduleFragment : BaseFragment<ScheduleViewModel>() {
     }
 
     private fun bindActor() {
-        val actor = ScheduleActor(fragViewModel)
+        val actor = ScheduleActor(viewModel::takeAction)
 
         with(binding) {
             btnTablesPenn.setOnClickListener {
