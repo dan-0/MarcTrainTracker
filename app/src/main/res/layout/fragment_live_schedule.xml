@@ -35,8 +35,8 @@
             android:layout_height="?android:attr/actionBarSize"
             android:background="@color/white"
             android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"
             app:title="@string/schedule"
             app:titleTextColor="@color/colorPrimaryDark"/>
     </com.google.android.material.appbar.AppBarLayout>

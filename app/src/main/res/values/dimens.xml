@@ -28,4 +28,6 @@
     <dimen name="elevation_card">2dp</dimen>
     <dimen name="elevation_app_bar">4dp</dimen>
     <dimen name="padding_card">8dp</dimen>
+
+    <dimen name="min_icon_size">48dp</dimen>
 </resources>

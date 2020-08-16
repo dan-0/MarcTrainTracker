@@ -17,11 +17,11 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this software.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/statusLayout">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -87,7 +87,8 @@
         android:id="@+id/trainStatusList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        style="@style/mt.recycler.view"
+        style="@style/mt.recycler.view.status"
+        tools:listitem="@layout/card_status_train"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <include

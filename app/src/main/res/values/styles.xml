@@ -72,7 +72,6 @@
     <style name="mt.traininfo.appbar" parent="Widget.Design.AppBarLayout">
         <item name="android:elevation">4dp</item>
         <item name="android:titleTextAppearance">@color/colorPrimaryDark</item>
-        <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:background">@android:color/background_light</item>
         <item name="android:fitsSystemWindows">true</item>
     </style>
@@ -115,11 +114,13 @@
     </style>
 
     <style name="mt.recycler.view" parent="Widget.AppCompat.ListView">
-        <item name="android:layout_marginEnd">@dimen/activity_horizontal_margin</item>
-        <item name="android:layout_marginStart">@dimen/activity_horizontal_margin</item>
-        <item name="android:elevation">@dimen/elevation_card</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollbarStyle">outsideInset</item>
+    </style>
+
+    <style name="mt.recycler.view.status">
+        <item name="android:layout_marginEnd">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginStart">@dimen/activity_horizontal_margin</item>
     </style>
 
     <style name="schedulePrompt">
@@ -127,4 +128,19 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">true</item>
     </style>
+
+    <style name="text.h1" parent="TextAppearance.MaterialComponents.Headline1"/>
+    <style name="text.h2" parent="TextAppearance.MaterialComponents.Headline2"/>
+    <style name="text.h3" parent="TextAppearance.MaterialComponents.Headline3"/>
+    <style name="text.h4" parent="TextAppearance.MaterialComponents.Headline4"/>
+    <style name="text.h5" parent="TextAppearance.MaterialComponents.Headline5"/>
+    <style name="text.h6" parent="TextAppearance.MaterialComponents.Headline6"/>
+    <style name="text.body1" parent="TextAppearance.MaterialComponents.Body1"/>
+    <style name="text.body2" parent="TextAppearance.MaterialComponents.Body2"/>
+    <style name="text.caption" parent="TextAppearance.MaterialComponents.Caption"/>
+    <style name="text.overline" parent="TextAppearance.MaterialComponents.Overline"/>
+    <style name="text.subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1"/>
+    <style name="text.subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2"/>
+    <style name="text.button" parent="TextAppearance.MaterialComponents.Button"/>
+    
 </resources>
