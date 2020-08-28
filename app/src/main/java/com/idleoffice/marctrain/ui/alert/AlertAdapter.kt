@@ -22,14 +22,9 @@ package com.idleoffice.marctrain.ui.alert
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.idleoffice.marctrain.databinding.RecyclerAlertTrainBinding
-import java.text.SimpleDateFormat
-import java.util.*
 
 class AlertAdapter : ListAdapter<BasicAlert, BasicAlertViewHolder>(AlertEquality) {
-
-    val fromDateFormatter = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : BasicAlertViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -45,14 +40,3 @@ class AlertAdapter : ListAdapter<BasicAlert, BasicAlertViewHolder>(AlertEquality
     }
 }
 
-class BasicAlertViewHolder(
-    private val binding: RecyclerAlertTrainBinding
-) : RecyclerView.ViewHolder(binding.root) {
-
-    fun onBind(alert: BasicAlert) {
-        binding.line.text = alert.line
-        binding.description.text = alert.description
-        binding.date.text = alert.dateTime
-    }
-
-}

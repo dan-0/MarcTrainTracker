@@ -25,5 +25,5 @@ import org.koin.dsl.module.module
 
 val alertFragmentModule = module {
     viewModel { AlertViewModel(get(), get(), get(), get()) }
-    factory { AlertRepo(get()) }
+    factory { AlertRepoImpl(get()) as AlertRepo }
 }

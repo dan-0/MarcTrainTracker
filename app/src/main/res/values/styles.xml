@@ -32,8 +32,6 @@
         <item name="colorAccent">@color/colorConsentAccent</item>
     </style>
 
-    <style name="H6" parent="TextAppearance.MaterialComponents.Headline6"/>
-
     <style name="mt.spinner.item" parent="Base.Widget.AppCompat.TextView.SpinnerItem">
         <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
         <item name="android:layout_marginStart">@dimen/activity_horizontal_margin</item>
@@ -112,7 +110,7 @@
         <item name="android:elevation">@dimen/elevation_card</item>
         <item name="android:background">@color/white</item>
         <item name="android:padding">@dimen/padding_card</item>
-        <item name="android:layout_margin">8dp</item>
+        <item name="android:layout_margin">@dimen/base_view_margin</item>
     </style>
 
     <style name="mt.recycler.view" parent="Widget.AppCompat.ListView">

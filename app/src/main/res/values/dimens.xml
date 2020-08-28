@@ -31,4 +31,5 @@
 
     <dimen name="min_icon_size">48dp</dimen>
     <dimen name="label_description_start_margin">8dp</dimen>
+    <dimen name="base_view_margin">8dp</dimen>
 </resources>

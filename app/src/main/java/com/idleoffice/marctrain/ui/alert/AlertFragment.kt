@@ -23,12 +23,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.FragmentAlertBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -78,21 +75,9 @@ class AlertFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        binding.trainAlertList ?: return
-        val viewManager = LinearLayoutManager(context)
-        binding.trainAlertList.apply {
-            setHasFixedSize(true)
-            layoutManager = viewManager
+        with(binding.trainAlertList) {
             itemAnimator = DefaultItemAnimator()
             adapter = alertAdapter
-            val divider = DividerItemDecoration(context, viewManager.orientation)
-            val drawable = ContextCompat.getDrawable(context, R.drawable.status_divider)
-
-            if(drawable != null) {
-                divider.setDrawable(drawable)
-            }
-
-            addItemDecoration(divider)
         }
     }
 
