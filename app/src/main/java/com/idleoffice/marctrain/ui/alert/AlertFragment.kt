@@ -31,7 +31,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.FragmentAlertBinding
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -39,7 +38,7 @@ class AlertFragment : Fragment() {
 
     private val viewModel: AlertViewModel by viewModel()
 
-    private val alertAdapter: AlertAdapter by inject()
+    private val alertAdapter: AlertAdapter = AlertAdapter()
 
     private var _binding: FragmentAlertBinding? = null
     private val binding get() = _binding!!
@@ -71,13 +70,8 @@ class AlertFragment : Fragment() {
                 }
                 is AlertViewState.Content -> {
                     Timber.d("New alert received")
-
-                    with(alertAdapter.alerts) {
-                        clear()
-                        addAll(it.alerts)
-                        hideLoading()
-                        binding.trainAlertList.adapter?.notifyDataSetChanged()
-                    }
+                    hideLoading()
+                    alertAdapter.submitList(it.alerts)
                 }
             }
         }

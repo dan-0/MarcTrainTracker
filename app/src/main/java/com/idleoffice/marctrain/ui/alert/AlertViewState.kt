@@ -1,7 +1,5 @@
 package com.idleoffice.marctrain.ui.alert
 
-import com.idleoffice.marctrain.data.model.TrainAlert
-
 sealed class AlertViewState {
 
     object Init : AlertViewState()
@@ -11,6 +9,6 @@ sealed class AlertViewState {
     object Error : AlertViewState()
 
     data class Content(
-        val alerts: List<TrainAlert>
+        val alerts: List<BasicAlert>
     ) : AlertViewState()
 }
