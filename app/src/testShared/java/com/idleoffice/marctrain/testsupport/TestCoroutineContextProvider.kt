@@ -19,11 +19,11 @@
 
 package com.idleoffice.marctrain.testsupport
 
-import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
+import com.idleoffice.marctrain.coroutines.DispatcherProvider
 import kotlinx.coroutines.test.TestCoroutineContext
 import kotlin.coroutines.CoroutineContext
 
-class TestCoroutineContextProvider: CoroutineContextProvider {
+class TestCoroutineContextProvider: DispatcherProvider {
     val testContext = TestCoroutineContext()
     override val io: CoroutineContext = testContext
     override val ui: CoroutineContext = testContext

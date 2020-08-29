@@ -11,7 +11,16 @@
     <fragment
         android:id="@+id/navigation_alert"
         android:name="com.idleoffice.marctrain.ui.alert.AlertFragment"
-        android:label="AlertFragment" />
+        android:label="AlertFragment" >
+        <action
+            android:id="@+id/action_navigation_alert_to_alertDetailsFragment"
+            app:destination="@id/alertDetailsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:launchSingleTop="true" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_schedule"
         android:name="com.idleoffice.marctrain.ui.schedule.ScheduleFragment"
@@ -35,4 +44,14 @@
     <action
         android:id="@+id/toScheduleFragment"
         app:destination="@id/navigation_schedule" />
+
+    <fragment
+        android:id="@+id/alertDetailsFragment"
+        android:name="com.idleoffice.marctrain.ui.alertdetails.AlertDetailsFragment"
+        android:label="AlertDetailsFragment">
+
+        <argument
+            android:name="targetUrl"
+            app:argType="string" />
+    </fragment>
 </navigation>

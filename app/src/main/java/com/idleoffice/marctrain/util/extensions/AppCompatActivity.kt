@@ -1,4 +1,4 @@
-package com.idleoffice.marctrain.extensions
+package com.idleoffice.marctrain.util.extensions
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController

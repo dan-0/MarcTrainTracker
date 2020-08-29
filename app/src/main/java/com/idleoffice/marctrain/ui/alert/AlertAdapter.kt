@@ -24,14 +24,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.idleoffice.marctrain.databinding.RecyclerAlertTrainBinding
 
-class AlertAdapter : ListAdapter<BasicAlert, BasicAlertViewHolder>(AlertEquality) {
+class AlertAdapter(
+    private val loadAlertDetails: (url: String) -> Unit
+) : ListAdapter<BasicAlert, BasicAlertViewHolder>(AlertEquality) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : BasicAlertViewHolder {
         val inflater = LayoutInflater.from(parent.context)
 
         val binding = RecyclerAlertTrainBinding.inflate(inflater, parent, false)
 
-        return BasicAlertViewHolder(binding)
+        return BasicAlertViewHolder(binding, loadAlertDetails)
     }
 
     override fun onBindViewHolder(holder: BasicAlertViewHolder, position: Int) {

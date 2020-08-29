@@ -23,7 +23,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
+import com.idleoffice.marctrain.coroutines.DispatcherProvider
 import com.idleoffice.marctrain.data.model.TrainStatus
 import com.idleoffice.marctrain.data.tools.Direction
 import com.idleoffice.marctrain.data.tools.TrainLine
@@ -40,7 +40,7 @@ import org.threeten.bp.Duration
 import timber.log.Timber
 
 class StatusViewModel(
-    private val dispatchers: CoroutineContextProvider,
+    private val dispatchers: DispatcherProvider,
     private val trainDataService: TrainDataService,
     private val networkProvider: NetworkProvider,
     private val idlingResource: IdlingResource

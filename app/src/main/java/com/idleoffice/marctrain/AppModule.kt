@@ -23,6 +23,7 @@ import android.content.Context
 import com.idleoffice.marctrain.network.LiveNetworkProvider
 import com.idleoffice.marctrain.network.NetworkProvider
 import com.idleoffice.marctrain.okhttp.getContent
+import com.idleoffice.marctrain.util.StringProvider
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
@@ -70,4 +71,6 @@ val appModules = module {
 
     single { androidApplication().getSharedPreferences("prefs", Context.MODE_PRIVATE) }
     single { LiveNetworkProvider(get()) as NetworkProvider }
+
+    single { StringProvider(get()) }
 }

@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hadilq.liveevent.LiveEvent
 import com.idleoffice.marctrain.analytics.FirebaseService
-import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
+import com.idleoffice.marctrain.coroutines.DispatcherProvider
 import com.idleoffice.marctrain.idling.IdlingResource
 import com.idleoffice.marctrain.retrofit.ts.TrainScheduleService
 import com.idleoffice.marctrain.ui.schedule.interactor.HapticEvent
@@ -38,7 +38,7 @@ import java.io.File
 
 
 class ScheduleViewModel(
-    private val dispatchers: CoroutineContextProvider,
+    private val dispatchers: DispatcherProvider,
     private val idlingResource: IdlingResource,
     private val trainScheduleService: TrainScheduleService,
     private val appFileDir: File,

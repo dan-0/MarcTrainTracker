@@ -27,7 +27,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.ActivityMainBinding
-import com.idleoffice.marctrain.extensions.findNavController
+import com.idleoffice.marctrain.util.extensions.findNavController
 import com.idleoffice.marctrain.vibrateTap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

@@ -17,7 +17,14 @@ class AlertRepoImpl (
 
     override suspend fun fetchAlertData() {
         idlingResource.startIdlingAction()
-        val mainDoc = Jsoup.connect("$BASE_MTA_URL$SERVICE_ALERT_PATH").get()
+
+        val mainDoc = runCatching {
+            Jsoup.connect("$BASE_MTA_URL$SERVICE_ALERT_PATH").get()
+        }.getOrElse {
+            Timber.w(it)
+            idlingResource.stopIdlingAction()
+            return
+        }
 
         val alertsRows = mainDoc.getElementById(ACTIVE_ALERT_ID)?.children()
 

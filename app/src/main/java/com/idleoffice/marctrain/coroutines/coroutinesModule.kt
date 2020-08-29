@@ -22,5 +22,5 @@ package com.idleoffice.marctrain.coroutines
 import org.koin.dsl.module.module
 
 val coroutinesModule = module {
-    single { AppCoroutineContextProvider() as CoroutineContextProvider }
+    single { AppCoroutineContextProvider() as DispatcherProvider }
 }

@@ -23,7 +23,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.idleoffice.marctrain.coroutines.CoroutineContextProvider
+import com.idleoffice.marctrain.coroutines.DispatcherProvider
 import com.idleoffice.marctrain.idling.IdlingResource
 import com.idleoffice.marctrain.network.NetworkProvider
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -35,7 +35,7 @@ import org.threeten.bp.Duration
 import timber.log.Timber
 
 class AlertViewModel(
-    private val coroutineContextProvider: CoroutineContextProvider,
+    private val coroutineContextProvider: DispatcherProvider,
     private val networkProvider: NetworkProvider,
     private val idlingResource: IdlingResource,
     private val alertRepo: AlertRepo

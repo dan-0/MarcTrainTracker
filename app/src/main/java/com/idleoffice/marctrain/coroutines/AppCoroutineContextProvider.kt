@@ -22,7 +22,7 @@ package com.idleoffice.marctrain.coroutines
 import kotlinx.coroutines.Dispatchers
 
 
-class AppCoroutineContextProvider: CoroutineContextProvider {
+class AppCoroutineContextProvider: DispatcherProvider {
     override val io = Dispatchers.IO
     override val ui = Dispatchers.Main
 }

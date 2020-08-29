@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.FragmentAlertBinding
@@ -35,7 +36,9 @@ class AlertFragment : Fragment() {
 
     private val viewModel: AlertViewModel by viewModel()
 
-    private val alertAdapter: AlertAdapter = AlertAdapter()
+    private val alertAdapter: AlertAdapter = AlertAdapter(
+        ::loadAlertDetails
+    )
 
     private var _binding: FragmentAlertBinding? = null
     private val binding get() = _binding!!
@@ -97,5 +100,10 @@ class AlertFragment : Fragment() {
         Timber.d("Hiding loading view.")
         binding.loadingLayout.loadingTextViewPartial.text = ""
         binding.loadingLayout.root.visibility = View.GONE
+    }
+
+    private fun loadAlertDetails(targetUrl: String) {
+        val direction = AlertFragmentDirections.actionNavigationAlertToAlertDetailsFragment(targetUrl)
+        findNavController().navigate(direction)
     }
 }

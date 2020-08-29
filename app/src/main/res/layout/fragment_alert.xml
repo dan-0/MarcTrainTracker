@@ -43,7 +43,7 @@
         style="@style/mt.recycler.view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/alert_card"
+        tools:listitem="@layout/recycler_alert_train"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 

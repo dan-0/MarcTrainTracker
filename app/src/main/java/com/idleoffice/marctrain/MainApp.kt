@@ -29,6 +29,7 @@ import com.idleoffice.marctrain.logging.KoinLogger
 import com.idleoffice.marctrain.logging.Logging
 import com.idleoffice.marctrain.retrofit.ts.retrofitModule
 import com.idleoffice.marctrain.ui.alert.alertFragmentModule
+import com.idleoffice.marctrain.ui.alertdetails.alertDetailsModule
 import com.idleoffice.marctrain.ui.schedule.scheduleFragmentModule
 import com.idleoffice.marctrain.ui.status.statusFragmentModule
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -46,7 +47,8 @@ class MainApp : Application() {
         idlingResourceModule,
         firebaseModule,
         coroutinesModule,
-        retrofitModule
+        retrofitModule,
+        alertDetailsModule
     )
 
     override fun onCreate() {
