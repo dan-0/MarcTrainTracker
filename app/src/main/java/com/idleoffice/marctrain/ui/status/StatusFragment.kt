@@ -38,12 +38,12 @@ import com.idleoffice.marctrain.data.tools.TrainLine
 import com.idleoffice.marctrain.databinding.FragmentStatusCoordinatorBinding
 import com.idleoffice.marctrain.ui.status.data.StatusViewState
 import com.idleoffice.marctrain.ui.status.data.TrainLineState
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
 class StatusFragment : Fragment() {
 
-    private val viewModel: StatusViewModel by viewModel()
+    private val viewModel: StatusViewModel by sharedViewModel()
 
     private val statusAdapter: StatusAdapter = StatusAdapter()
 

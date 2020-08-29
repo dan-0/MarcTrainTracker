@@ -29,12 +29,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.idleoffice.marctrain.R
 import com.idleoffice.marctrain.databinding.FragmentAlertBinding
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
 class AlertFragment : Fragment() {
 
-    private val viewModel: AlertViewModel by viewModel()
+    private val viewModel: AlertViewModel by sharedViewModel()
 
     private val alertAdapter: AlertAdapter = AlertAdapter(
         ::loadAlertDetails
@@ -50,6 +50,7 @@ class AlertFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initRecyclerView()
         observeAlerts()
     }
 
@@ -60,7 +61,6 @@ class AlertFragment : Fragment() {
             when (it) {
                 AlertViewState.Init -> {
                     showLoading(getString(R.string.looking_for_alerts))
-                    initRecyclerView()
                     viewModel.loadAlerts()
                 }
                 AlertViewState.Error, // TODO Handler alerts, issue #26

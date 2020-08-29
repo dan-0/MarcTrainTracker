@@ -81,9 +81,6 @@ class AlertViewModel(
     private fun doGetTrainAlerts() {
 
         viewModelScope.launch(coroutineContextProvider.io) {
-            launchWithHandledException {
-                alertRepo.fetchAlertData()
-            }
             while (true) {
                 val delayInterval = if (networkProvider.isNetworkConnected()) {
                     launchWithHandledException {
