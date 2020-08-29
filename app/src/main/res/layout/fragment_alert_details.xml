@@ -22,6 +22,7 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="@dimen/base_view_margin"
             android:visibility="gone"
             tools:visibility="visible">
 
@@ -39,6 +40,7 @@
                 android:id="@+id/labelRoutes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/alertDetailLabel"
                 android:text="@string/routes_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title" />
@@ -47,6 +49,7 @@
                 android:id="@+id/routes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                style="@style/alertDetailContent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/labelBarrier"
                 app:layout_constraintTop_toBottomOf="@id/title"
@@ -59,11 +62,11 @@
                 app:barrierDirection="bottom"
                 app:constraint_referenced_ids="labelRoutes, routes" />
 
-
             <TextView
                 android:id="@+id/labelDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/alertDetailLabel"
                 android:text="@string/description_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/routesBarrier" />
@@ -72,6 +75,7 @@
                 android:id="@+id/description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                style="@style/alertDetailContent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/labelBarrier"
                 app:layout_constraintTop_toBottomOf="@id/routesBarrier"
@@ -88,6 +92,7 @@
                 android:id="@+id/labelStartDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/alertDetailLabel"
                 android:text="@string/start_date_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/descriptionBarrier" />
@@ -96,6 +101,7 @@
                 android:id="@+id/startDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                style="@style/alertDetailContent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/labelBarrier"
                 app:layout_constraintTop_toBottomOf="@id/descriptionBarrier"
@@ -112,6 +118,7 @@
                 android:id="@+id/labelEndDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/alertDetailLabel"
                 android:text="@string/end_date_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/startDateBarrier" />
@@ -120,6 +127,7 @@
                 android:id="@+id/endDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                style="@style/alertDetailContent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/labelBarrier"
                 app:layout_constraintTop_toBottomOf="@id/startDateBarrier"
@@ -136,6 +144,7 @@
                 android:id="@+id/labelCause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/alertDetailLabel"
                 android:text="@string/cause_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/endDateBarrier" />
@@ -144,6 +153,7 @@
                 android:id="@+id/cause"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                style="@style/alertDetailContent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/labelBarrier"
                 app:layout_constraintTop_toBottomOf="@id/endDateBarrier"
@@ -160,6 +170,7 @@
                 android:id="@+id/labelEffect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/alertDetailLabel"
                 android:text="@string/effect_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/causeBarrier" />
@@ -168,6 +179,7 @@
                 android:id="@+id/effect"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                style="@style/alertDetailContent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/labelBarrier"
                 app:layout_constraintTop_toBottomOf="@id/causeBarrier"

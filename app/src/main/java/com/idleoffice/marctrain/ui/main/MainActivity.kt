@@ -20,6 +20,7 @@
 package com.idleoffice.marctrain.ui.main
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -54,6 +55,15 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.navigation
 
         val navController = findNavController()
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            binding.navigation.visibility = when (destination.id) {
+                R.id.navigation_status,
+                R.id.navigation_alert,
+                R.id.navigation_schedule -> View.VISIBLE
+                else -> View.GONE
+            }
+        }
 
         navView.setupWithNavController(navController)
     }

@@ -129,6 +129,15 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="alertDetailLabel">
+        <item name="android:layout_marginTop">@dimen/base_view_margin</item>
+    </style>
+
+    <style name="alertDetailContent">
+        <item name="android:layout_marginTop">@dimen/base_view_margin</item>
+        <item name="layout_goneMarginStart">@dimen/label_description_start_margin</item>
+    </style>
+
     <style name="text.h1" parent="TextAppearance.MaterialComponents.Headline1"/>
     <style name="text.h2" parent="TextAppearance.MaterialComponents.Headline2"/>
     <style name="text.h3" parent="TextAppearance.MaterialComponents.Headline3"/>
